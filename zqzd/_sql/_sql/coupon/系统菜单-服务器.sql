@@ -1,0 +1,214 @@
+-- 清空往下的菜单项
+truncate table sys_menu;
+
+-- -- 用户管理
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (0, '用户管理', NULL, NULL, 0, 'fa fa-user-circle-o', -6, 0);
+set @parentid_id = @@identity;
+
+-- 鼎鑫权益
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid_id, '鼎鑫权益', 'coupon/coupon/couponuser.html', NULL, 1, 'fa fa-user', 0, 0);
+set @parentid = @@identity;
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '查询', NULL, 'couponuser:list,couponuser:info', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '修改', NULL, 'couponuser:update', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '删除', NULL, 'couponuser:delete', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '更多信息', NULL, 'couponuser:moremsg', 2, NULL, 0, 0);
+
+
+-- 惠友圈
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid_id, '精明拾惠', 'coupon/coupon/couponuser-hy.html', NULL, 1, 'fa fa-user-o', 0, 0);
+set @parentid = @@identity;
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '查询', NULL, 'couponuser:listhy', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '查看详情', NULL, 'couponuser:infohy', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '修改', NULL, 'couponuser:updatehy', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '删除', NULL, 'couponuser:deletehy', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '设为平台推广员', NULL, 'couponuser:updatehy-tomanager', 2, NULL, 0, 0);
+
+-- 信用分
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid_id, '信用分', 'coupon/coupon/couponusercreditinfo.html	', NULL, 1, 'fa fa-credit-card-alt', 0, 0);
+set @parentid = @@identity;
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '查看', NULL, 'couponusercreditinfo:list,couponusercreditinfo:info	', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '修改', NULL, 'couponusercreditinfo:updateCredit', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '更多信息', NULL, 'couponuser:creditMsg', 2, NULL, 0, 0);
+
+-- -- 商品管理
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( 0, '商品管理', NULL, NULL, 0, 'fa fa-shopping-bag', -5, 0);
+set @parentid_id = @@identity;
+
+-- 商品种类
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid_id, '商品种类', 'coupon/coupon/couponcategory.html', NULL, 1, 'fa fa-sun-o', 0, 0);
+set @parentid = @@identity;
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '查询', NULL, 'couponcategory:list,couponcategory:info', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '添加', NULL, 'couponcategory:save', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '修改', NULL, 'couponcategory:update', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '启用禁用', NULL, 'couponcategory:changeenable', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '删除', NULL, 'couponcategory:delete', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '选择上级菜单', NULL, 'couponcategory:select', 2, NULL, 0, 0);
+
+
+-- 商品列表
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid_id, '商品列表', 'coupon/coupon/coupongoodsinfo.html', NULL, 1, 'fa fa-shopping-bag', 0, 0);
+set @parentid = @@identity;
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '查看', NULL, 'coupongoodsinfo:list,coupongoodsinfo:info', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '新增', NULL, 'coupongoodsinfo:save', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '修改', NULL, 'coupongoodsinfo:update', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '删除', NULL, 'coupongoodsinfo:delete', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '上架', NULL, 'coupongoodsinfo:upperShelf', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '下架', NULL, 'coupongoodsinfo:soldOut', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '批量上传', NULL, 'coupongoodsinfo:batchAdd', 2, NULL, 0, 0);
+
+-- 收藏管理
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid_id, '收藏管理', 'coupon/coupon/couponcollect.html', NULL, 1, 'fa fa-star', 3, 0);
+set @parentid = @@identity;
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) SELECT @parentid, '查看', null, 'couponcollect:list,couponcollect:info', '2', null, '6', 0;
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) SELECT @parentid, '删除', null, 'couponcollect:delete', '2', null, '6', 0;
+
+-- -- 推广管理
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( 0, '推广管理', NULL, NULL, 0, 'fa fa-external-link', -4, 0);
+set @parentid_id = @@identity;
+-- 平台推广员
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid_id, '平台推广员', 'coupon/coupon/couponuserplat.html', NULL, 1, 'fa fa-user-circle', 0, 0);
+set @parentid = @@identity;
+
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '查看', NULL, 'couponuser:listtg,couponuser:infotg', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '修改', NULL, 'couponuser:updatetg', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '取消推广员', NULL, 'couponuser:updateExtend', 2, NULL, 0, 0);
+
+
+
+-- -- 订单管理
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( 0, '订单管理', NULL, NULL, 0, 'fa fa-sitemap', -3, 0);
+set @parentid_id = @@identity;
+
+-- 订单列表
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid_id, '订单列表', 'coupon/coupon/couponorder.html', NULL, 1, 'fa fa-sitemap', 0, 0);
+set @parentid = @@identity;
+
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '查看', NULL, 'Couponorder:list,Couponorder:info', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '添加', NULL, 'Couponorder:save', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '修改', NULL, 'Couponorder:update', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '删除', NULL, 'Couponorder:delete', 2, NULL, 0, 0);
+
+-- 纠纷列表
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid_id, '纠纷列表', 'coupon/coupon/couponissuehandle.html', NULL, 1, 'fa fa-question-circle-o', 0, 0);
+set @parentid = @@identity;
+
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '查看', NULL, 'couponissuehandle:list,couponissuehandle:info', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '处理', NULL, 'couponissuehandle:handle', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '查看订单信息', NULL, 'couponissuehandle:ordermsg', 2, NULL, 0, 0);
+
+-- 提现申请
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid_id, '提现申请', 'coupon/coupon/couponcashdrawal.html', NULL, 1, 'fa fa-cny', 0, 0);
+set @parentid = @@identity;
+
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '查看', NULL, 'couponcashdrawal:list,couponcashdrawal:info', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '处理', NULL, 'couponcashdrawal:handle', 2, NULL, 0, 0);
+
+
+-- -- 财务报表
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( 0, '财务报表', NULL, NULL, 0, 'fa fa-list-alt', -2, 0);
+set @parentid_id = @@identity;
+
+-- 资金明细
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid_id, '资金明细', 'coupon/coupon/couponwalletinfo.html', NULL, 1, 'fa fa-credit-card', 0, 0);
+set @parentid = @@identity;
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '查看', NULL, 'couponwalletinfo:list,couponwalletinfo:info', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '导出Excel', NULL, 'couponwalletinfo:listcountexcel', 2, NULL, 0, 0);
+
+-- 佣金明细
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid_id, '佣金明细', 'coupon/coupon/couponcommissioninfo.html', NULL, 1, 'fa fa-bar-chart', 0, 0);
+set @parentid = @@identity;
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '查看', NULL, 'couponwalletinfo:listm,couponwalletinfo:infom', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '导出Excel', NULL, 'couponwalletinfo:listCommissionExcel', 2, NULL, 0, 0);
+
+-- 商品明细
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid_id, '商品明细', 'coupon/coupon/couponorderinfo.html', NULL, 1, 'fa fa-bar-chart', 0, 0);
+set @parentid = @@identity;
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '查看', NULL, 'Couponorder:listInfo', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '导出Excel', NULL, 'Couponorder:listGoodsExcel', 2, NULL, 0, 0);
+
+
+-- -- 系统管理
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( 0, '系统管理', NULL, NULL, 0, 'fa fa-cog', -1, 0);
+set @parentid_id = @@identity;
+
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid_id, '近期下单情况', NULL, 'couponeptordereday:list', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid_id, '近期客户活跃情况', NULL, 'couponeptusereday:list', 2, NULL, 0, 0);
+
+-- 管理员列表
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid_id, '管理员列表', 'sys/user.html', NULL, 1, 'fa fa-user', 1, 0);
+set @parentid = @@identity;
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '查看', NULL, 'sys:user:list,sys:user:info', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '新增', NULL, 'sys:user:save,sys:role:select', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '修改', NULL, 'sys:user:update,sys:role:select', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '删除', NULL, 'sys:user:delete', 2, NULL, 0, 0);
+
+-- 角色管理
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid_id, '角色管理', 'sys/role.html', NULL, 1, 'fa fa-user-secret', 1, 0);
+set @parentid = @@identity;
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '查看', NULL, 'sys:role:list,sys:role:info', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '新增', NULL, 'sys:role:save,sys:menu:perms', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '修改', NULL, 'sys:role:update,sys:menu:perms', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '删除', NULL, 'sys:role:delete', 2, NULL, 0, 0);
+
+
+-- 部门管理
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid_id, '部门管理', 'sys/dept.html', NULL, 1, 'fa fa-sitemap', 3, 0);
+set @parentid = @@identity;
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '查看', NULL, 'sys:dept:list,sys:dept:info', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '新增', NULL, 'sys:dept:save', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '修改', NULL, 'sys:dept:update', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '删除', NULL, 'sys:dept:delete', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '选择部门', NULL, 'sys:dept:select', 2, NULL, 0, 0);
+
+
+-- 短信配置
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid_id, '短信配置', 'sys/smslog.html', NULL, 1, 'fa fa-envelope-open', 1, 0);
+set @parentid = @@identity;
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '查看', NULL, 'sys:smslog:list,sys:smslog:info', 2, NULL, 0, 0);
+
+-- 操作日志
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid_id, '操作日志', 'sys/sysoperlog.html', NULL, 1, 'fa fa-envelope-open', 1, 0);
+set @parentid = @@identity;
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '查看', NULL, 'sysoperlog:list,sysoperlog:info', 2, NULL, 0, 0);
+
+-- 菜单管理
+-- INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid_id, '菜单管理', 'sys/menu.html', NULL, 1, 'fa fa-folder-open', 4, 0);
+-- set @parentid = @@identity;
+-- INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '查看', NULL, 'sys:menu:list,sys:menu:info', 2, NULL, 0, 0);
+-- INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '新增', NULL, 'sys:menu:save,sys:menu:select', 2, NULL, 0, 0);
+-- INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '修改', NULL, 'sys:menu:update,sys:menu:select', 2, NULL, 0, 0);
+-- INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '删除', NULL, 'sys:menu:delete', 2, NULL, 0, 0);
+
+-- 阿里云文件配置
+
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid_id, '图片服务器配置', 'sys/oss.html', 'sys:oss:all', 1, 'fa fa-file-image-o', 6, 0);
+
+-- 系统自动任务
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid_id, '定时任务', 'sys/schedule.html', NULL, 1, 'fa fa-tasks', 5, 0);
+set @parentid = @@identity;
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '查看', NULL, 'sys:schedule:list,sys:schedule:info', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '新增', NULL, 'sys:schedule:save', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '修改', NULL, 'sys:schedule:update', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '删除', NULL, 'sys:schedule:delete', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '暂停', NULL, 'sys:schedule:pause', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '恢复', NULL, 'sys:schedule:resume', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '立即执行', NULL, 'sys:schedule:run', 2, NULL, 0, 0);
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid, '日志列表', NULL, 'sys:schedule:log', 2, NULL, 0, 0);
+
+-- 系统字典
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid_id, '系统字典', 'sys/macro.html', NULL, 1, 'fa fa-book', 6, 0);
+set @parentid = @@identity;
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '查看', NULL, 'sys:macro:list,sys:macro:info', 2, NULL, 6, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '新增', NULL, 'sys:macro:save', 2, NULL, 6, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '修改', NULL, 'sys:macro:update', 2, NULL, 6, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '删除', NULL, 'sys:macro:delete', 2, NULL, 6, 0);
+
+-- 接口文档
+-- INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid_id, '接口文档', 'swagger-ui.html', '', 1, 'fa fa-code', 0, 0);
+
+-- 系统配置
+INSERT INTO `sys_menu`(`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES (@parentid_id, '商城配置', 'coupon/coupon/couponconfig.html', '', 1, 'fa fa-sun-o', 7, 0);
+set @parentid = @@identity;
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '加载数据', NULL, 'coupon:config:load', 2, NULL, 6, 0);
+INSERT INTO `sys_menu`( `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`, `status`) VALUES ( @parentid, '保存', NULL, 'coupon:config:update', 2, NULL, 6, 0);
+
