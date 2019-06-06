@@ -1,0 +1,106 @@
+package com.platform.dto;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+public class CouponGoodsInfoBatchAddDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	//商品分类Id
+	private Integer cId;
+	
+	//有效期
+	private Date effTime;
+	
+	//商品集合
+	private List<GoodsInfo> goods;
+	
+	
+	public Integer getcId() {
+		return cId;
+	}
+
+	public void setcId(Integer cId) {
+		this.cId = cId;
+	}
+
+	public Date getEffTime() {
+		return effTime;
+	}
+
+	public void setEffTime(Date effTime) {
+		this.effTime = effTime;
+	}
+
+	public List<GoodsInfo> getGoods() {
+		return goods;
+	}
+
+	public void setGoods(List<GoodsInfo> goods) {
+		this.goods = goods;
+	}
+
+	@Override
+	public String toString() {
+		StringBuffer sff = new StringBuffer();
+		
+		sff.append("{cId:" + cId + ", effTime:" + effTime + ", goods:" + goods + "}");
+		
+		if(goods != null) {
+			sff.append("goods: [");
+			for (GoodsInfo goodsInfo : goods) {
+				sff.append(goodsInfo.toString());
+			}
+			sff.append("]");
+		}
+		return sff.toString();
+	}
+
+	/**
+	 * 商品明细
+	 * @author Administrator
+	 *
+	 */
+	public static class GoodsInfo implements Serializable {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		//图片路径
+		private String img;
+		//序列号
+		private String code;
+		
+		@Override
+		public String toString() {
+			return "{img:" + img + ", code:" + code + "}";
+		}
+
+		public String getImg() {
+			return img;
+		}
+
+		public void setImg(String img) {
+			this.img = img;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public void setCode(String code) {
+			this.code = code;
+		}
+		
+		
+		
+	}
+	
+}

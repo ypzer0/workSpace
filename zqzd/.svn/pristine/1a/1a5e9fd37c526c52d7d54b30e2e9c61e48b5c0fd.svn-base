@@ -1,0 +1,116 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api'
+
+export const cart = {
+  getUserCartInfo: (params) => {
+    return axios.request({
+      url: 'cart/getUserCartInfo',
+      data: params,
+      method: 'post'
+    })
+  },
+  //更新用户商品
+  updateUserCartGoods: (params) => {
+    return axios.request({
+      url: 'cart/updateUserCartGoods',
+      data: params,
+      method: 'post'
+    })
+  },
+  deleteUserCartGoods: (params) => {
+    return axios.request({
+      url: 'cart/deleteUserCartGoods',
+      data: params,
+      method: 'post'
+    })
+  },
+
+
+  cartAdd: (params) => {
+    return axios.request({
+      url: api.CartAdd,
+      data: params,
+      method: 'post'
+    },
+    {
+      cp : 'application/json'
+    })
+  },
+  
+  //初始化加载
+  checkout: (params) => {
+    return axios.request({
+      url: api.CartCheckout,
+      data: params,
+      method: 'post'
+    })
+  },
+  getCheckoutInfo: (params) => {
+    return axios.request({
+      url: 'cart/getCheckoutInfo',
+      data: params,
+      method: 'post'
+    })
+  },
+
+  //获取交易信息
+
+  getTransactionInfo: (params) => {
+    var para = {
+      orderId: params.oid
+    }
+    return axios.request({
+      url: api.OrderQuery ,
+      data: para,
+      method: 'post'
+    })
+  },
+  
+  LoadCar: (params) => {
+    return axios.request({
+      url: api.CartList,
+      data: params,
+      method: 'post'
+    })
+  },
+  //选中商品
+  GoodsChecked: (params) => {
+    return axios.request({
+      url: api.CartChecked,
+      data: params,
+      method: 'post'
+    },
+    {
+      cp : 'application/json'
+    })
+  },
+
+  UpdateGoodsNumber: (params) => {
+    
+    return axios.request({
+      url: api.CartUpdate,
+      data: params,
+      method: 'post'
+    },
+    {
+      cp : 'application/json'
+    })
+
+  },
+
+  CartDelete: (params) => {
+    
+    return axios.request({
+      url: api.CartDelete,
+      data: params,
+      method: 'post'
+    },
+    {
+      cp : 'application/json'
+    })
+
+  },
+
+  
+
+}

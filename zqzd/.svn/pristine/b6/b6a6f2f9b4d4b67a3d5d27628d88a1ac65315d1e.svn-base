@@ -1,0 +1,87 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api'
+
+export const order = {
+  getOrderList: (params) => {
+    return axios.request({
+      url: api.OrderList,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  submitOrder: (params) => {
+    var para = {
+      couponId: params.couponId,
+      type: params.type,//cart or buy
+      postscript: params.msg,
+      addressId: params.aid
+    }
+
+    return axios.request({
+      url: api.OrderSubmit,
+      data: para,
+      method: 'post'
+    },
+    {
+      cp : 'application/json'
+    })
+  }, 
+  pay: (params) => {
+    return axios.request({
+      url: api.PayPrepayId,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  cancelOrder: (params) => {
+    return axios.request({
+      url: api.OrderCancel,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  getOrderDetail: (params) => {
+
+    return axios.request({
+      url: api.OrderDetail,
+      data: params,
+      method: 'post'
+    })
+
+  },
+  sureShip: (params) => {
+
+    return axios.request({
+      url: api.OrderConfirm,
+      data: params,
+      method: 'post'
+    })
+
+  },
+
+  orderRefund: (params) => {
+
+    return axios.request({
+      url: api.OrderRefund,
+      data: params,
+      method: 'post'
+    })
+    
+  },
+
+  returnGoods: (params) => {
+
+    return axios.request({
+      url: api.ReturnGoods,
+      data: params,
+      method: 'post'
+    })
+    
+  },
+  
+  
+
+}

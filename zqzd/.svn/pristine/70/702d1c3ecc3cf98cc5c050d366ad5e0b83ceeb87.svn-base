@@ -1,0 +1,81 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api'
+
+export const home = {
+  getHomeInfo: (params) => {
+    //zy 2018-12-27 
+    // return axios.request({
+    //   url: 'home/getHomeInfo',
+    //   data: params,
+    //   method: 'post'
+    // })
+  },
+  //zy 2018-12-27 获取滚动商品
+  getBanner: (params) => {
+    
+    return axios.request({
+      url: api.IndexUrlBanner,
+      data: params,
+      method: 'post'
+    })
+
+  },
+
+  //zy 2018-12-28 品牌商
+  getBrand: (params) => {
+    
+    return axios.request({
+      url: api.IndexUrlBrand,
+      data: params,
+      method: 'post'
+    })
+
+  },
+
+  //zy 2018-12-28 获取新品
+  getNewGoods: (params) => {
+    
+    return axios.request({
+      url: api.IndexUrlNewGoods,
+      data: params,
+      method: 'post'
+    })
+
+  },
+  //zy 2018-12-28 人气推荐
+  getGoodsHot: (params) => {
+    
+    return axios.request({
+      url: api.GoodsHot,
+      data: params,
+      method: 'post'
+    })
+
+  },
+
+  //获取热门商品
+  getHotGoodsList: (params) => {
+    return axios.request({
+      url: api.IndexUrlHotGoods,
+      data: params,
+      method: 'post'
+    })
+  },
+  //获取精选
+  getTopPic: (params) => {
+    return axios.request({
+      url: api.IndexUrlTopic,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  getIndexUrlCategory: (params) => {
+    return axios.request({
+      url: api.IndexUrlCategory,
+      data: params,
+      method: 'post'
+    })
+  },
+  
+}

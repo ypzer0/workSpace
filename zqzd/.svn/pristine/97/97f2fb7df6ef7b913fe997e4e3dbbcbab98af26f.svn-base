@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ApiZdOrderMapper">
+
+    <resultMap type="com.platform.entity.ZdOrderVo" id="orderMap">
+        <result property="id" column="id"/>
+        <result property="goodsId" column="goods_id"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="payStatus" column="pay_status"/>
+        <result property="userId" column="user_id"/>
+        <result property="orderNumber" column="order_number"/>
+        <result property="orderSn" column="order_sn"/>
+        <result property="confirmTime" column="confirm_time"/>
+        <result property="payTime" column="pay_time"/>
+        <result property="orderPrice" column="order_price"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.platform.entity.ZdOrderVo">
+		select
+			`id`,
+			`goods_id`,
+			`order_status`,
+			`pay_status`,
+			`user_id`,
+			`order_number`,
+			`order_sn`,
+			`confirm_time`,
+			`pay_time`,
+			`order_price`
+		from zd_order
+		where id = #{id}
+	</select>
+	
+	<select id="queryOrderList" resultType="com.platform.entity.ZdOrderVo">
+		select
+			o.`id`,
+			o.`goods_id`,
+			o.`order_status`,
+			o.`pay_status`,
+			o.`user_id`,
+			o.`order_number`,
+			o.`order_sn`,
+			o.`confirm_time`,
+			o.`pay_time`,
+			o.`order_price`,
+			g.goods_name,
+			g.small_img_path
+		from zd_order o
+		left join zd_goods_info g on g.id=o.goods_id
+		where o.user_id = #{userId}
+		and o.pay_status=#{payStatus}
+		limit 0,20
+	</select>
+	
+	<select id="queryOrderDetails" resultType="com.platform.entity.ZdOrderVo">
+		select
+			o.`id`,
+			o.`goods_id`,
+			o.`order_status`,
+			o.`pay_status`,
+			o.`user_id`,
+			o.`order_number`,
+			o.`order_sn`,
+			o.`confirm_time`,
+			o.`pay_time`,
+			o.`order_price`,
+			g.goods_name,
+			g.small_img_path,
+			g.price,
+			g.big_img_path
+		from zd_order o
+		left join zd_goods_info g on g.id=o.goods_id
+		where o.id = #{id}
+	</select>
+
+	<select id="queryList" resultType="com.platform.entity.ZdOrderVo">
+		select
+    		`id`,
+    		`goods_id`,
+    		`order_status`,
+    		`pay_status`,
+    		`user_id`,
+    		`order_number`,
+    		`order_sn`,
+    		`confirm_time`,
+    		`pay_time`,
+    		`order_price`
+		from zd_order
+		WHERE 1=1
+		<if test="name != null and name.trim() != ''">
+			AND name LIKE concat('%',#{name},'%')
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from zd_order
+		WHERE 1=1
+        <if test="name != null and name.trim() != ''">
+            AND name LIKE concat('%',#{name},'%')
+        </if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.ZdOrderVo" useGeneratedKeys="true" keyProperty="id">
+		insert into zd_order(
+			`goods_id`,
+			`order_status`,
+			`pay_status`,
+			`user_id`,
+			`order_number`,
+			`order_sn`,
+			`confirm_time`,
+			`pay_time`,
+			`order_price`)
+		values(
+			#{goodsId},
+			#{orderStatus},
+			#{payStatus},
+			#{userId},
+			#{orderNumber},
+			#{orderSn},
+			#{confirmTime},
+			#{payTime},
+			#{orderPrice})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.ZdOrderVo">
+		update zd_order 
+		<set>
+			<if test="cId != null">`goods_id` = #{goodsId}, </if>
+			<if test="orderStatus != null">`order_status` = #{orderStatus}, </if>
+			<if test="payStatus != null">`pay_status` = #{payStatus}, </if>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="orderNumber != null">`order_number` = #{orderNumber}, </if>
+			<if test="orderSn != null">`order_sn` = #{orderSn}, </if>
+			<if test="confirmTime != null">`confirm_time` = #{confirmTime}, </if>
+			<if test="payTime != null">`pay_time` = #{payTime}</if>
+			<if test="orderPrice != null">`order_price` = #{orderPrice}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from zd_order where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from zd_order where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

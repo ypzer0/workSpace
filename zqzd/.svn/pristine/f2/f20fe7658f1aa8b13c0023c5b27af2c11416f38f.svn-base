@@ -1,0 +1,15 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api.js'
+export const z_register = {
+    
+  //加载页面数据
+  register: (params) => {
+    
+    return axios.request({
+      url: api.z_UserRegister,
+      data: params,
+      method: 'post'
+    })
+  },
+
+}

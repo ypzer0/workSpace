@@ -1,0 +1,29 @@
+package com.platform.controller;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.platform.service.ZdUserService;
+import com.platform.utils.R;
+
+/**
+ * 
+ * @author 杨鹏
+ *
+ */
+@RestController
+@RequestMapping("zduser")
+public class ZdUserController extends AbstractController{
+	@Autowired
+	private ZdUserService userService;
+	
+	@RequestMapping("/list")
+	public R list(@RequestParam Map<String, Object> params) {
+		return userService.list(params);
+		
+	}
+}

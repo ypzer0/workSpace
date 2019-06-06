@@ -1,0 +1,108 @@
+package com.platform.entity;
+
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * 实体
+ * 表名 fx_user_log
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-24 10:23:35
+ */
+public class CouponFxUserLogVo implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    //
+    private Integer id;
+    //分销ID
+    private Integer fId;
+    //用户ID
+    private Integer uId;
+    //上级用户ID
+    private Integer puid;
+    //描述
+    private String content;
+    //添加时间
+    private Date addTime;
+
+    /**
+     * 设置：
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * 获取：
+     */
+    public Integer getId() {
+        return id;
+    }
+    /**
+     * 设置：分销ID
+     */
+    public void setFId(Integer fId) {
+        this.fId = fId;
+    }
+
+    /**
+     * 获取：分销ID
+     */
+    public Integer getFId() {
+        return fId;
+    }
+    /**
+     * 设置：用户ID
+     */
+    public void setUId(Integer uId) {
+        this.uId = uId;
+    }
+
+    /**
+     * 获取：用户ID
+     */
+    public Integer getUId() {
+        return uId;
+    }
+    /**
+     * 设置：上级用户ID
+     */
+    public void setPuid(Integer puid) {
+        this.puid = puid;
+    }
+
+    /**
+     * 获取：上级用户ID
+     */
+    public Integer getPuid() {
+        return puid;
+    }
+    /**
+     * 设置：描述
+     */
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    /**
+     * 获取：描述
+     */
+    public String getContent() {
+        return content;
+    }
+    /**
+     * 设置：添加时间
+     */
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+    /**
+     * 获取：添加时间
+     */
+    public Date getAddTime() {
+        return addTime;
+    }
+}

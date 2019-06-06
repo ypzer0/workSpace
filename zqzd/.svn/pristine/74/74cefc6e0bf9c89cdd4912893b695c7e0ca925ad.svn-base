@@ -1,0 +1,14 @@
+export const z_UserRegister = 'user/register' //客服
+export const z_GoodsList = 'goods/list' //检测服务导航
+export const z_GoodsCategory = 'goods/category' //检测服务商品
+export const zd_consult='question/save' //用户提交问题
+export const zd_order_list='order/list' //订单列表
+
+
+
+
+
+
+
+
+

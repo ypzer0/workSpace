@@ -1,0 +1,59 @@
+package com.platform.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.dao.CouponUserFrozenInfoDao;
+import com.platform.entity.CouponUserFrozenInfoEntity;
+import com.platform.service.CouponUserFrozenInfoService;
+
+/**
+ * Service实现类
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-23 14:18:51
+ */
+@Service("CouponuserFrozenInfoService")
+public class CouponUserFrozenInfoServiceImpl implements CouponUserFrozenInfoService {
+    @Autowired
+    private CouponUserFrozenInfoDao CouponuserFrozenInfoDao;
+
+    @Override
+    public CouponUserFrozenInfoEntity queryObject(Integer id) {
+        return CouponuserFrozenInfoDao.queryObject(id);
+    }
+
+    @Override
+    public List<CouponUserFrozenInfoEntity> queryList(Map<String, Object> map) {
+        return CouponuserFrozenInfoDao.queryList(map);
+    }
+
+    @Override
+    public int queryTotal(Map<String, Object> map) {
+        return CouponuserFrozenInfoDao.queryTotal(map);
+    }
+
+    @Override
+    public int save(CouponUserFrozenInfoEntity CouponuserFrozenInfo) {
+        return CouponuserFrozenInfoDao.save(CouponuserFrozenInfo);
+    }
+
+    @Override
+    public int update(CouponUserFrozenInfoEntity CouponuserFrozenInfo) {
+        return CouponuserFrozenInfoDao.update(CouponuserFrozenInfo);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return CouponuserFrozenInfoDao.delete(id);
+    }
+
+    @Override
+    public int deleteBatch(Integer[] ids) {
+        return CouponuserFrozenInfoDao.deleteBatch(ids);
+    }
+}

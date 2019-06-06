@@ -1,0 +1,28 @@
+import {api} from '@/service/api'
+
+export const actions = {
+  async getSearchHot () {
+    let res = await api.search.getSearchHot()
+    if (res.success) {
+      return res.data
+    }
+  },
+  async getSearchListBykeyword ({commit}, n) {
+    var para = {
+      order: n.sort == undefined ? "id" : n.sort,
+      sort: n.order == undefined ? "desc" : n.order,
+      keyword: n.keyword
+    }
+    let res = await api.category.getGoodsByCategory(para)
+    if (res.success) {
+      return res.data
+    }
+  },
+  async getSearchHelp ({commit}, para) {
+    let res = await api.search.getSearchHelpBykeyword(para)
+    if (res.success) {
+      return res.data
+    }
+  },
+  
+}

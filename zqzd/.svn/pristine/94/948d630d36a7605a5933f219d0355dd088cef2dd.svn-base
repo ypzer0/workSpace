@@ -1,0 +1,119 @@
+package com.platform.service;
+
+import com.platform.dto.CouponCommissionInfoDto;
+import com.platform.dto.CouponWalletInfoDto;
+import com.platform.entity.CouponWalletInfoEntity;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Service接口
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-23 15:21:11
+ */
+public interface CouponWalletInfoService {
+
+    /**
+     * 根据主键查询实体
+     *
+     * @param id 主键
+     * @return 实体
+     */
+    CouponWalletInfoEntity queryObject(Integer id);
+
+    /**
+     * 分页查询
+     *
+     * @param map 参数
+     * @return list
+     */
+    List<CouponWalletInfoEntity> queryList(Map<String, Object> map);
+
+    /**
+     * 分页统计总数
+     *
+     * @param map 参数
+     * @return 总数
+     */
+    int queryTotal(Map<String, Object> map);
+
+    /**
+     * 保存实体
+     *
+     * @param CouponwalletInfo 实体
+     * @return 保存条数
+     */
+    int save(CouponWalletInfoEntity CouponwalletInfo);
+
+    /**
+     * 根据主键更新实体
+     *
+     * @param CouponwalletInfo 实体
+     * @return 更新条数
+     */
+    int update(CouponWalletInfoEntity CouponwalletInfo);
+
+    /**
+     * 根据主键删除
+     *
+     * @param id
+     * @return 删除条数
+     */
+    int delete(Integer id);
+
+    /**
+     * 根据主键批量删除
+     *
+     * @param ids
+     * @return 删除条数
+     */
+    int deleteBatch(Integer[] ids);
+    
+    //佣金
+    /**
+     * 根据主键查询实体
+     *	查询佣金信息
+     * @param id 主键
+     * @return 实体
+     */
+    CouponWalletInfoEntity queryCommissionObject(Integer id);
+
+    /**
+     * 佣金分页查询
+     *
+     * @param map 参数
+     * @return list
+     */
+    List<CouponWalletInfoEntity> queryCommissionList(Map<String, Object> map);
+
+    /**
+     * 佣金分页统计总数
+     *
+     * @param map 参数
+     * @return 总数
+     */
+    int queryCommissionTotal(Map<String, Object> map);
+
+    /**
+     * 佣金汇总
+     * @param map
+     * @return
+     */
+    Map<String, Object> rptQueryWalletCountSum(Map<String, Object> map);
+    
+    /**
+     *资金明细导出
+     * @param map
+     * @return
+     */
+  	List<CouponWalletInfoDto> QueryWalletCount(Map<String, Object> map);
+  	 /**
+     *佣金明细导出
+     * @param map
+     * @return
+     */
+  	List<CouponCommissionInfoDto> QueryCommissionCount(Map<String, Object> map);
+}

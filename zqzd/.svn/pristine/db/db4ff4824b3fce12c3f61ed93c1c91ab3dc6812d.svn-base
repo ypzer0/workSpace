@@ -1,0 +1,71 @@
+<template>
+  <div>
+    <div class="msg-cell" :key="index" v-for="(item, index) in list" @click="btnClick(item)" :id="'msg-d-' + item.id">
+      <div class="cell-time-status">
+        <div class="cell-time">
+          <span>{{ item.msgWay == 1 ? item.uname : item.handerName }}</span>
+        </div>
+        <div class="cell-status">
+          <span>{{item.ctime | formatDate}}</span>
+        </div>
+      </div>
+      <div class="cell-time-status">
+        <div class="cell-time">
+          <span>{{item.msg}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import {formatDate} from '../../../utils/date';
+
+export default {
+  filters: {
+      formatDate(time) {
+          var date = new Date(time);
+          return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
+      }
+  },
+  data(){
+    return {
+    }
+  },
+  props: ['list'],
+  computed:{
+
+  },
+  components: {
+  },
+  methods:{
+    btnClick(d){
+      this.$emit('btn-click', d);
+    },
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .msg-cell{
+    margin-top:4px;
+    padding:0 28px;
+    background-color: white;
+    .cell-time-status{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 90px;
+      .cell-time{
+        span{
+          color:#666;
+        }
+      }
+      .cell-status{
+        span{
+          color:#845f3f;
+        }
+      }
+    }
+  }
+</style>

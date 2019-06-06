@@ -1,0 +1,14 @@
+package com.platform.dao;
+
+import com.platform.entity.CouponFxUserEntity;
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-24 10:23:35
+ */
+public interface CouponFxUserDao extends BaseDao<CouponFxUserEntity> {
+
+}

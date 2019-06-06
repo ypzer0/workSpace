@@ -1,0 +1,309 @@
+package com.platform.service.impl;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.github.pagehelper.util.StringUtil;
+import com.platform.dao.CouponGoodsInfoDao;
+import com.platform.dto.CouponGoodsInfoBatchAddDto;
+import com.platform.entity.CouponCategoryEntity;
+import com.platform.entity.CouponGoodsInfoEntity;
+import com.platform.service.CouponCategoryService;
+import com.platform.service.CouponGoodsInfoService;
+import com.platform.service.SysOperLogService;
+import com.platform.utils.DateUtils;
+import com.platform.utils.R;
+import com.platform.utils.Constant.OperLogFlag;
+import com.qcloud.cos.utils.Md5Utils;
+import com.qiniu.util.StringUtils;
+
+/**
+ * Service实现类
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-22 16:02:53
+ */
+@Service("CoupongoodsInfoService")
+public class CouponGoodsInfoServiceImpl implements CouponGoodsInfoService {
+    @Autowired
+    private CouponGoodsInfoDao CoupongoodsInfoDao;
+    @Autowired
+    private CouponCategoryService couponCategoryService;
+    @Autowired
+    private SysOperLogService sysOperLogService;
+    
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Override
+    public CouponGoodsInfoEntity queryObject(Integer id) {
+        return CoupongoodsInfoDao.queryObject(id);
+    }
+
+    @Override
+    public List<CouponGoodsInfoEntity> queryList(Map<String, Object> map) {
+        return CoupongoodsInfoDao.queryList(map);
+    }
+
+    @Override
+    public int queryTotal(Map<String, Object> map) {
+        return CoupongoodsInfoDao.queryTotal(map);
+    }
+
+    @Override
+    public int save(CouponGoodsInfoEntity CoupongoodsInfo) {
+        return CoupongoodsInfoDao.save(CoupongoodsInfo);
+    }
+
+    @Override
+    public int update(CouponGoodsInfoEntity CoupongoodsInfo) {
+        return CoupongoodsInfoDao.update(CoupongoodsInfo);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return CoupongoodsInfoDao.delete(id);
+    }
+
+    @Override
+    public int deleteBatch(Integer[] ids) {
+        return CoupongoodsInfoDao.deleteBatch(ids);
+    }
+
+    /**
+     * 删除商品
+     * @param id
+     * @param operuid
+     * @return
+     */
+    @Override
+    public R delGoods(Integer[] ids, Integer operuid) {
+
+		if(ids == null || ids.length == 0) {
+			return R.error("数据异常!");
+		}
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("ids", ids);
+		Integer total = queryTotal(map);
+		if(total != ids.length) {
+			return R.error("数据异常!");
+		}
+		
+    	map = new HashMap<>();
+		map.put("ids", ids);
+		map.put("delete", 1);
+        CoupongoodsInfoDao.updateIsDelBatch(map);
+        
+        return R.ok();
+    }
+
+    /**
+     * 添加商品
+     * @param oldData
+     * @param operuid
+     * @return
+     */
+    @Override
+    public R addGoodsInfo(CouponGoodsInfoEntity oldData, Integer operuid) {
+    	
+    	logger.info(oldData.toString());
+    	
+    	if(StringUtils.isNullOrEmpty(oldData.getImgPath())){
+    		return R.error("请上传图片!");
+    	}
+    	if(StringUtils.isNullOrEmpty(oldData.getRedeemCode())) {
+    		return R.error("请输入兑换码!");
+    	}
+    	if(oldData.getcId() == null) {
+    		return R.error("不存在商品分类!");
+    	}
+    	if(oldData.getEffTime() == null) {
+    		return R.error("有效期不能为空!");
+    	}
+    	oldData.getEffTime().setHours(23);
+    	oldData.getEffTime().setMinutes(59);
+    	oldData.getEffTime().setSeconds(59);
+    	Long effTimeEnd = DateUtils.getTimeDiffSeconds(oldData.getEffTime());
+    	if(effTimeEnd > 0) {
+    		return R.error("有效期不能小于当前时间!");
+    	}
+
+    	CouponCategoryEntity ccEntity = couponCategoryService.queryObject(oldData.getcId());
+    	if(ccEntity == null) {
+    		return R.error("不存在商品分类!");
+    	}
+
+    	CouponGoodsInfoEntity newDt = new CouponGoodsInfoEntity();
+    	newDt.setAddTime(new Date());
+    	newDt.setcId(ccEntity.getId());
+    	newDt.setCName(ccEntity.getName());
+    	newDt.setCreateUserId(operuid);
+    	newDt.setEffTime(oldData.getEffTime());
+    	newDt.setEffTimeEnd(-effTimeEnd);
+    	newDt.setGoodsNumber(1);
+    	newDt.setGoodsSn(newDt.GenGoodsCode());
+    	newDt.setGoodsUnit("张");
+    	newDt.setImgPath(oldData.getImgPath());
+    	newDt.setIsDelete(0);
+    	newDt.setIsOnSale(1);
+    	newDt.setName("");
+    	newDt.setIsPlat(1);
+    	
+    	newDt.setRedeemCode(oldData.getRedeemCode());//兑换码
+    	
+    	newDt.setValiCode(newDt.GetGoodsMd5Str());//验证编码
+    	
+    	newDt.setSortOrder(0);//排序号
+    	newDt.setUpdateTime(new Date());
+    	newDt.setUpdateUserId(operuid);
+
+    	CoupongoodsInfoDao.save(newDt);
+    	
+    	sysOperLogService.AddOperLog("新建商品", newDt.toString(), OperLogFlag.Goods, operuid);
+    	return R.ok();
+    }
+
+    /**
+     * 修改商品
+     * @param oldData
+     * @param operuid
+     * @return
+     */
+    @Override
+    public R updateGoodsInfo(CouponGoodsInfoEntity oldData, Integer operuid) {
+    	if(oldData.getId() == null || oldData.getId() < 0) {
+    		return R.error("数据异常!");
+    	}
+    	if(StringUtils.isNullOrEmpty(oldData.getImgPath())){
+    		return R.error("请上传图片!");
+    	}
+    	if(StringUtils.isNullOrEmpty(oldData.getRedeemCode())) {
+    		return R.error("请输入兑换码!");
+    	}
+    	if(oldData.getcId() == null) {
+    		return R.error("不存在商品分类!");
+    	}
+    	if(oldData.getEffTime() == null) {
+    		return R.error("有效期不能为空!");
+    	}
+    	oldData.getEffTime().setHours(23);
+    	oldData.getEffTime().setMinutes(59);
+    	oldData.getEffTime().setSeconds(59);
+    	Long effTimeEnd = DateUtils.getTimeDiffSeconds(oldData.getEffTime());
+    	if(effTimeEnd > 0) {
+    		return R.error("有效期不能小于当前时间!");
+    	}
+
+    	CouponCategoryEntity ccEntity = couponCategoryService.queryObject(oldData.getcId());
+    	if(ccEntity == null) {
+    		return R.error("不存在商品分类!");
+    	}
+
+    	CouponGoodsInfoEntity nowDt = CoupongoodsInfoDao.queryObject(oldData.getId());
+    	if(nowDt == null) {
+    		return R.error("数据异常!");
+    	}
+    	
+    	nowDt.setcId(ccEntity.getId());
+    	nowDt.setCName(ccEntity.getName());
+    	nowDt.setEffTime(oldData.getEffTime());
+    	nowDt.setEffTimeEnd(-effTimeEnd);
+    	nowDt.setImgPath(oldData.getImgPath());
+    	nowDt.setRedeemCode(oldData.getRedeemCode());//兑换码
+
+    	nowDt.setValiCode(nowDt.GetGoodsMd5Str());//验证编码
+    	nowDt.setUpdateTime(new Date());
+    	nowDt.setUpdateUserId(operuid);
+
+    	CoupongoodsInfoDao.update(nowDt);
+    	
+    	sysOperLogService.AddOperLog("更新商品", nowDt.GetUpdateLogStr(), OperLogFlag.Goods, operuid);
+    	return R.ok();
+    }
+    
+
+    /**
+     * 批量添加商品
+     * @param oldData
+     * @param operuid
+     * @return
+     */
+    @Override
+    public R addBatchGoodsInfo(CouponGoodsInfoBatchAddDto oldData, Integer operuid) {
+    	
+
+    	if(oldData.getcId() == null) {
+    		return R.error("请选择商品分类!");
+    	}
+    	
+    	if(oldData.getEffTime() == null) {
+    		return R.error("有效期不能为空!");
+    	}
+    	oldData.getEffTime().setHours(23);
+    	oldData.getEffTime().setMinutes(59);
+    	oldData.getEffTime().setSeconds(59);
+    	Long effTimeEnd = DateUtils.getTimeDiffSeconds(oldData.getEffTime());
+    	if(effTimeEnd > 0) {
+    		return R.error("有效期不能小于当前时间!");
+    	}
+
+    	CouponCategoryEntity ccEntity = couponCategoryService.queryObject(oldData.getcId());
+    	if(ccEntity == null) {
+    		return R.error("不存在商品分类!");
+    	}
+    	
+    	if(oldData.getGoods() == null || oldData.getGoods().size() == 0){
+    		return R.error("请上传商品!");
+    	}
+    	for (CouponGoodsInfoBatchAddDto.GoodsInfo gi : oldData.getGoods()) {
+			
+    		if(StringUtils.isNullOrEmpty(gi.getImg())) {
+        		return R.error("请完善商品图片!");
+    		}
+    		else if( StringUtils.isNullOrEmpty(gi.getCode())) {
+        		return R.error("请完善商品兑换码!");
+    		}
+		}
+
+    	for (CouponGoodsInfoBatchAddDto.GoodsInfo gi : oldData.getGoods()) {
+
+        	CouponGoodsInfoEntity newDt = new CouponGoodsInfoEntity();
+        	newDt.setAddTime(new Date());
+        	newDt.setcId(ccEntity.getId());
+        	newDt.setCName(ccEntity.getName());
+        	newDt.setCreateUserId(operuid);
+        	newDt.setEffTime(oldData.getEffTime());
+        	newDt.setEffTimeEnd(-effTimeEnd);
+        	newDt.setGoodsNumber(1);
+        	newDt.setGoodsSn(newDt.GenGoodsCode());
+        	newDt.setGoodsUnit("张");
+        	newDt.setImgPath(gi.getImg());
+        	newDt.setIsDelete(0);
+        	newDt.setIsOnSale(1);
+        	newDt.setName("");
+        	newDt.setIsPlat(1);
+        	
+        	newDt.setRedeemCode(gi.getCode());//兑换码
+        	newDt.setValiCode(newDt.GetGoodsMd5Str());//验证编码
+        	
+        	newDt.setSortOrder(0);//排序号
+        	newDt.setUpdateTime(new Date());
+        	newDt.setUpdateUserId(operuid);
+
+        	CoupongoodsInfoDao.save(newDt);
+        	sysOperLogService.AddOperLog("新建商品", newDt.toString(), OperLogFlag.Goods, operuid);
+		}
+    	
+    	return R.ok();
+    }
+    
+    
+}

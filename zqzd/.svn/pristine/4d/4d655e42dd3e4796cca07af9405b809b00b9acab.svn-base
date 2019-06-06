@@ -1,0 +1,205 @@
+<template>
+  <div class="box">
+    <div class="page-header border-1px-bottom" slot="top">
+      <div class="header-left" @click="$back">
+        <i class="iconfont">&#xe601;</i>
+      </div>
+      <h3>关于我们</h3>
+      <div class="header-right">
+        <!-- <i class="iconfont setting">&#xe615;</i> -->
+        <!-- <span @click="SaveAddr">保存</span> -->
+      </div>
+    </div>
+
+    <div>关于我们</div>
+
+  </div>
+    
+</template>
+
+<script type="text/ecmascript-6">
+
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default {
+  computed: {
+    ...mapState('y_my', ['myCenter'])
+  },
+  components: {
+    
+  },
+  methods:{
+    ...mapActions('y_my', ['getMyCenter']),
+
+  },
+  created(){
+    this.getMyCenter();
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .box{
+    width: 100%;
+    height: 100%;
+    background: #eeeded;
+  }
+  .exit{
+    width: 100%;
+    height: 98px;
+    margin: 0 auto;
+    text-align: center;
+    line-height: 98px;
+    font-size: 36px;
+    color: #fff;
+    background: #ff4439;
+    position: fixed;
+    bottom: 0;
+  }
+  .page-header{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 88px;
+    // background: #2eacef;
+    background: -webkit-linear-gradient(left, #ff6839 , #ff4439); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(right, #ff6839, #ff4439); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(right, #ff6839, #ff4439); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to right, #ff6839 , #ff4439); /* 标准的语法 */
+    position: inherit;
+    .header-left{
+      position: absolute;
+      top:3.5%;
+      left:30px;
+      color: #fff;
+      transform: translateY(-50%);
+    }
+    h3{
+      font-size: 30px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .header-right{
+      position: absolute;
+      top:3%;
+      right:30px;
+      transform: translateY(-50%);
+      span{
+        color:#666;
+      }
+      .setting{
+        color: #fff;
+        font-size: 50px;
+      }
+    }
+  }
+
+
+  .my-kefu{
+      width: 100%;
+      margin: 0 auto;
+      background: #fff;
+      //border-radius: 6px;
+      margin-top: 20px;
+      //margin-bottom: 20px;
+      .my-order-title{
+          border-bottom: 1px solid #e5e5e5;
+        .my-order-title-iner{
+            display: flex;
+            justify-content: space-between;
+            width: 92%;
+            margin: 0 auto;
+            padding: 36px 0;
+            .my-order-title-name{
+                font-size: 32px;
+                color: #333333;
+                .my-service-icon{
+                    color: #333333;
+                    margin-right: 20px;
+                    font-size: 40px;
+                    margin-top: 10px;
+                }
+            }
+            .my-order-title-state{
+                font-size: 26px;
+                color: #838383;
+                .my-order-go{
+                    font-size: 26px;
+                    color: #838383;
+                    margin-left: 15px;
+                }
+            }
+        }
+      }
+      .my-order-classify{
+            display: flex;
+            justify-content: space-around;
+            padding: 44px 0;
+            .my-order-classify-state{
+                img{
+                    height: 44px;
+                    margin: 0 20px;
+                }
+                p{
+                    font-size: 26px;
+                    color: #333333;
+                    margin-top: 12px;
+                }
+            }
+      }
+  }
+
+  .my-we{
+      width: 100%;
+      margin: 0 auto;
+      background: #fff;
+      //border-radius: 6px;
+      //margin-top: 20px;
+      //margin-bottom: 100px;
+      .my-order-title{
+          border-bottom: 1px solid #e5e5e5;
+        .my-order-title-iner{
+            display: flex;
+            justify-content: space-between;
+            width: 92%;
+            margin: 0 auto;
+            padding: 36px 0;
+            .my-order-title-name{
+                font-size: 32px;
+                color: #333333;
+                .my-service-icon{
+                    color: #333333;
+                    margin-right: 20px;
+                    font-size: 40px;
+                    margin-top: 10px;
+                }
+            }
+            .my-order-title-state{
+                font-size: 26px;
+                color: #838383;
+                .my-order-go{
+                    font-size: 26px;
+                    color: #838383;
+                    margin-left: 15px;
+                }
+            }
+        }
+      }
+      .my-order-classify{
+            display: flex;
+            justify-content: space-around;
+            padding: 44px 0;
+            .my-order-classify-state{
+                img{
+                    height: 44px;
+                    margin: 0 20px;
+                }
+                p{
+                    font-size: 26px;
+                    color: #333333;
+                    margin-top: 12px;
+                }
+            }
+      }
+  }
+</style>

@@ -1,0 +1,7 @@
+import {z_register} from './z_register'
+
+
+
+export const api = {
+  z_register,
+}

@@ -1,0 +1,18 @@
+export default {
+ 
+  //我的推广-我的推广
+  promote:{
+    
+  },
+
+  //我的推广-佣金明细
+  commission:{
+    
+  },
+
+  //我的推广-我的下级
+  junior:{
+    
+  },
+
+}

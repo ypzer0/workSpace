@@ -1,0 +1,30 @@
+package com.platform.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.dto.CouponCommissionInfoDto;
+import com.platform.dto.CouponWalletInfoDto;
+import com.platform.entity.CouponWalletInfoEntity;
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-23 15:21:11
+ */
+public interface CouponWalletInfoDao extends BaseDao<CouponWalletInfoEntity> {
+	//查询佣金信息
+	CouponWalletInfoEntity queryCommissionObject(int id);
+	//佣金分页查询
+	List<CouponWalletInfoEntity> queryCommissionList(Map<String, Object> map);
+	//佣金分页统计总数
+	int queryCommissionTotal(Map<String, Object> map);
+	//佣金统计
+	Map<String, Object> rptQueryWalletCountSum(Map<String, Object> map);
+	//资金明细导出
+	List<CouponWalletInfoDto> QueryWalletCount(Map<String, Object> map);
+	//佣金明细导出
+	List<CouponCommissionInfoDto> QueryCommissionCount(Map<String, Object> map);
+}

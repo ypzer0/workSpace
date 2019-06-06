@@ -1,0 +1,21 @@
+/**
+ * 科室表
+ **/
+-- ----------------------------
+-- Table structure for `zd_department`
+-- ----------------------------
+DROP TABLE IF EXISTS `zd_department`;
+CREATE TABLE `zd_department` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '科室id',
+  `department_name` varchar(90) NOT NULL DEFAULT '' COMMENT '科室名称',
+	`hospital_id` int(11) DEFAULT '0' COMMENT '医院id',
+	
+  `handler_id` int(11) DEFAULT 0 COMMENT '操作人',
+  `add_time` datetime not null COMMENT '添加时间',
+  `is_delete` tinyint(1) unsigned DEFAULT '0' COMMENT '是否删除  0-未删除，1-已删除',
+  
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `handler_id`(`handler_id`) USING BTREE,
+  INDEX `is_delete`(`is_delete`) USING BTREE,
+  INDEX `add_time`(`add_time`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;

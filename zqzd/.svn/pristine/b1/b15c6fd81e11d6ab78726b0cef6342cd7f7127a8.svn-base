@@ -1,0 +1,19 @@
+import * as types from './mutation-types'
+
+export const mutations = {
+  //我的推广-我的推广
+  [types.INIT_PROMOTE] (state, o) {
+     state.promote = o;
+  },
+
+  //我的推广-佣金明细
+  [types.INIT_COMMISSION] (state, o) {
+    state.commission = o;
+ },
+
+ //我的推广-我的下级
+ [types.INIT_JUNIOR] (state, o) {
+  state.junior = o;
+},
+
+}

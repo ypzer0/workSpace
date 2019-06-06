@@ -1,0 +1,106 @@
+package com.platform.service;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.platform.dao.ApiOrderMapper;
+import com.platform.entity.CouponOrderVo;
+import com.platform.entity.UserVo;
+import com.platform.util.ApiPageUtils;
+import com.platform.utils.Rp;
+
+@Service
+public class ApiOrderService {
+	@Autowired 
+	private ApiOrderMapper mapper;
+	
+	public Rp useLoad(Integer gid) {
+		CouponOrderVo couponOrderVo = mapper.queryGoodsImg(gid);
+		couponOrderVo.setOrderStatus(4);
+		mapper.update(couponOrderVo);
+		return Rp.ok().putDt("img", couponOrderVo.getImgPath());
+		
+	}
+	
+	public Rp Orderlist(UserVo loginUser,Integer status,Integer page,Integer size) {
+		Map<String,Object> params=new HashMap<>();
+		params.put("userId", loginUser.getId());
+		params.put("orderStatus", status);
+		params.put("offset", page - 1);
+		params.put("limit", size);
+
+		List<CouponOrderVo> List = mapper.queryOrderList(params);
+		Integer total=mapper.queryOrderTotal(params);
+		
+		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+		for (CouponOrderVo Order : List) {
+			Map<String, Object> cMap = new HashMap<String, Object>();
+			cMap.put("oid",Order.getId());
+			cMap.put("orderCode", Order.getGoodsSn());
+			cMap.put("img", Order.getPicUrl());
+			cMap.put("goodsName", Order.getTopName() + "|" + Order.getParentName());
+			cMap.put("goodsCount", Order.getBuyCount());
+			cMap.put("money", Order.getOrderPrice());
+			cMap.put("orderTime", new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Order.getConfirmTime()));
+			cMap.put("status",Order.getOrderStatus());
+			cMap.put("gid", Order.getGoodsId());
+
+			cMap.put("showUse", false);
+			cMap.put("showPay", false);
+			cMap.put("showIssue", false);
+			
+			switch (Order.getOrderStatus()) {
+			case 0:
+				cMap.put("statusStr","未支付");
+				cMap.put("showPay", true);
+				break;
+			case 1:
+				cMap.put("statusStr","支付成功");
+				cMap.put("showUse", true);
+				if((new Date().getTime()-Order.getConfirmTime().getTime())<1000l*60l*60l*6l) {
+					cMap.put("showIssue", true);
+				}
+				break;
+			case 2:
+				cMap.put("statusStr","支付失败");
+				break;
+			case 3:
+				cMap.put("statusStr", "纠纷中");
+				break;
+			case 4:	
+				cMap.put("statusStr", "已完成");
+				cMap.put("showUse", true);
+				break;
+			case 5:	
+				cMap.put("statusStr", "已关闭");
+				break;	
+			default:
+				cMap.put("statusStr", "数据异常");
+			}
+			
+			dataList.add(cMap);
+		}
+		ApiPageUtils apiPageUtils=new ApiPageUtils(dataList, total, size, page);
+		Rp rt = Rp.ok();
+		rt.put("data",apiPageUtils);
+		return rt;
+	}
+	
+	public Rp useAsk(Integer id) {
+		
+		CouponOrderVo orderVo = mapper.queryObject(id);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("gid", id);
+		map.put("useAsk", orderVo.getUserMsg());
+		map.put("orderSn", orderVo.getOrderSn());
+		map.put("addTime", new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(orderVo.getAddTime()));
+		return Rp.ok().putAllDt(map);
+	}
+}

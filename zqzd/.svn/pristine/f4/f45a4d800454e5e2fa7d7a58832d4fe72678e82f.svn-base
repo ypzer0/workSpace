@@ -1,0 +1,59 @@
+package com.platform.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.dao.ZdGoodsInfoDao;
+import com.platform.entity.ZdGoodsInfoEntity;
+import com.platform.service.ZdGoodsInfoService;
+
+/**
+ * Service实现类
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-05-29 18:30:18
+ */
+@Service("ZdgoodsInfoService")
+public class ZdGoodsInfoServiceImpl implements ZdGoodsInfoService {
+    @Autowired
+    private ZdGoodsInfoDao ZdGoodsInfoDao;
+
+    @Override
+    public ZdGoodsInfoEntity queryObject(Integer id) {
+        return ZdGoodsInfoDao.queryObject(id);
+    }
+
+    @Override
+    public List<ZdGoodsInfoEntity> queryList(Map<String, Object> map) {
+        return ZdGoodsInfoDao.queryList(map);
+    }
+
+    @Override
+    public int queryTotal(Map<String, Object> map) {
+        return ZdGoodsInfoDao.queryTotal(map);
+    }
+
+    @Override
+    public int save(ZdGoodsInfoEntity ZdGoodsInfo) {
+        return ZdGoodsInfoDao.save(ZdGoodsInfo);
+    }
+
+    @Override
+    public int update(ZdGoodsInfoEntity ZdGoodsInfo) {
+        return ZdGoodsInfoDao.update(ZdGoodsInfo);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return ZdGoodsInfoDao.delete(id);
+    }
+
+    @Override
+    public int deleteBatch(Integer[] ids) {
+        return ZdGoodsInfoDao.deleteBatch(ids);
+    }
+}

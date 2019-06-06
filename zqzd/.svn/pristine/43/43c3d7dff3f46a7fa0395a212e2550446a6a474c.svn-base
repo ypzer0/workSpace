@@ -1,0 +1,21 @@
+package com.platform.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.entity.ZdOrderVo;
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-05-30 12:54:18
+ */
+public interface ApiZdOrderMapper extends BaseDao<ZdOrderVo> {
+	
+	List<ZdOrderVo> queryOrderList(Map<String, Object> map); 
+	
+	ZdOrderVo queryOrderDetails(Integer id);
+	
+}

@@ -1,0 +1,69 @@
+<template>
+  <div :better-scroll="true">
+    <div class="category-prompt">
+      <div class="category-prompt-title">
+        <span>来源及提示</span>
+        <i class="iconfont">&#xea34;</i>
+      </div>
+      <div class="category-prompt-text">
+        1.每天，10点：动卡空app--权益--9分享悦</br>2.请保证券码有效性，且保证7天有效期</br>3.若上传的券码以被使用或错误的券码，即便你已拿到货款，后续也会被追责，故请卖家认真核实
+      </div>
+      <div class="category-prompt-name">
+        <span class="category-prompt-name-name">{{uploadGoods.cname}}</span>
+        <span class="category-prompt-name-price">收购价：￥{{uploadGoods.cprice}}</span>
+      </div>
+    </div>
+
+  </div>
+    
+</template>
+
+<script type="text/ecmascript-6">
+
+export default {
+  props:['uploadGoods'],
+  computed: {
+
+  },
+  components: {
+
+  },
+  methods:{
+
+
+  },
+  created(){
+
+  }
+}
+</script>
+
+<style lang="less" scoped>
+ .category-prompt{
+   width: 92%;
+   margin: 0 auto;
+   margin-top: 108px;
+   .category-prompt-title{
+     color: #2eacef;
+     font-size: 28px;
+     margin-top: 20px;
+     span{
+       margin-right: 10px;
+     }
+   }
+   .category-prompt-text{
+     color: #333333;
+     font-size: 28px;
+     margin-top: 20px;
+     line-height: 40px;
+   }
+   .category-prompt-name{
+     display: flex;
+     justify-content: space-between;
+     padding: 60px 0;
+     border-bottom: 1px solid #e5e5e5;
+     font-size: 32px;
+     color: #2eacef;
+   }
+ }
+</style>

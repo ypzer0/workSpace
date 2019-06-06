@@ -1,0 +1,30 @@
+package com.platform.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.entity.CouponUserCreditVo;
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-23 10:55:21
+ */
+public interface ApiUserCreditMapper extends BaseDao<CouponUserCreditVo> {
+	
+	//查询用户信用分详情
+	
+	List<CouponUserCreditVo> queryListMsg(Map<String, Object> map);
+	
+	//信用分详情
+	int queryTotalMsg (Map<String, Object> map);
+	
+	//信用分统计
+	Map<String, Object> QueryCreditCountSum(Map<String, Object> map);
+	
+	//个人信用分变动统计
+	Map<String, Object> QueryCreditMsgCountSum(Map<String, Object> map);
+	
+}

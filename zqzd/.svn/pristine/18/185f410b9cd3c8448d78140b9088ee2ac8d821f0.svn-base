@@ -1,0 +1,208 @@
+<template>
+    <div style="overflow:scroll">
+      <!-- v-if="this.num == 0" -->
+      <!-- <mt-loadmore :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :auto-fill="false" ref="loadmore"> -->
+            <ul class="order_goods_box">
+              <li class="order_goods_li" :key="index" v-for="(item, index) in allOrderList.data">
+                <div class="order_goods_img"><img :src="item.img" /></div>
+                <div class="order_goods_introduce">
+                  <div class="order_goods_introduce_title">
+                    <p class="order_goods_introduce_title_name">{{item.goodsName}}</p>
+                    <span class="order_goods_introduce_title_state" v-if="item.status == '0'">{{item.statusStr}}</span>
+                    <span class="order_goods_introduce_title_state" v-if="item.status == '1'">{{item.statusStr}}</span>
+                    <span class="order_goods_introduce_title_state" v-if="item.status == '2'">{{item.statusStr}}</span>
+                    <span class="order_goods_introduce_title_state" v-if="item.status == '3'">{{item.statusStr}}</span>
+                    <span class="order_goods_introduce_title_state" v-if="item.status == '4'">{{item.statusStr}}</span>
+                    <span class="order_goods_introduce_title_state" v-if="item.status == '5'">{{item.statusStr}}</span>
+                    <!-- <span class="order_goods_introduce_title_state" :class="{dispute:item.orderGoodsStatusname == disputeItem}" v-if="item.orderGoodsStatus == '申请纠纷'" @click="dispute(item)">{{item.orderGoodsStatusname}}</span>
+                    <span class="order_goods_introduce_title_state" :class="{active:item.orderGoodsStatusname == num}" v-if="item.orderGoodsStatus == '纠纷中'">{{item.orderGoodsStatusname}}</span> -->
+                  </div>
+                  <p class="order_goods_introduce_number">數量：{{item.goodsCount}}</p>
+                  <p class="order_goods_introduce_time">下單時間：{{item.orderTime}}</p>
+                  <div class="order_state">
+                    <p class="order_goods_introduce_price">￥{{item.money}}</p>
+                    <p class="order_arr_btn">
+                      <button class="order_btn" v-show="item.showPay == true" @click="obligationPay({key: 1, item: item, go: $go})">立即支付</button>
+                      <button class="order_btn" v-show="item.showIssue == true" @click="obligationPay({key: 2, item: item, go: $go})">申请纠纷</button>
+                      <button class="order_btn" v-show="item.showUse == true" @click="obligationPay({key: 3,item: item, go: $go})">立即使用</button>
+                    </p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+        <!-- </mt-loadmore> -->
+    </div>
+</template>
+
+<script type="text/ecmascript-6">
+// import { Scroller } from 'vux'
+// import VueScroller from 'vue-scroller'
+//import 'mint-ui/lib/style.css';
+import { Loadmore } from 'mint-ui';
+import list from 'nat-vue-list';
+import axois from 'axios';
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default {
+  data(){
+    return{
+      num: "纠纷中",
+      disputeItem: "申请纠纷",
+      list: [],
+      loading: false,
+      finished: false,
+      error: false,
+
+      getScoreLog: [],
+      pageNo: 1,
+      allLoaded: false,
+      bottomText: '上拉加载更多...',
+      bottomPullText: '上拉加载更多',
+      bottomLoadingText: '',
+      totalCount: '',
+      bottomDropped: false,
+      bottomDistance:'70px',
+    }
+  },
+  computed: {
+    ...mapState('y_order', ['allOrderList'])
+  },
+  components:{
+    // VueScroller,
+    // Scroller,
+    list,
+    axois,
+    //Loadmore.name, 
+    Loadmore,
+  },
+  methods: {
+    ...mapActions('y_order', ['getPageOrderList', 'obligationPay']),
+    dispute:function(item){
+      this.$router.push({path:`/y-apply-disputes?goodsCode=${item.orderCode}`})
+    },
+
+    clickJump(item){
+      console.log("item:",item)
+      this.$go(`/y-details/${item.oid}`)
+    },
+
+    loadBottom() {
+        // this.pageNo += 1;
+        // if (this.pageNo == this.totalGetCount) {
+        //   this.allLoaded = true;
+        // }
+        this.allLoaded = true;
+        this.bottomDistance;
+        this.bottomPullText;
+        
+        //this.$refs.loadmore.onBottomLoaded();
+        setTimeout(() => {
+          this.getPageOrderList (
+            // pageNo: this.pageNo,
+            // typeFlag: '1'
+          ).then(response => {
+            this.bottomLoadingText = '加载中中...';
+            //debugger;
+            // if (response.data.errcode == 0) {
+            //   this.getScoreLog = this.getScoreLog.concat(response.data.scoreLog);
+            // }
+          }, response => {
+          });
+        }, 1500);
+      },
+  }
+}
+
+</script>
+
+
+<style lang="less" scoped>
+//  @import 'mint-ui/lib/style.css';
+/* 商品列表 */
+  .order_goods_box{
+    width: 100%;
+    /* margin: 0 auto; */
+    margin-top: 216px;
+  }
+  .order_goods_li{
+    display: flex;
+    width: 92%;
+    margin: 4vw auto;
+  }
+  .order_goods_img{
+    width: 170px;
+    height: 170px;
+    background: #333333;
+    margin-right: 20px;
+    border-radius: 6px;
+  }
+  .order_goods_img img{
+    width: 100%;
+    height: 100%;
+    // border-radius: 6px;
+  }
+  .order_goods_introduce{
+    width: 500px;
+  }
+  .order_goods_introduce_title{
+    display: flex;
+    justify-content: space-between;
+    font-size: 28px;
+  }
+  .order_goods_introduce_title_name{
+    width: 70%;
+  }
+  .order_goods_introduce_title_state{
+    width: 30%;
+    text-align: right;
+    color: #838383;
+  }
+  .order_goods_introduce_number{
+    font-size: 28px;
+    color: #838383;
+    margin-top: 20px;
+  }
+  .order_goods_introduce_time{
+    font-size: 28px;
+    color: #838383;
+    margin-top: 20px;
+  }
+  .order_state{
+    display: flex;
+    justify-content: space-between;
+  }
+  .order_goods_introduce_price{
+    font-size: 36px;
+    color: #ff4439;
+    margin-top: 25px;
+  }
+  .order_arr_btn{
+    margin-top: 10px;
+  }
+  .order_btn{
+    width: 140px;
+    height: 60px;
+    text-align: center;
+    line-height: 55px;
+    background: none;
+    border: 1px solid #ff4439;
+    color: #ff4439;
+    border-radius: 6px;
+    margin-left: 20px;
+  }
+
+
+  .active{
+    color: #ff4439;
+  }
+  .dispute{
+    color: #ff4439;
+    border:1px solid #ff4439;
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    margin-right: 24px;
+    width: auto;
+  }
+</style>

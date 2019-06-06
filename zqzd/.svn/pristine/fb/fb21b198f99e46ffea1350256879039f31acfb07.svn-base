@@ -1,0 +1,107 @@
+<template>
+    <div>
+        <div class="total-spending">
+            <p class="total-spending-p1">汇总：<span>￥{{moneyDetail.incomeTotal}}</span></p>
+            <p class="total-spending-p2">可提现：<span>￥{{moneyDetail.incomeDeposit}}</span></p>
+        </div>
+        <p class="total-spending-p3">冻结中：<span>￥{{moneyDetail.incomeFreeze}}</span></p>
+        <ul class="spending-detail">
+            <li class="spending-detail-list" :key="index" v-for="(item, index) in moneyDetail.moneyDetailList">
+                <div class="spending-detail-list-time">
+                    <div class="spending-detail-list-time-iner">
+                        <span class="spending-time">{{item.incomeTime}}</span>
+                        <span class="spending-price">+￥{{item.incomePrice}}</span>
+                    </div>
+                </div>
+                <p class="spending-detail-list-note">{{item.incomeNote}}</p>
+            </li>
+        </ul>
+    </div>
+</template>
+
+<script type="text/ecmascript-6">
+
+export default {
+    props: ['moneyDetail'],
+  data(){
+    return{
+      
+    }
+  },
+
+  components:{
+  },
+
+  methods: {
+    
+    }
+}
+</script>
+
+<style lang="less" scoped>
+    .total-spending{
+        width: 92%;
+        margin: 40px auto;
+        font-size: 36px;
+        display: flex;
+        flex-wrap: wrap;
+        .total-spending-p1{
+            span{
+            color: #ff4439;
+            }
+        }
+        .total-spending-p2{
+            margin-left: 100px;
+            span{
+            color: #ff4439;
+            }
+        }
+    }
+
+    .total-spending-p3{
+            margin-top: 30px;
+            width: 92%;
+            margin: 40px auto;
+            font-size: 36px;
+            display: flex;
+            flex-wrap: wrap;
+            span{
+            color: #ff4439;
+            }
+        }
+
+    .spending-detail{
+        width: 100%;
+        margin: 0 auto;
+        .spending-detail-list{
+            width: 100%;
+            margin: 0 auto;
+            background: #fff;
+            margin-top: 20px;
+            .spending-detail-list-time{
+                border-bottom: 1px solid #e5e5e5;
+                .spending-detail-list-time-iner{
+                    width: 92%;
+                    margin: 0 auto;
+                    padding: 30px 0;
+                    font-size: 30px;
+                    display: flex;
+                    justify-content: space-between;
+                    .spending-time{
+                        color: #333333;
+                    }
+                    .spending-price{
+                        color: #ff4439;
+                    }
+                }
+            }
+            .spending-detail-list-note{
+                width: 92%;
+                margin: 0 auto;
+                padding: 30px 0;
+                font-size: 28px;
+                color: #838383;
+            }
+        }
+    }
+</style>

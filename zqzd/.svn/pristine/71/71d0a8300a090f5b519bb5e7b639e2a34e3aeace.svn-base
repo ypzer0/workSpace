@@ -1,0 +1,15 @@
+package com.platform.dao;
+
+import com.platform.entity.CouponEptUserEdayVo;
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-05-05 11:00:49
+ */
+public interface ApiEptUserEdayMapper extends BaseDao<CouponEptUserEdayVo> {
+
+	int updateRptCustomer(String btime);
+}

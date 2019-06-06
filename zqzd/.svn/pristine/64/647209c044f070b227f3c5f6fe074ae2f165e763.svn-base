@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ApiUserFrozenMapper">
+
+    <resultMap type="com.platform.entity.CouponUserFrozenVo" id="CouponuserFrozenInfoMap">
+        <result property="id" column="id"/>
+        <result property="uId" column="u_id"/>
+        <result property="fMoney" column="f_money"/>
+        <result property="srcType" column="src_type"/>
+        <result property="status" column="status"/>
+        <result property="hId" column="h_id"/>
+        <result property="hName" column="h_name"/>
+        <result property="addTime" column="add_time"/>
+        <result property="uTime" column="u_time"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.platform.entity.CouponUserFrozenVo">
+		select
+			`id`,
+			`u_id`,
+			`f_money`,
+			`src_type`,
+			`status`,
+			`h_id`,
+			`h_name`,
+			`add_time`,
+			`u_time`
+		from coupon_user_frozen_info
+		where id = #{id}
+	</select>
+
+	<select id="queryList" resultType="com.platform.entity.CouponUserFrozenVo">
+		select
+    		`id`,
+    		`u_id`,
+    		`f_money`,
+    		`src_type`,
+    		`status`,
+    		`h_id`,
+    		`h_name`,
+    		`add_time`,
+    		`u_time`
+		from coupon_user_frozen_info
+		WHERE 1=1
+		<if test="name != null and name.trim() != ''">
+			AND name LIKE concat('%',#{name},'%')
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from coupon_user_frozen_info
+		WHERE 1=1
+        <if test="name != null and name.trim() != ''">
+            AND name LIKE concat('%',#{name},'%')
+        </if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.CouponUserFrozenVo" useGeneratedKeys="true" keyProperty="id">
+		insert into coupon_user_frozen_info(
+			`u_id`,
+			`f_money`,
+			`src_type`,
+			`status`,
+			`h_id`,
+			`h_name`,
+			`add_time`,
+			`u_time`)
+		values(
+			#{uId},
+			#{fMoney},
+			#{srcType},
+			#{status},
+			#{hId},
+			#{hName},
+			#{addTime},
+			#{uTime})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.CouponUserFrozenVo">
+		update coupon_user_frozen_info 
+		<set>
+			<if test="uId != null">`u_id` = #{uId}, </if>
+			<if test="fMoney != null">`f_money` = #{fMoney}, </if>
+			<if test="srcType != null">`src_type` = #{srcType}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="hId != null">`h_id` = #{hId}, </if>
+			<if test="hName != null">`h_name` = #{hName}, </if>
+			<if test="addTime != null">`add_time` = #{addTime}, </if>
+			<if test="uTime != null">`u_time` = #{uTime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from coupon_user_frozen_info where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from coupon_user_frozen_info where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

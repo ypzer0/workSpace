@@ -1,0 +1,10 @@
+import * as types from './mutation-types'
+import { debug } from 'util';
+
+export const mutations = {
+//个人中心
+[types.INIT_URSE] (state, o) {
+  state.urse = o;
+},
+
+}

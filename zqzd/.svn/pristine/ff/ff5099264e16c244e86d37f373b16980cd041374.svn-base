@@ -1,0 +1,9 @@
+package com.platform.dao;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.platform.entity.ZdUserVo;
+
+public interface ApiZdUserMapper extends BaseDao<ZdUserVo>{
+	ZdUserVo queryByUserName(@Param("username") String username);
+}

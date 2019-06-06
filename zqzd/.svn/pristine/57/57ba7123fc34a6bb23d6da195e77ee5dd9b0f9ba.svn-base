@@ -1,0 +1,4 @@
+//export const INIT_ORDER = 'INIT_ORDER'
+export const INIT_GoodsDetail = 'INIT_GoodsDetail'
+export const INIT_JOIN_COLLECT = 'INIT_JOIN_COLLECT'
+export const INIT_COLLECT_CANCEL = 'INIT_COLLECT_CANCEL'

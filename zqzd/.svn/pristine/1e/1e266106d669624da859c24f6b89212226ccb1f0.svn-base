@@ -1,0 +1,98 @@
+package com.platform.service;
+
+import com.platform.dto.UpdateCreditDto;
+import com.platform.entity.CouponUserCreditInfoEntity;
+import com.platform.utils.R;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Service接口
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-23 10:55:21
+ */
+public interface CouponUserCreditInfoService {
+
+    /**
+     * 根据主键查询实体
+     *
+     * @param id 主键
+     * @return 实体
+     */
+    CouponUserCreditInfoEntity queryObject(Integer id);
+
+    /**
+     * 分页查询
+     *
+     * @param map 参数
+     * @return list
+     */
+    List<CouponUserCreditInfoEntity> queryList(Map<String, Object> map);
+
+    /**
+     * 分页统计总数
+     *
+     * @param map 参数
+     * @return 总数
+     */
+    int queryTotal(Map<String, Object> map);
+
+    /**
+     * 保存实体
+     *
+     * @param CouponuserCreditInfo 实体
+     * @return 保存条数
+     */
+    int save(CouponUserCreditInfoEntity CouponuserCreditInfo);
+
+    /**
+     * 根据主键更新实体
+     *
+     * @param CouponuserCreditInfo 实体
+     * @return 更新条数
+     */
+    int update(CouponUserCreditInfoEntity CouponuserCreditInfo);
+
+    /**
+     * 根据主键删除
+     *
+     * @param id
+     * @return 删除条数
+     */
+    int delete(Integer id);
+
+    /**
+     * 根据主键批量删除
+     *
+     * @param ids
+     * @return 删除条数
+     */
+    int deleteBatch(Integer[] ids);
+    
+    /**
+     * 此该信用积分
+     * @param para
+     * @param operuid
+     * @return
+     */
+    R updateCredit(UpdateCreditDto para, int operuid);
+    
+    /**
+	 * 
+	 * 查看信用分变动的更多信息
+	 * zy 2019-04-24
+	 * @param oldUser
+	 * @param operuid
+	 * @return
+	 */
+    R creditChangeMsg(Map<String, Object> map, int operuid);
+    
+    //信用分统计
+  	R QueryCreditCountSum(Map<String, Object> map);
+  	
+  	//个人积分变动数量统计
+  	R QueryCreditMsgCountSum(Map<String, Object> map);
+}

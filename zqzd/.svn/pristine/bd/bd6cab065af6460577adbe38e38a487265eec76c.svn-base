@@ -1,0 +1,63 @@
+package com.platform.dto;
+
+import java.io.Serializable;
+
+public class UpdateCreditDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	//信用分明细id
+	private Integer cid;
+	
+	//操作类型
+	private Integer otype;
+	
+	//变动数量
+	private Integer creadit;
+	
+	//变动原因
+	private String reason;
+
+	
+	@Override
+	public String toString() {
+		return "UpdateCreditDto [cid=" + cid + ", otype=" + otype + ", creadit=" + creadit + ", reason=" + reason + "]";
+	}
+
+	public Integer getCid() {
+		return cid;
+	}
+
+	public void setCid(Integer cid) {
+		this.cid = cid;
+	}
+
+	public Integer getOtype() {
+		return otype;
+	}
+
+	public void setOtype(Integer otype) {
+		this.otype = otype;
+	}
+
+	public Integer getCreadit() {
+		return creadit;
+	}
+
+	public void setCreadit(Integer creadit) {
+		this.creadit = creadit;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+	
+	
+}

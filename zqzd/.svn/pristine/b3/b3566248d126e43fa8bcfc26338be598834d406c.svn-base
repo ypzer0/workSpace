@@ -1,0 +1,15 @@
+package com.platform.dao;
+
+import com.platform.entity.CouponEptOrderEdayVo;
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-05-05 11:00:49
+ */
+public interface ApiEptOrderEdayMapper extends BaseDao<CouponEptOrderEdayVo> {
+
+    int updateRptOrder(String btime);
+}

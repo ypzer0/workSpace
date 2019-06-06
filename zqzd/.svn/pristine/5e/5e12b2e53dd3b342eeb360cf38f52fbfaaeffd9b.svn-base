@@ -1,0 +1,66 @@
+export default [
+  { 
+    path: '*', 
+    component: (resolve) => require(['../pages/error/404.vue'], resolve)  
+  },
+  {
+    path: '/MP_verify_VFWs6ecdlScbAQEY.txt',
+    name: '/',
+    component: () => import('@/secret/weixin1'),
+    // @/secret/weixin.txt
+  },
+  {
+    path: '/',
+    name: '/',
+    redirect: '/z-home'
+  },
+  // {
+  //   path: '/test',
+  //   name: '/test',
+  //   component: () => import('@/pages/y_test/test')
+  // },
+  // {
+  //   path: '/search',
+  //   name: 'search',
+  //   component: () => import('@/pages/search/search')
+  // },
+  //卓琪项目路由
+  {
+    path: '/z-home',
+    name: 'z-home',
+     meta: {
+       title: '检测服务',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/z-home/home')
+  },
+  {
+    path: '/z-register',
+    name: 'z-register',
+     meta: {
+       title: '注册会员',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/z-register/register')
+  },
+  {
+    path: '/z-consult',
+    name: 'z-consult',
+     meta: {
+       title: '一病多问',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/z-consult/consult')
+  },
+  {
+    path: '/z-details',
+    name: 'z-details',
+     meta: {
+       title: '服务详情',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/z-details/details')
+  },
+  
+
+]

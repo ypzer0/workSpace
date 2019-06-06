@@ -1,0 +1,22 @@
+export default {
+  home: {
+    recommend: {},
+    section: []
+    
+  },
+  banner:{
+    list:[]
+  },
+  newGoods:{
+    list:[]
+  },
+  brand:{
+    list:[]
+  },
+  hotGoods:{
+    list:[]
+  },
+  topPic:{
+    list:[]
+  }
+}

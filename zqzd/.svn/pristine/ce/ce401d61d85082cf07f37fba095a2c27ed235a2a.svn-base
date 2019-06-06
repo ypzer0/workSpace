@@ -1,0 +1,30 @@
+import * as types from './mutation-types'
+
+export const mutations = {
+  [types.INIT_LIST] (state, o) {
+    state.list = o.data;
+    
+  },
+  [types.INIT_TOTALCOUNT] (state, o) {
+    state.total.allCount = o.allCount;
+    state.total.picCount = o.hasPicCount;
+
+  },
+  [types.LOAD_DATAS] (state) {
+
+    state.filter.list = [];
+    //loadfilter type
+    state.filter.list.push(
+      {
+        text: "全部",
+        type: "ALL",
+        isCheck: true
+      },
+      {
+        text: "最新",
+        type: "New",
+        isCheck: false
+      },
+    );
+  },
+}

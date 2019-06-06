@@ -1,0 +1,68 @@
+import * as types from './mutation-types'
+import {api} from '@/service/api'
+import {toast} from '@/libs/cube-ui'
+
+export const actions = {
+  //收藏页面列表
+  async getFavorites ({dispatch, commit,state}, o) {
+
+    let res = await api.y_favorites.favorites()
+    if (res.success) {
+      // toast('获取订单数据成功', 'correct')
+      commit(types.INIT_Favorites, res.data);
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+  //收藏页面列表  取消收藏
+  async getCollectRemove ({dispatch, commit}, o) {
+    
+    let res = await api.y_favorites.collectRemove()
+    if (res.success) {
+      // toast('获取订单数据成功', 'correct')
+      commit(types.INIT_COLLECT_REMOVE, res.data);
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+
+  //点击取消收藏
+  async NowBuy ({dispatch, commit, state}, o) {
+    let goodslist = [];
+    let _this = this;
+    state.favorites.forEach((ele , index) => {
+      console.log("favorites:",ele)
+      if(ele.checkboxItem == true){
+        console.log("favorites111:",state.favorites)
+        //state.favorites.splice(index,1);
+        console.log("index:",index)
+        goodslist.push({
+          cid:ele.cid,
+          // checkboxItem: ele.checkboxItem,
+          // checkedAll: state.checkbox.checkedAll
+        })
+        // goodslist.push(ele.cid);
+      }
+
+    });
+
+    // let pasr = {
+    //   cid: state.favorites.cid,
+    // }
+    let res = await api.y_favorites.collectRemove(goodslist)
+    //debugger;
+    if (res.success) {
+      // toast('获取订单数据成功', 'correct')
+      // commit(types.INIT_COLLECT_REMOVE, res.data);
+      state.checkbox.checkedAll = false;
+      dispatch('getFavorites');
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+
+  
+}

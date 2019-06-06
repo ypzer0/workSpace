@@ -1,0 +1,104 @@
+package com.platform.controller;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.platform.entity.ZdEptOrderEdayEntity;
+import com.platform.service.ZdEptOrderEdayService;
+import com.platform.utils.PageUtils;
+import com.platform.utils.Query;
+import com.platform.utils.R;
+
+/**
+ * Controller
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-06-01 15:25:04
+ */
+@RestController
+@RequestMapping("Zdeptordereday")
+public class ZdEptOrderEdayController {
+    @Autowired
+    private ZdEptOrderEdayService ZdeptOrderEdayService;
+
+    /**
+     * 查看列表
+     */
+    @RequestMapping("/list")
+    @RequiresPermissions("Zdeptordereday:list")
+    public R list(@RequestParam Map<String, Object> params) {
+        //查询列表数据
+        Query query = new Query(params);
+
+        List<ZdEptOrderEdayEntity> ZdeptOrderEdayList = ZdeptOrderEdayService.queryList(query);
+        int total = ZdeptOrderEdayService.queryTotal(query);
+
+        PageUtils pageUtil = new PageUtils(ZdeptOrderEdayList, total, query.getLimit(), query.getPage());
+
+        return R.ok().put("page", pageUtil);
+    }
+
+    /**
+     * 查看信息
+     */
+    @RequestMapping("/info/{id}")
+    @RequiresPermissions("Zdeptordereday:info")
+    public R info(@PathVariable("id") Integer id) {
+        ZdEptOrderEdayEntity ZdeptOrderEday = ZdeptOrderEdayService.queryObject(id);
+
+        return R.ok().put("ZdeptOrderEday", ZdeptOrderEday);
+    }
+
+    /**
+     * 保存
+     */
+    @RequestMapping("/save")
+    @RequiresPermissions("Zdeptordereday:save")
+    public R save(@RequestBody ZdEptOrderEdayEntity ZdeptOrderEday) {
+        ZdeptOrderEdayService.save(ZdeptOrderEday);
+
+        return R.ok();
+    }
+
+    /**
+     * 修改
+     */
+    @RequestMapping("/update")
+    @RequiresPermissions("Zdeptordereday:update")
+    public R update(@RequestBody ZdEptOrderEdayEntity ZdeptOrderEday) {
+        ZdeptOrderEdayService.update(ZdeptOrderEday);
+
+        return R.ok();
+    }
+
+    /**
+     * 删除
+     */
+    @RequestMapping("/delete")
+    @RequiresPermissions("Zdeptordereday:delete")
+    public R delete(@RequestBody Integer[] ids) {
+        ZdeptOrderEdayService.deleteBatch(ids);
+
+        return R.ok();
+    }
+
+    /**
+     * 查看所有列表
+     */
+    @RequestMapping("/queryAll")
+    public R queryAll(@RequestParam Map<String, Object> params) {
+
+        List<ZdEptOrderEdayEntity> list = ZdeptOrderEdayService.queryList(params);
+
+        return R.ok().put("list", list);
+    }
+}

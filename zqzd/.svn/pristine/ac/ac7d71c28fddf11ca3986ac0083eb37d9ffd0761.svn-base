@@ -1,0 +1,95 @@
+<template>
+    <div class="my-order">
+      <div class="my-order-title">
+          <div class="my-order-title-iner" @click="$go('/y-order/list')">
+            <span class="my-order-title-name">全部订单</span>
+            <span class="my-order-title-state">全部订单<i class="iconfont my-order-go">&#xe65f;</i></span>
+        </div>
+      </div>
+      <div class="my-order-classify">
+          <div class="my-order-classify-state" @click="$go('/y-order/list')">
+              <img style="height: 28px; margin: 0 0;" src="../../static/images/no_pay.png"/>
+              <p>未付款</p>
+          </div>
+          <!-- <div class="my-order-classify-state" @click="$go('/y-sell')">
+              <img style="height: 28px; margin: 0 0;" src="../../static/images/shelves.png"/>
+              <p>已下架</p>
+          </div> -->
+          <div class="my-order-classify-state" @click="$go('/y-order/list')">
+              <img style="height: 28px; margin: 0 0;" src="../../static/images/has_pay.png"/>
+              <p>已付款</p>
+          </div>
+          <!-- <div class="my-order-classify-state" @click="$go('/y-sell')">
+              <img style="height: 28px; margin: 0 0;" src="../../static/images/disputes.png"/>
+              <p>纠纷中</p>
+          </div> -->
+      </div>
+    </div>
+    
+</template>
+
+<script type="text/ecmascript-6">
+
+export default {
+props: [''],
+  computed: {
+
+  },
+  components: {
+    
+  },
+  methods:{
+
+
+  },
+  created(){
+
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .my-order{
+      width: 92%;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 6px;
+      margin-top: 20px;
+      .my-order-title{
+          border-bottom: 1px solid #e5e5e5;
+        .my-order-title-iner{
+            display: flex;
+            justify-content: space-between;
+            width: 92%;
+            margin: 0 auto;
+            padding: 23px 0;
+            .my-order-title-name{
+                font-size: 32px;
+                color: #333333;
+            }
+            .my-order-title-state{
+                font-size: 26px;
+                color: #838383;
+                .my-order-go{
+                    font-size: 26px;
+                    color: #838383;
+                    margin-left: 15px;
+                }
+            }
+        }
+      }
+      .my-order-classify{
+            display: flex;
+            justify-content: space-around;
+            padding: 44px 0;
+            .my-order-classify-state{
+                
+                p{
+                    font-size: 26px;
+                    color: #333333;
+                    margin-top: 12px;
+                }
+            }
+      }
+  }
+</style>

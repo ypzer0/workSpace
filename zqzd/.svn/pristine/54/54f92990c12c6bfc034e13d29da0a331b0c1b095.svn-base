@@ -1,0 +1,165 @@
+$(function () {
+    $("#jqGrid").Grid({
+        url: '../couponcashdrawal/list',
+        colModel: [
+        	{label: '用户编号', name: 'uCode', index: 'u_code', width: 80, sortable: false, align: 'center',
+        		formatter: function (value, dt, rowObject) {
+					var plat = rowObject.platType == 1 ? "DX" : "HY";
+                    return plat + value;
+                }		
+        	},
+        	{label: '用户名', name: 'nickname', index: 'nickname', width: 80, sortable: false, align: 'center'},
+        	{label: '信用分', name: 'credit', index: 'credit', width: 80, sortable: false, align: 'center'},
+        	{label: '积分', name: 'integral', index: 'integral', width: 80, sortable: false, align: 'center'},
+        	{label: '微信号', name: 'weixinCode', index: 'weixin_code', width: 80, sortable: false, align: 'center'},
+        	{label: '支付宝账号', name: 'zhifubao', index: 'zhifubao', width: 80, sortable: false, align: 'center'},
+        	{label: '类型', name: 'cType', index: 'c_type', width: 80, sortable: false, align: 'center',
+        		align: 'center',
+				formatter: function (value) {
+                	var rt = "";
+                	var cls = "";
+                	cls = 'label-blue';
+                	if (value == '1') {
+                    	rt =  '微信提现';
+                    } else if (value == '2') {
+                    	rt =  '支付宝提现'; 
+                    }else{
+                        rt =  '-';
+                    }
+                	return '<span class="label '+ cls +'">' + rt + '</span>';
+                }},
+        	{label: '状态', name: 'status', index: 'status', width: 80, sortable: false, align: 'center',
+        		align: 'center',
+				formatter: function (value) {
+                	var rt = "";
+                	var cls = "";
+                	cls = 'label-blue';
+                	if (value == '0') {
+                    	rt =  '申请中';
+                    } else if (value == '1') {
+                    	rt =  '已通过';
+                    } else if (value == '2') {
+                    	rt =  '已拒绝';
+                    } 
+                    else{
+                        rt =  '-';
+                    }
+                	return '<span class="label '+ cls +'">' + rt + '</span>';
+                }
+        	},
+        	{label: '提现金额', name: 'cash', index: 'cash', width: 80, sortable: false, align: 'center'},
+        	{label: '申请时间', name: 'addTime', index: 'add_time', width: 80, sortable: false, align: 'center',
+        		formatter: function (value) {
+                    return transDate(value);
+                }
+        	},
+        	
+			/*{label: 'id', name: 'id', index: 'id', key: true, hidden: true},
+			{label: '处理意见', name: 'msg', index: 'msg', width: 80},
+			{label: '修改时间', name: 'updateTime', index: 'update_time', width: 80}*/
+			]
+    });
+});
+
+let vm = new Vue({
+	el: '#rrapp',
+	data: {
+        showList: true,
+        title: null,
+		CouponcashDrawal: {},
+		ruleValidate: {
+			name: [
+				{required: true, message: '名称不能为空', trigger: 'blur'}
+			]
+		},
+		q: {
+		    name: ''
+		}
+	},
+	methods: {
+		query: function () {
+			vm.reload();
+		},
+		add: function () {
+			vm.showList = false;
+			vm.title = "新增";
+			vm.CouponcashDrawal = {};
+		},
+		update: function (event) {
+            let id = getSelectedRow("#jqGrid");
+			if (id == null) {
+				return;
+			}
+			vm.showList = false;
+            vm.title = "修改";
+
+            vm.getInfo(id)
+		},
+		saveOrUpdate: function (event) {
+            let url = "../couponcashdrawal/handle";
+            Ajax.request({
+			    url: url,
+                params: JSON.stringify(vm.CouponcashDrawal),
+                type: "POST",
+			    contentType: "application/json",
+                successCallback: function (r) {
+                    alert('操作成功', function (index) {
+                        vm.reload();
+                    });
+                }
+			});
+		},
+		del: function (event) {
+            let ids = getSelectedRows("#jqGrid");
+			if (ids == null){
+				return;
+			}
+
+			confirm('确定要删除选中的记录？', function () {
+                Ajax.request({
+				    url: "../couponcashdrawal/delete",
+                    params: JSON.stringify(ids),
+                    type: "POST",
+				    contentType: "application/json",
+                    successCallback: function () {
+                        alert('操作成功', function (index) {
+                            vm.reload();
+                        });
+					}
+				});
+			});
+		},
+		getInfo: function(id){
+            Ajax.request({
+                url: "../couponcashdrawal/info/"+id,
+                async: true,
+                successCallback: function (r) {
+                    vm.CouponcashDrawal = r.CouponcashDrawal;
+                }
+            });
+		},
+		reload: function (event) {
+			vm.showList = true;
+            let page = $("#jqGrid").jqGrid('getGridParam', 'page');
+			$("#jqGrid").jqGrid('setGridParam', {
+                postData: {'name': vm.q.name,'status':vm.q.status},
+                page: page
+            }).trigger("reloadGrid");
+            vm.handleReset('formValidate');
+		},
+        reloadSearch: function() {
+            vm.q = {
+                name: ''
+            }
+            vm.reload();
+        },
+        handleSubmit: function (name) {
+            handleSubmitValidate(this, name, function () {
+                vm.saveOrUpdate()
+            });
+        },
+        handleReset: function (name) {
+            handleResetForm(this, name);
+        }
+	}
+});

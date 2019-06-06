@@ -1,0 +1,93 @@
+package com.platform.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.dao.CouponWalletInfoDao;
+import com.platform.dto.CouponCommissionInfoDto;
+import com.platform.dto.CouponWalletInfoDto;
+import com.platform.entity.CouponWalletInfoEntity;
+import com.platform.service.CouponWalletInfoService;
+
+/**
+ * Service实现类
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-23 15:21:11
+ */
+@Service("CouponwalletInfoService")
+public class CouponWalletInfoServiceImpl implements CouponWalletInfoService {
+    @Autowired
+    private CouponWalletInfoDao CouponwalletInfoDao;
+
+    @Override
+    public CouponWalletInfoEntity queryObject(Integer id) {
+        return CouponwalletInfoDao.queryObject(id);
+    }
+
+    @Override
+    public List<CouponWalletInfoEntity> queryList(Map<String, Object> map) {
+        return CouponwalletInfoDao.queryList(map);
+    }
+
+    @Override
+    public int queryTotal(Map<String, Object> map) {
+        return CouponwalletInfoDao.queryTotal(map);
+    }
+
+    @Override
+    public int save(CouponWalletInfoEntity CouponwalletInfo) {
+        return CouponwalletInfoDao.save(CouponwalletInfo);
+    }
+
+    @Override
+    public int update(CouponWalletInfoEntity CouponwalletInfo) {
+        return CouponwalletInfoDao.update(CouponwalletInfo);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return CouponwalletInfoDao.delete(id);
+    }
+
+    @Override
+    public int deleteBatch(Integer[] ids) {
+        return CouponwalletInfoDao.deleteBatch(ids);
+    }
+    //佣金相关方法
+    @Override
+    public CouponWalletInfoEntity queryCommissionObject(Integer id) {
+        return CouponwalletInfoDao.queryCommissionObject(id);
+    }
+
+    @Override
+    public List<CouponWalletInfoEntity> queryCommissionList(Map<String, Object> map) {
+        return CouponwalletInfoDao.queryCommissionList(map);
+    }
+
+    @Override
+    public int queryCommissionTotal(Map<String, Object> map) {
+        return CouponwalletInfoDao.queryCommissionTotal(map);
+    }
+
+	@Override
+	public Map<String, Object> rptQueryWalletCountSum(Map<String, Object> map) {
+		return CouponwalletInfoDao.rptQueryWalletCountSum(map);
+	}
+
+	@Override
+	public List<CouponWalletInfoDto> QueryWalletCount(Map<String, Object> map) {
+		
+		return CouponwalletInfoDao.QueryWalletCount(map);
+	}
+
+	@Override
+	public List<CouponCommissionInfoDto> QueryCommissionCount(Map<String, Object> map) {
+		return CouponwalletInfoDao.QueryCommissionCount(map);
+	}
+    
+}

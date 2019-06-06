@@ -1,0 +1,26 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api'
+
+export const category = {
+  getCategory: (params) => {
+    return axios.request({
+      url: api.CatalogList,
+      data: params,
+      method: 'post'
+    })
+  },
+  getSubCategoryByPid: (params) => {
+    return axios.request({
+      url: api.GoodsCategory,
+      data: params,
+      method: 'post'
+    })
+  },
+  getGoodsByCategory: (params) => {
+    return axios.request({
+      url: api.GoodsList,
+      data: params,
+      method: 'post'
+    })
+  }
+}

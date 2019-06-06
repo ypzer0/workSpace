@@ -1,0 +1,202 @@
+<template>
+  <div class="category-content-sub-list">
+    <cube-scroll>
+      <div class="sub-list-wrap">
+
+            <ul class="goods_goods_box">
+              <li class="goods_goods_li" v-for="(item, index) in goodsList" :key="index">
+                <div class="goods_goods_img" @click="JumpDetails(item)"><img :src="item.gimg" /></div>
+                <div class="goods_goods_introduce">
+                  <p class="goods_goods_introduce_title_name" @click="JumpDetails(item)">{{item.name}}</p>
+                  <p class="goods_goods_introduce_number" @click="JumpDetails(item)"><span class="goods_goods_introduce_number_price">￥{{item.price}}</span><span class="goods_goods_introduce_number_number">数量：{{item.count}}</span></p>
+                  <p class="goods_goods_introduce_time"><span class="goods-share" @click="shareGoods(item)"><i class="iconfont goods-share-icon">&#xe64e;</i>分享</span><span class="goods_sub" @click="JumpDetails(item)">立即购买</span></p>
+                  <p class="goods_describe">市场价最高可兑换{{item.marketPrice}}元商品,最高可省{{item.preferentialPrice}}元</p>
+                </div>
+              </li>
+            </ul>
+      </div>
+    </cube-scroll>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapActions} from 'vuex'
+export default{
+  props:['goodsList'],
+
+  methods:{
+    ...mapActions('y_my', ['shareGoods']),
+    JumpDetails:function(item){
+      console.log("item:",item)
+      this.$go(`/y-details/${item.gid}?cid=${item.cid}`)
+    },
+  },
+}
+</script>
+
+<style lang="less" scoped>
+  @import '../../static/less/index';
+  .category-content-sub-list{
+    // margin-left:167px;
+    height: 100%;
+    background: #fff;
+    overflow: hidden;
+    .sub-list-wrap{
+      //padding:20px;
+      .order_goods_box{
+        width: 92%;
+        margin: 0 auto;
+      }
+      .wrap-banner{
+        height: 191px;
+        width:100%;
+        .ignore{
+          width:100%;
+          height: 100%;
+        }
+      }
+      .wrap-type{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 80px;
+        span{
+          position: relative;
+          display: inline-block;
+          padding:0 10px;
+          color:#666;
+          &::before{
+            position: absolute;
+            content: '';
+            top:50%;
+            left:-30px;
+            transform: translateY(-50%);
+            width:30px;
+            height: 1px;
+            background: #666;
+          }
+          &::after{
+            position: absolute;
+            content: '';
+            top:50%;
+            right:-30px;
+            transform: translateY(-50%);
+            width:30px;
+            height: 1px;
+            background: #666;
+          }
+        }
+      }
+      .wrap-list{
+        display: flex;
+        flex-wrap: wrap;
+        .list-item{
+          flex-basis: calc(33.333% - 124px / 3);
+          .item-pic{
+            position: relative;
+            height: 0;
+            width: 100%;
+            &[data-ratio="1:1"] {
+              padding-top: calc(100% * 1 / 1);
+            }
+            *{
+              position: absolute;
+              left: 0;
+              top: 0;
+              width: 100%;
+              height: 100%;
+            }
+          }
+          .item-name{
+            display: flex;
+            margin-top:10px;
+            justify-content: center;
+            span{
+              text-align:center;
+              color:#333;
+            }
+          }
+          &:not(:nth-child(3n)){
+            margin:0 62px 27px 0;
+          }
+        }
+      }
+    }
+  }
+
+
+
+
+  /* 商品列表 */
+  .goods_goods_li{
+    display: flex;
+    //justify-content: space-between;
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 70px;
+    padding-top: 30px;
+    margin: 0 auto;
+    width: 92%;
+    .goods_goods_img{
+      width: 150px;
+      height: 150px;
+      // border-radius: 6px;
+      background: #333333;
+      img{
+        width: 100%;
+        height: 100%;
+        border-radius: 6px;
+      }
+    }
+    .goods_goods_introduce{
+      margin-left: 30px;
+      width: 510px;
+      .goods_goods_introduce_title_name{
+        font-size: 28px;
+      }
+      .goods_goods_introduce_number{
+        display: flex;
+        justify-content: space-between;
+        margin-top: 45px;
+        .goods_goods_introduce_number_price{
+          font-size: 36px;
+          color: #ff4539;
+        }
+        .goods_goods_introduce_number_number{
+          font-size: 26px;
+          color: #838383;
+        }
+      }
+      .goods_goods_introduce_time{
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+        .goods-share{
+          font-size: 28px;
+          color: #838383;
+          margin-top: 10px;
+          .goods-share-icon{
+            color: #00c800;
+            font-size: 26px;
+            margin-right: 10px;
+          }
+        }
+        .goods_sub{
+          width: 160px;
+          height: 50px;
+          background: #ff4539;
+          color: #ffffff;
+          line-height: 50px;
+          text-align: center;
+          border-radius: 6px;
+        }
+      }
+    }
+    .goods_describe{
+      position: absolute;
+      left: 20px;
+      margin-top: 20px;
+      font-size: 24px;
+      color:#ff6839;
+    }
+  }
+</style>

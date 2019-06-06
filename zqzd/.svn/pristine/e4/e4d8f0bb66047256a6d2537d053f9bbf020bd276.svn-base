@@ -1,0 +1,151 @@
+<template>
+  <div :better-scroll="true" class="box">
+    <div class="page-header border-1px-bottom" slot="top">
+      <div class="header-left" @click="$back">
+        <i class="iconfont">&#xe601;</i>
+      </div>
+      <h3>申请纠纷</h3>
+      <div class="header-right">
+        <!-- <span @click="SaveAddr">保存</span> -->
+      </div>
+    </div>
+
+    <div class="apply-disputes">
+      <p class="apply-disputes-title">*请填写申请纠纷理由</p>
+      <textarea class="apply-disputes-text" v-model="msgText" placeholder="请认真填写申请纠纷"></textarea>
+    </div>
+    <div class="apply-disputes-btn" @click="disputesSub">提交申请</div>
+
+
+    <apply-disputes-prompt v-show="showAlert" @alert-hide="alertHide" :showAlert="showAlert"></apply-disputes-prompt>
+  </div>
+    
+</template>
+
+<script type="text/ecmascript-6">
+import applyDisputesPrompt from './apply-disputes-prompt'
+import {toast} from '@/libs/cube-ui'
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default {
+  data(){
+    return{
+      showAlert: false,
+      msgText: "",
+    }
+  },
+  computed: {
+    ...mapState('y_apply_disputes', ['applyDisputes']),
+  },
+  components: {
+    applyDisputesPrompt,
+  },
+  methods:{
+    ...mapActions('y_apply_disputes', ['getApplyDisputes']),
+    disputesSub(){
+      console.log("ccccc");
+      console.log("oid:", this.$route.params.oid)
+      if(this.msgText != ""){
+        this.getApplyDisputes({
+          oid: this.$route.params.oid,
+          msg: this.msgText,
+        });
+        this.showAlert = true;
+      }else{
+        toast("纠纷理由不能为空", 'warn')
+      }
+      
+    },
+    alertHide(dt){
+      this.showAlert = false;
+    }
+  },
+  created(){
+
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .box{
+    width: 100%;
+    height: 100%;
+    background: #eeeded;
+    .pay-btn{
+      width: 100%;
+      height: 98px;
+      margin: 0 auto;
+      text-align: center;
+      line-height: 98px;
+      font-size: 36px;
+      color: #ffffff;
+      position: fixed;
+      bottom: 0;
+      background: #2eacef;
+    }
+  }
+  .page-header{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 88px;
+    background: #2eacef;
+    .header-left{
+      position: absolute;
+      top:50%;
+      left:30px;
+      color: #fff;
+      transform: translateY(-50%);
+    }
+    h3{
+      font-size: 30px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .header-right{
+      position: absolute;
+      top:50%;
+      right:30px;
+      transform: translateY(-50%);
+      span{
+        color:#666;
+      }
+    }
+  }
+
+
+
+
+.apply-disputes{
+  width: 92%;
+  margin: 0 auto;
+  .apply-disputes-title{
+    font-size: 30px;
+    color: #2eacef;
+    margin-top: 50px;
+    margin-bottom: 30px;
+  }
+  .apply-disputes-text{
+    width: 98%;
+    border-color: #e5e5e5;
+    padding-top: 20px;
+    padding-left: 10px;
+    height: 300px;
+    margin: 0 auto;
+  }
+}
+
+.apply-disputes-btn{
+  width: 100%;
+  height: 98px;
+  margin: 0 auto;
+  background: #2eacef;
+  color: #fff;
+  font-size: 36px;
+  text-align: center;
+  line-height: 98px;
+  position: fixed;
+  bottom: 0;
+}
+ 
+</style>

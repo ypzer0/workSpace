@@ -1,0 +1,61 @@
+import Vue from 'vue'
+import Vuex from 'vuex'
+import commonModule from './common/index'
+import searchModule from './search/index'
+
+import y_orderModule from './y_order/index'
+import y_goodsHomeModule from './y_goods_home/index'
+import y_goods_detailModule from './y_goods_detail/index'
+import y_FavoritesModule from './y_favorites/index'
+import y_payModule from './y_pay/index'
+import y_paySuccessModule from './y_pay_success/index'
+import y_myModule from './y_my/index'
+import y_HaveBuy from './y_have_buy/index'
+import y_HaveSell from './y_have_sell/index'
+import y_MoneyDetail from './y_money_detail/index'
+import y_UseExplain from './y_use_explain/index'
+import y_UseDetailsModule from './y_use_details/index'
+import y_homeModule from './y_home/index'
+import y_GoodsHomeClasskyListModule from './y_goods_home_classky_list/index'
+import y_updateCategoryModule from './y_update_category/index'
+import y_afterSalesModule from './y_after_sales/index'
+import y_applyDisputesModule from './y_apply_disputes/index'
+import y_UserInfoModule from './y_user_info/index'
+import y_ChangePhoneModule from './y_change_phone/index'
+import y_WithdrawalModule from './y_withdrawal/index'
+import y_CommissionDetailModule from './y_commission_detail/index'
+import y_ServiceModule from './y_service/index'
+
+
+
+Vue.use(Vuex)
+
+export default new Vuex.Store({
+  modules: {
+    common: commonModule,
+    search: searchModule,
+    y_order: y_orderModule,
+    y_goods_home: y_goodsHomeModule,
+    y_goods_detail: y_goods_detailModule,
+    y_favorites: y_FavoritesModule,
+    y_goods_home: y_goodsHomeModule,
+    y_pay:y_payModule,
+    y_pay_success:y_paySuccessModule,
+    y_my:y_myModule,
+    y_have_buy:y_HaveBuy,
+    y_have_sell:y_HaveSell,
+    y_money_detail:y_MoneyDetail,
+    y_use_explain:y_UseExplain,
+    y_home:y_homeModule,
+    y_goods_home_classky_list:y_GoodsHomeClasskyListModule,
+    y_update_category: y_updateCategoryModule,
+    y_afterSales: y_afterSalesModule,
+    y_apply_disputes: y_applyDisputesModule,
+    y_use_details: y_UseDetailsModule,
+    y_user_info :y_UserInfoModule,
+    y_change_phone: y_ChangePhoneModule,
+    y_withdrawal: y_WithdrawalModule,
+    y_commission_detail: y_CommissionDetailModule,
+    y_service: y_ServiceModule,
+  }
+})

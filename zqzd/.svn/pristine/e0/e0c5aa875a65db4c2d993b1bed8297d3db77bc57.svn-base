@@ -1,0 +1,13 @@
+export default {
+  list:[
+//       {id:'101', orderid:'1', orderSn:'0123123', orderStatus:'1', 
+//       typeid:'1', status:4,statusNameStr:'已拒绝', uid:'2', 
+//       uName:'18375618888', handerId:'1', handerName:'admin', utime:'Thu Mar 07 19:09:02 GMT+08:00 2019', 
+//       ctime:'Thu Mar 07 19:08:39 GMT+08:00 2019', newMsg:'2'}, 
+// {id:'100', orderid:'1', orderSn:'0123123', orderStatus:'1', typeid:'1', 
+// status:'3',statusNameStr:'已通过', uid:'2', uName:'18375618888', handerId:'1', handerName:'admin',
+//  utime:'Thu Mar 07 19:08:22 GMT+08:00 2019', ctime:'Thu Mar 07 19:07:43 GMT+08:00 2019', newMsg:'3'},
+  ],
+  msglist:[],
+  currentAsk:{}
+}

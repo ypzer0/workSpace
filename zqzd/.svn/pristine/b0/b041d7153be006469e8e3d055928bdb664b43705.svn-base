@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.CouponLogDao">
+
+    <resultMap type="com.platform.entity.CouponLogEntity" id="couponLogMap">
+        <result property="id" column="id"/>
+        <result property="cid" column="cid"/>
+        <result property="sendType" column="send_type"/>
+        <result property="reson" column="reson"/>
+        <result property="changeType" column="change_type"/>
+        <result property="change" column="change"/>
+        <result property="uid" column="uid"/>
+        <result property="uname" column="uname"/>
+        <result property="handerId" column="hander_id"/>
+        <result property="handerName" column="hander_name"/>
+        <result property="ctime" column="ctime"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.platform.entity.CouponLogEntity">
+		select
+			`id`,
+			`cid`,
+			`send_type`,
+			`reson`,
+			`change_type`,
+			`change`,
+			`uid`,
+			`uname`,
+			`hander_id`,
+			`hander_name`,
+			`ctime`
+		from nideshop_coupon_log
+		where id = #{id}
+	</select>
+
+	<select id="queryList" resultType="com.platform.entity.CouponLogEntity">
+		select
+    		`id`,
+    		`cid`,
+    		`send_type`,
+    		`reson`,
+    		`change_type`,
+    		`change`,
+    		`uid`,
+    		`uname`,
+    		`hander_id`,
+    		`hander_name`,
+    		`ctime`
+		from nideshop_coupon_log
+		WHERE 1=1
+		<if test="name != null and name.trim() != ''">
+			AND name LIKE concat('%',#{name},'%')
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from nideshop_coupon_log
+		WHERE 1=1
+        <if test="name != null and name.trim() != ''">
+            AND name LIKE concat('%',#{name},'%')
+        </if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.CouponLogEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into nideshop_coupon_log(
+			`cid`,
+			`send_type`,
+			`reson`,
+			`change_type`,
+			`change`,
+			`uid`,
+			`uname`,
+			`hander_id`,
+			`hander_name`,
+			`ctime`)
+		values(
+			#{cid},
+			#{sendType},
+			#{reson},
+			#{changeType},
+			#{change},
+			#{uid},
+			#{uname},
+			#{handerId},
+			#{handerName},
+			#{ctime})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.CouponLogEntity">
+		update nideshop_coupon_log 
+		<set>
+			<if test="cid != null">`cid` = #{cid}, </if>
+			<if test="sendType != null">`send_type` = #{sendType}, </if>
+			<if test="reson != null">`reson` = #{reson}, </if>
+			<if test="changeType != null">`change_type` = #{changeType}, </if>
+			<if test="change != null">`change` = #{change}, </if>
+			<if test="uid != null">`uid` = #{uid}, </if>
+			<if test="uname != null">`uname` = #{uname}, </if>
+			<if test="handerId != null">`hander_id` = #{handerId}, </if>
+			<if test="handerName != null">`hander_name` = #{handerName}, </if>
+			<if test="ctime != null">`ctime` = #{ctime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from nideshop_coupon_log where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from nideshop_coupon_log where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

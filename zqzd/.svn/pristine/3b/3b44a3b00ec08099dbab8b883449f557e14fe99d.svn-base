@@ -1,0 +1,37 @@
+package com.platform.service;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.platform.dto.ConfigContactDto;
+import com.platform.entity.SysConfigEntity;
+import com.platform.entity.UserVo;
+import com.platform.utils.Constant;
+import com.platform.utils.Rp;
+
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@Service
+public class ApiCustomerService {
+	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private SysConfigService sysConfigService;
+    
+	//
+	public Rp load(UserVo loginUser) {
+		// TODO Auto-generated method stub
+		ConfigContactDto configContact = sysConfigService.getConfigObject(Constant.KEY_CONTACT, ConfigContactDto.class);
+		Rp rp=new Rp();
+		rp.put("data",configContact);
+		return rp;
+	}
+	
+}

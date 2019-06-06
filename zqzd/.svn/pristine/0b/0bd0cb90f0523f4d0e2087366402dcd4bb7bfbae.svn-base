@@ -1,0 +1,88 @@
+<template>
+    <div>
+        <!-- v-if="showTab == 1"   已完成 -->
+        <ul class="buy-list-ul">
+            <li class="buy-list-ul-li" :key="index" v-for="(item, index) in completeBuy">
+                <div class="buy-list-ul-li-left">
+                    <p class="buy-list-ul-li-left-title">{{item.goodsName}}</p>
+                    <p class="buy-list-ul-li-left-time">{{item.expireTime}}  有效</p>
+                </div>
+                <div class="buy-list-ul-li-right" @click="use(item)">立即使用</div>
+            </li>
+        </ul>
+    </div>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default {
+//props: ['haveBuy'],
+data(){
+    return{
+      
+    }
+},
+
+computed: {
+    ...mapState('y_have_buy', ['completeBuy']),
+},
+
+components:{
+},
+
+methods: {
+    //立即使用
+    use(item){
+        console.log("item:",item);
+        //return;
+        this.$router.push({path:`/y-use-explain?oid=${item.oid}`})
+    },
+}
+}
+</script>
+
+<style lang="less" scoped>
+    .buy-list-ul{
+        width: 100%;
+        margin: 0 auto;
+        .buy-list-ul-li{
+            width: 92%;
+            height: 178px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 6px;
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            .buy-list-ul-li-left{
+                margin-left: 20px;
+                .buy-list-ul-li-left-title{
+                    font-size: 30px;
+                    color: #333333;
+                    margin-top: 20px;
+                }
+                .buy-list-ul-li-left-time{
+                    font-size: 28px;
+                    color: #838383;
+                    margin-top: 20px;
+                }
+                .buy-list-ul-li-left-btn{
+                    font-size: 32px;
+                    color: #ff4539;
+                    margin-top: 30px;
+                }
+            }
+            .buy-list-ul-li-right{
+                width: 178px;
+                height: 178px;
+                background: #ff4539;
+                font-size: 32px;
+                color: #fff;
+                text-align: center;
+                line-height: 178px;
+                border-radius: 0 6px 6px 0;
+                margin-left: 20px;
+            }
+        }
+    }
+</style>

@@ -1,0 +1,35 @@
+package com.platform.dao;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.platform.entity.CouponCategoryEntity;
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-22 11:35:38
+ */
+public interface CouponCategoryDao extends BaseDao<CouponCategoryEntity> {
+	/**
+	 * 批量修改isShow状态
+	 * @param map
+	 * @return
+	 */
+	int changeStatus(Map<String, Object> map);
+	/**
+	 * 批量修改分类状态
+	 * @param map
+	 * @return
+	 */
+	int changeStatusDelete(Map<String, Object> map);
+	/**
+	 * 批量修改isShow状态
+	 * @param map
+	 * @return
+	 */
+	HashMap<String, Object> querySum(Map<String, Object> map);
+	
+}

@@ -1,0 +1,129 @@
+<template>
+  <div class="home-box">
+    <ul class="home-list">
+      <li class="home-list-li" v-for='(item,index) in home' :key="index" @click="goodsJump">
+        <div class="home-list-img">
+          <img v-bind:src="item.smallImgPath"/>
+        </div>
+        <p class="home-list-price">￥{{item.price}}</p>
+        <p class="home-list-name">{{item.goodsName}}</p>
+        <p class="home-list-remark">{{item.goodsDesc}}</p>
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import Vue from 'vue'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
+export default {
+  data (){
+    return{
+      num: 0,
+      listContent:[
+        {
+          img: "../../static/images/img.png",
+          price: "888.88",
+          name: "基因检测 发发硕大的密码...",
+          remark: "适用于16-26岁",
+        },
+        {
+          img: "../../static/images/img.png",
+          price: "888.88",
+          name: "基因检测 发发硕大的密码...",
+          remark: "适用于16-26岁",
+        },
+      ],
+    }
+  },
+
+  computed: {
+    ...mapState('z_home', ['home'])
+  },
+  components: {
+    
+  },
+  methods: {
+    ...mapActions('z_home', ['getHome']),
+    clickTab:function(index,item){
+      console.log("num:", this.num);
+      console.log("item:", item);
+      this.num = index;
+      this.$emit('click-tab', { i : index, item : item });
+    },
+
+    goodsJump:function(){
+      //let gid = this.home;
+      //console.log("gid:",gid)
+      //this.$go(`/z-details?gid=${o.parent.id}`)
+      //this.$go(`/z-details?gid=${o.parent.id}`)
+    }
+  },
+  created() {
+    this.getHome();
+  },
+  activated(){
+
+  },
+  
+}
+</script>
+
+<style lang="less" scoped>
+  .home-banner{
+    width: 100%;
+    height: 310px;
+    margin: 0 auto;
+    .home-banner-img{
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .home-box{
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 18px;
+    background: #ffffff;
+    padding-bottom: 40px;
+    .home-list{
+      width: 94%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      .home-list-li{
+        margin-top: 30px;
+        .home-list-img{
+          width: 340px;
+          height: 260px;
+          border-radius: 6px;
+          img{
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .home-list-price{
+          font-size: 30px;
+          margin-top: 25px;
+          color: #f58d25;
+        }
+        .home-list-name{
+          font-size: 26px;
+          margin-top: 25px;
+          color: #2e2e2e;
+        }
+        .home-list-remark{
+          font-size: 22px;
+          margin-top: 25px;
+          color: #b0b0b6;
+        }
+      }
+    }
+  }
+
+  .active{
+    color: #15a396;
+    border-bottom: 4px solid #15a396;
+  }
+</style>

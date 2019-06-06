@@ -1,0 +1,184 @@
+import * as types from './mutation-types'
+import * as utils from '../../utils/date'
+import {toast} from '@/libs/cube-ui'
+
+export const mutations = {
+  [types.INIT_IDENTIFY_TIMER] ({state}, o) {
+    state.identifyingCode.timer = o
+  },
+  [types.CLEAR_IDENTIFY_TIMER] (state) {
+    clearInterval(state.identifyingCode.timer)
+    state.identifyingCode.timer = null
+    state.identifyingCode.time = 60
+  },
+  [types.UPDATE_IDENTIFY_TIMER] (state, n) {
+    state.identifyingCode.time = n
+  },
+  [types.LOAD_GOODS_DETAIL] (state, n){
+    state.goodsD.gallery = n.gallery;
+    state.goodsD.info = n.info;
+    state.goodsD.count = 1;
+
+    var propIds = [];
+    if(state.goodsD.firstSdProId != 0 && n.productList.length != 0){
+      var pros = n.productList.filter(res=> {
+        return res.id == state.goodsD.firstSdProId;
+      });
+      if(pros.length != 0){
+        propIds = pros[0].goods_specification_ids.split('_');
+      }
+    }
+    else{
+      //默认获取第一组产品
+      propIds = n.productList[0].goods_specification_ids.split('_');
+    }
+
+    var newspecifyList = [];
+    $.extend(true,newspecifyList, n.specificationList);
+    
+    //所有product sid集合
+    var haveSids = [];
+    n.productList.forEach((d,i)=>{
+      var spids = d.goods_specification_ids.replace(',', '_').split('_');
+      spids.forEach((dd,ii)=>{
+        haveSids.push(dd);
+      })
+    });
+    //去重复
+    var new_arr=[];
+    for(var i=0;i<haveSids.length;i++) {
+    　　var items=haveSids[i];
+    　　//判断元素是否存在于new_arr中，如果不存在则插入到new_arr的最后
+    　　if($.inArray(items,new_arr)==-1) {
+    　　　　new_arr.push(items);
+    　　}
+    }
+    haveSids = new_arr;
+    
+    //不要不存在在的属性
+    if(newspecifyList != undefined && newspecifyList != null && newspecifyList.length != 0){
+      for(var i = newspecifyList.length -1; i >= 0 ; i --){
+        var nowsp = newspecifyList[i];
+        var newAttrs = [];
+
+        if(nowsp.valueList != undefined && nowsp.valueList != null){
+          
+          for(var j = 0; j < nowsp.valueList.length; j ++){
+            var nowv = nowsp.valueList[j];
+            if($.inArray(nowv.id + '',haveSids)!=-1){
+              newAttrs.push(nowv);
+            }
+          }
+        }
+
+        if(newAttrs.length != 0){
+          nowsp.valueList = newAttrs;
+        }
+        else{
+          newspecifyList.splice(i, 1);
+        }
+      }
+    }
+
+    // debugger;
+    //默认选中属性
+    if(newspecifyList != undefined && newspecifyList != null && newspecifyList.length != 0){
+      //获取一组有用的product
+      var newPropIds = [];
+      // debugger;
+      if(propIds.length != 0){
+        propIds.forEach((dd, ii)=>{
+          //如果有逗号则取第一个
+          newPropIds.push(dd.split(',')[0]);
+        });
+      }
+      for(var i = 0 ; i < newspecifyList.length; i ++){
+        var nowsp = newspecifyList[i];
+        if(nowsp.valueList != undefined && nowsp.valueList != null){
+          // debugger;
+
+          for(var j = 0; j < nowsp.valueList.length; j ++){
+            var nowv = nowsp.valueList[j];
+
+            nowv.isCheck = false;
+            newPropIds.forEach((ddd, iii)=>{
+              if(ddd == nowv.id){
+                nowv.isCheck = true;
+                return false;
+              }
+            });
+
+          }
+          if(newPropIds.length == 0){
+            nowsp.valueList[0].isCheck = true;
+          }
+
+        }
+      }
+    }
+    
+    state.goodsD.specifies = newspecifyList;
+
+
+
+    state.goodsD.checkSpeci = {};
+    //产品列表
+    state.goodsD.productList = n.productList;
+    state.goodsD.comment = n.comment;
+    state.goodsD.issue = n.issue;
+
+  },
+  [types.BUY_NOW](state, n){
+
+
+  },
+  //
+  [types.COMPILE_GOODS](state){
+
+    // debugger;
+    var ckids = [];
+    state.goodsD.specifies.forEach(ele => {
+
+      var ckpro = ele.valueList.filter(f => {
+        return f.isCheck;
+      });
+      ckids.push(ckpro[0].id);
+
+    });
+    var ckidsStr = ckids.sort().join('_');
+    // var pros = state.goodsD.productList.filter(f =>{
+    //   return f.goods_specification_ids === ckidsStr;
+    // });
+    // debugger;
+    var pros = state.goodsD.productList.filter(f =>{
+      var endRt = false;
+      for(var i = 0 ; i< ckids.length ; i ++){
+        var ckid = ckids[i];
+        eval("endRt = /(^"+ckid+"_)|(^"+ckid+",)|(^"+ckid+"$)|(,"+ckid+"_)|(,"+ckid+",)|(,"+ckid+"$)|(_"+ckid+"$)|(_"+ckid+",)|(_"+ckid+"_)/g.test(f.goods_specification_ids)");
+        if(!endRt){
+          return false;
+        }
+      }
+      return true;
+    });
+
+    if(pros.length != 0){
+      var nowp = pros[0];
+      state.goodsD.isChangeSelectedPro = true;
+      state.goodsD.selectedPro = {};
+      state.goodsD.selectedPro.retail_price = nowp.retail_price;
+      state.goodsD.selectedPro.goods_name = nowp.goods_name;
+      state.goodsD.selectedPro.list_pic_url = nowp.list_pic_url;
+      state.goodsD.selectedPro.goods_specification_ids = nowp.goods_specification_ids;
+      state.goodsD.selectedPro.id = nowp.id;
+      state.goodsD.selectedPro.market_price = nowp.market_price;
+      state.goodsD.selectedPro.goods_number = nowp.goods_number;
+      
+    }
+    else{
+      state.goodsD.isChangeSelectedPro = false;
+    }
+  },
+
+
+}

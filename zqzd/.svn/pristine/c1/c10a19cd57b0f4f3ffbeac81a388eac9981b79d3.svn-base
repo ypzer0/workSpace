@@ -1,0 +1,122 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api.js'
+export const y_have_sell = {
+    
+  //我的卡券寄卖页面数据
+  haveSell: (params) => {
+    
+    return axios.request({
+      url: api.Y_HaveSell,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  //寄卖-出售页面数据
+  consignSell: (params) => {
+    //debugger;
+    console.log("params:",params);
+    var paraStr = "";
+    if(params != undefined){
+      paraStr = Object.keys(params).map(function (key) {
+        // body...
+        return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
+      }).join("&");
+        paraStr = "?" + paraStr;
+    }
+    console.log("paraStr:",paraStr);
+    return axios.request({
+      url: api.Y_HaveSell + paraStr,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  //寄卖-已下架面数据
+  soldOutSell: (params) => {
+    console.log("params:",params);
+    var paraStr = "";
+    if(params != undefined){
+      paraStr = Object.keys(params).map(function (key) {
+        // body...
+        return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
+      }).join("&");
+        paraStr = "?" + paraStr;
+    }
+    console.log("paraStr:",paraStr);
+    return axios.request({
+      url: api.Y_HaveSell + paraStr,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  //寄卖-已完成面数据
+  completeSell: (params) => {
+    console.log("params:",params);
+    var paraStr = "";
+    if(params != undefined){
+      paraStr = Object.keys(params).map(function (key) {
+        // body...
+        return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
+      }).join("&");
+        paraStr = "?" + paraStr;
+    }
+    console.log("paraStr:",paraStr);
+    return axios.request({
+      url: api.Y_HaveSell + paraStr,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  //寄卖-纠纷中面数据
+  disputesSell: (params) => {
+    console.log("params:",params);
+    var paraStr = "";
+    if(params != undefined){
+      paraStr = Object.keys(params).map(function (key) {
+        // body...
+        return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
+      }).join("&");
+        paraStr = "?" + paraStr;
+    }
+    console.log("paraStr:",paraStr);
+    return axios.request({
+      url: api.Y_HaveSell + paraStr,
+      data: params,
+      method: 'post'
+    })
+  },
+
+
+  //寄卖-出售中-下架
+  shelves: (params) => {
+    console.log("params:",params);
+    return axios.request({
+      url: api.Y_MyGoodsDown,
+      data: params,
+      method: 'post'
+    },
+    {
+      cp : 'application/json'
+     })
+  },
+
+
+  //寄卖-出售中-上架
+  goodsSoldOut: (params) => {
+    console.log("params:",params);
+    return axios.request({
+      url: api.Y_MygoodsUpper,
+      data: params,
+      method: 'post'
+    },
+    {
+      cp : 'application/json'
+     })
+  },
+
+
+  
+}

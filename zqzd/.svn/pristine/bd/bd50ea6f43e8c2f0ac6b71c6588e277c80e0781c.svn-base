@@ -1,0 +1,11 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api'
+export const common = {
+  getIdentifyingCode: (params) => {
+    return axios.request({
+      url: api.SmsLoginCode,
+      data: params,
+      method: 'post'
+    })
+  }
+}

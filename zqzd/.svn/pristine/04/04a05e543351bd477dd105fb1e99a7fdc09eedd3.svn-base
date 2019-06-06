@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ApiUserMapper">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.platform.entity.UserVo" id="userMap">
+        <result property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="gender" column="gender"/>
+        <result property="birthday" column="birthday"/>
+        <result property="registerTime" column="register_time"/>
+        <result property="lastLoginTime" column="last_login_time"/>
+        <result property="lastLoginIp" column="last_login_ip"/>
+        <result property="userLevelId" column="user_level_id"/>
+        <result property="nickname" column="nickname"/>
+        <result property="mobile" column="mobile"/>
+        <result property="registerIp" column="register_ip"/>
+        <result property="avatar" column="avatar"/>
+        <result property="weixinOpenid" column="weixin_openid"/>
+        <result property="platType" column="plat_type"/>
+        <result property="weixinCode" column="weixin_code"/>
+        <result property="codeId" column="code_id"/>
+        <result property="multiple" column="multiple"/>
+        <result property="status" column="status"/>
+        <result property="zhifubao" column="zhifubao"/>
+        <result property="credit" column="credit"/>
+        <result property="integral" column="integral"/>
+        <result property="isExtend" column="is_extend"/>
+        <result property="frozen" column="frozen"/>
+        <result property="money" column="money"/>
+        <result property="age" column="age"/>
+        <result property="uCode" column="u_code"/>
+        <result property="sucOut" column="sucOut"/>
+        <result property="sucOutMoney" column="sucOutMoney"/>
+        <result property="sucBuy" column="sucBuy"/>
+        <result property="sucBuyMoney" column="sucBuyMoney"/>
+        <result property="uCode" column="u_code"/>
+    </resultMap>
+
+    <select id="queryObject" resultMap="userMap">
+    		select
+			u.`id`,
+			u.`username`,
+			u.`password`,
+			u.`gender`,
+			u.`birthday`,
+			u.`register_time`,
+			u.`last_login_time`,
+			u.`last_login_ip`,
+			u.`user_level_id`,
+			u.`nickname`,
+			u.`mobile`,
+			u.`register_ip`,
+			u.`avatar`,
+			u.`weixin_openid`,
+			u.`plat_type`,
+			u.`weixin_code`,
+			u.`code_id`,
+			u.`multiple`,
+			u.`status`,
+			u.`zhifubao`,
+			u.`credit`,
+			u.`integral`,
+			u.`money`,
+			u.`is_extend`,
+			u.`age`,
+			u.`frozen`,
+			ub.u_code
+		from coupon_user u
+		left join coupon_user_code_bom ub on u.id = ub.u_id
+		where u.id = #{value}
+	</select>
+	
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.platform.entity.SmsLogVo" id="smslogMap">
+        <result property="id" column="id"/>
+        <result property="user_id" column="user_id"/>
+        <result property="phone" column="phone"/>
+        <result property="log_date" column="log_date"/>
+        <result property="sms_code" column="sms_code"/>
+        <result property="send_status" column="send_status"/>
+        <result property="sms_text" column="sms_text"/>
+        <result property="is_used" column="is_used"/>
+    </resultMap>
+
+    <select id="querySmsCodeTodayLast" resultMap="smslogMap">
+		
+		select
+		a.id,
+		a.user_id,
+		a.phone,
+		a.log_date,
+		a.sms_code,
+		a.send_status,
+		a.type,
+		a.is_used,
+		a.sms_text
+		from coupon_sms_log a
+		where 1=1 
+		and a.type = #{type} and a.user_id = #{uid}
+		and ifnull(a.is_used, 0) != 1
+		order by a.log_date desc
+		limit 1
+    </select>
+
+    <update id="updateSmsLog" >
+      update coupon_sms_log 
+		<set>
+			`is_used` = #{is_used}
+		</set>
+		where id = #{id}
+    </update>
+
+
+    <select id="queryByMobile" resultMap="userMap">
+        		select
+			u.`id`,
+			u.`username`,
+			u.`password`,
+			u.`gender`,
+			u.`birthday`,
+			u.`register_time`,
+			u.`last_login_time`,
+			u.`last_login_ip`,
+			u.`user_level_id`,
+			u.`nickname`,
+			u.`mobile`,
+			u.`register_ip`,
+			u.`avatar`,
+			u.`weixin_openid`,
+			u.`plat_type`,
+			u.`weixin_code`,
+			u.`code_id`,
+			u.`multiple`,
+			u.`status`,
+			u.`zhifubao`,
+			u.`credit`,
+			u.`integral`,
+			u.`money`,
+			u.`is_extend`,
+			u.`age`,
+			u.`frozen`,
+			ub.u_code
+		from coupon_user u
+		left join coupon_user_code_bom ub on u.id = ub.u_id
+        where 1 = 1 and `mobile` = #{mobile}
+		
+    </select>
+	
+    <select id="queryByOpenId" resultMap="userMap">
+       		select
+			u.`id`,
+			u.`username`,
+			u.`password`,
+			u.`gender`,
+			u.`birthday`,
+			u.`register_time`,
+			u.`last_login_time`,
+			u.`last_login_ip`,
+			u.`user_level_id`,
+			u.`nickname`,
+			u.`mobile`,
+			u.`register_ip`,
+			u.`avatar`,
+			u.`weixin_openid`,
+			u.`plat_type`,
+			u.`weixin_code`,
+			u.`code_id`,
+			u.`multiple`,
+			u.`status`,
+			u.`zhifubao`,
+			u.`credit`,
+			u.`integral`,
+			u.`money`,
+			u.`is_extend`,
+			u.`age`,
+			u.`frozen`,
+			ub.u_code
+		from coupon_user u
+		left join coupon_user_code_bom ub on u.id = ub.u_id
+        where 1 = 1 and u.`weixin_openid` = #{openId}
+    </select>
+
+    <select id="queryList" resultMap="userMap">
+        select * from coupon_user
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+		select count(*) from coupon_user 
+	</select>
+
+    <insert id="save" parameterType="com.platform.entity.UserVo" useGeneratedKeys="true" keyProperty="id">
+		insert into coupon_user(
+			`username`,
+			`password`,
+			`gender`,
+			`birthday`,
+			`register_time`,
+			`last_login_time`,
+			`last_login_ip`,
+			`user_level_id`,
+			`nickname`,
+			`mobile`,
+			`register_ip`,
+			`avatar`,
+			`weixin_openid`,
+			`plat_type`,
+			`weixin_code`,
+			`code_id`,
+			`multiple`,
+			`status`,
+			`zhifubao`,
+			`credit`,
+			`integral`,
+			`money`,
+			`is_extend`,
+			`age`,
+			`frozen`
+			
+			)values(
+			#{username},
+			#{password},
+			#{gender},
+			#{birthday},
+			#{registerTime},
+			#{lastLoginTime},
+			#{lastLoginIp},
+			#{userLevelId},
+			#{nickname},
+			#{mobile},
+			#{registerIp},
+			#{avatar},
+			#{weixinOpenid},
+			#{platType},
+			#{weixinCode},
+			#{codeId},
+			#{multiple},
+			#{status},
+			#{zhifubao},
+			#{credit},
+			#{integral},
+			#{money},
+			#{isExtend},
+			#{age},
+			#{frozen}
+			)
+	</insert>
+
+    <update id="update" parameterType="com.platform.entity.UserVo">
+      update coupon_user 
+		<set>
+			<if test="username != null">`username` = #{username}, </if>
+			<if test="password != null">`password` = #{password}, </if>
+			<if test="gender != null">`gender` = #{gender}, </if>
+			<if test="birthday != null">`birthday` = #{birthday}, </if>
+			<if test="registerTime != null">`register_time` = #{registerTime}, </if>
+			<if test="lastLoginTime != null">`last_login_time` = #{lastLoginTime}, </if>
+			<if test="lastLoginIp != null">`last_login_ip` = #{lastLoginIp}, </if>
+			<if test="userLevelId != null">`user_level_id` = #{userLevelId}, </if>
+			<if test="nickname != null">`nickname` = #{nickname}, </if>
+			<if test="mobile != null">`mobile` = #{mobile}, </if>
+			<if test="registerIp != null">`register_ip` = #{registerIp}, </if>
+			<if test="avatar != null">`avatar` = #{avatar}, </if>
+			<if test="weixinOpenid != null">`weixin_openid` = #{weixinOpenid}, </if>
+			<if test="platType != null">`plat_type` = #{platType}, </if>
+			<if test="weixinCode != null">`weixin_code` = #{weixinCode}, </if>
+			<if test="codeId != null">`code_id` = #{codeId}, </if>
+			<if test="multiple != null">`multiple` = #{multiple},</if>
+			<if test="status != null">`status` = #{status},</if>
+			<if test="zhifubao != null">`zhifubao` = #{zhifubao},</if>
+			<if test="credit != null">`credit` = #{credit},</if>
+			<if test="integral != null">`integral` = #{integral},</if>
+			<if test="frozen != null">`frozen` = #{frozen},</if>
+			<if test="money != null">`money` = #{money},</if>
+			<if test="age != null">`age` = #{age},</if>
+			<if test="isExtend != null">`is_extend` = #{isExtend}</if>
+		</set>
+		where id = #{id}
+    </update>
+    
+    <update id="updateMobile" parameterType="com.platform.entity.UserVo">
+      update coupon_user 
+		<set>
+			<if test="mobile != null">`mobile` = #{mobile}, </if>
+		</set>
+		where id = #{id}
+    </update>
+
+
+    <select id="querySmsCodeByUserId" resultMap="smslogMap">
+				
+		select
+        a.id,
+        a.user_id,
+        a.phone,
+        a.log_date,
+        a.sms_code,
+        a.send_status,
+        a.type,
+        a.sms_text
+        from coupon_sms_log a
+		where a.user_id = #{user_id}
+		order by log_date desc limit 1
+    </select>
+
+    <insert id="saveSmsCodeLog" parameterType="com.platform.entity.SmsLogVo">
+        insert into coupon_sms_log(
+        `id`,
+        `user_id`,
+        `phone`,
+        `log_date`,
+        `sms_code`,
+        `send_status`,
+        `type`,
+        `is_used`,
+        `sms_text`)
+        values(
+        #{id},
+        #{user_id},
+        #{phone},
+        #{log_date},
+        #{sms_code},
+        #{send_status},
+        #{type},
+        #{is_used},
+        #{sms_text}
+        )
+    </insert>
+
+</mapper>

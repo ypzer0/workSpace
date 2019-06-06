@@ -1,0 +1,72 @@
+<template>
+  <div class="pay-succeed-box">
+    <div class="pay-succeed-img"><img src="../../static/images/pay-success.png"/></div>
+    <p class="pay-succeed-title">恭喜你获得商品</p>
+    <p class="pay-succeed-text1">我们已经收到来自你的订单，卖家已经发货。</p>
+    <p class="pay-succeed-text2">进入<span @click="$go('/z-urse')">个人中心</span>点击查看我的订单。</p>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import Vue from 'vue'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
+export default {
+  computed: {
+    
+  },
+  components: {
+    
+  },
+  methods: {
+    
+  },
+  created() {
+
+  },
+  activated(){
+
+  },
+  
+}
+</script>
+
+<style lang="less" scoped>
+.pay-succeed-box{
+  width: 100%;
+  margin: 0 auto;
+  background: #ffffff;
+  padding-bottom: 50px;
+  .pay-succeed-img{
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    padding-top: 75px;
+    img{
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .pay-succeed-title{
+    font-size: 34px;
+    color: #15a396;
+    text-align: center;
+    margin-top: 20px;
+  }
+  .pay-succeed-text1{
+    font-size: 26px;
+    color: #5d5d5d;
+    text-align: center;
+    margin-top: 45px;
+  }
+  .pay-succeed-text2{
+    font-size: 26px;
+    color: #5d5d5d;
+    text-align: center;
+    margin-top: 10px;
+    span{
+      color: #15a396;
+    }
+  }
+}
+</style>

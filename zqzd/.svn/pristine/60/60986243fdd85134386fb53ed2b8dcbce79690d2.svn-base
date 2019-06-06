@@ -1,0 +1,117 @@
+$(function () {
+    $("#jqGrid").Grid({
+        url: '../couponTest/list',
+        colModel: [
+            {label: 'id', name: 'id', key: true, hidden: true},
+            {label: '用户名', name: 'username', width: 50},
+            {label: '用户操作', name: 'operation', width: 70},
+            {label: '请求方法', name: 'method', width: 150},
+            {label: '请求参数', name: 'params', width: 80},
+            {label: 'IP地址', name: 'ip', width: 150},
+            {
+                label: '创建时间', name: 'createDate', width: 90, formatter: function (value) {
+                return transDate(value);
+            }
+            }
+        ]
+    });
+});
+
+var vm = new Vue({
+    el: '#rrapp',
+    data: {
+    	showList: true,
+    	title: null,
+    	couponTest:{
+    		name: 'testy'
+    	},
+        q: {
+            key: null
+        },
+        isLogin: []
+    },
+    methods: {
+        query: function () {
+            vm.reload();
+        },
+        add: function () {
+            vm.showList = false;
+            vm.title = "新增";
+            vm.couponTest = {
+            	username:''		
+            };
+        },
+        del: function (event) {
+            var ids = getSelectedRows("#jqGrid");
+            if (ids == null) {
+                return;
+            }
+
+            confirm('确定要删除选中的记录？', function () {
+                Ajax.request({
+                    type: "POST",
+                    url: "../couponTest/delete",
+                    contentType: "application/json",
+                    params: JSON.stringify(ids),
+                    successCallback: function (r) {
+                        alert('操作成功', function (index) {
+                            vm.reload();
+                        });
+                    }
+                });
+            });
+        },
+        update: function (event) {
+        	var id = getSelectedRow("#jqGrid");
+            if (id == null) {
+                return;
+            }
+            vm.showList = false;
+            vm.title = "修改";
+
+            vm.getInfo(id)
+        },
+        saveOrUpdate: function (event) {
+            var url = vm.couponTest.id == null ? "../couponTest/save" : "../couponTest/update";
+
+            Ajax.request({
+                type: "POST",
+                url: url,
+                contentType: "application/json",
+                params: JSON.stringify(vm.couponTest),
+                successCallback: function () {
+                    alert('操作成功', function (index) {
+                        vm.reload();
+                    });
+                }
+            });
+        },
+        getInfo: function (id) {
+            Ajax.request({
+                url: "../couponTest/info/" + id,
+                async: true,
+                successCallback: function (r) {
+                	debugger;
+                    vm.couponTest = r.couponTest;
+                }
+            });
+        },
+        reload: function (event) {
+        	vm.showList = true;
+            var page = $("#jqGrid").jqGrid('getGridParam', 'page');
+            $("#jqGrid").jqGrid('setGridParam', {
+                postData: {'key': vm.q.key, 'operation': vm.isLogin.toLocaleString()},
+                page: page
+            }).trigger("reloadGrid");
+            vm.handleReset('formValidate');
+        },
+        handleSubmit: function (name) {
+            handleSubmitValidate(this, name, function () {
+                vm.saveOrUpdate()
+            });
+        },
+        handleReset: function (name) {
+            handleResetForm(this, name);
+        }
+    }
+});

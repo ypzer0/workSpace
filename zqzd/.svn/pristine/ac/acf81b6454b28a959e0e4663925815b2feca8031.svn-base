@@ -1,0 +1,799 @@
+package com.platform.service;
+
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.AlipayClient;
+import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.domain.AlipayTradeWapPayModel;
+import com.alipay.api.internal.util.AlipaySignature;
+import com.alipay.api.request.AlipayTradeWapPayRequest;
+import com.platform.dao.ApiGoodsMapper;
+import com.platform.dao.ApiOrderMapper;
+import com.platform.dao.ApiUserMapper;
+import com.platform.dao.ApiWalletLogMapper;
+import com.platform.dao.ApiWalletMapper;
+import com.platform.entity.CouponGoodsVo;
+import com.platform.entity.CouponOrderVo;
+import com.platform.entity.CouponWalletLogVo;
+import com.platform.entity.CouponWalletVo;
+import com.platform.entity.PayLogEntity;
+import com.platform.entity.UserVo;
+import com.platform.util.wechat.MD5;
+import com.platform.util.wechat.WechatRefundApiResult;
+import com.platform.util.wechat.WechatUtil;
+import com.platform.utils.AlipayConfigUtil;
+import com.platform.utils.CharUtil;
+import com.platform.utils.MapExtUtils;
+import com.platform.utils.MapUtils;
+import com.platform.utils.R;
+import com.platform.utils.ResourceUtil;
+import com.platform.utils.Rp;
+import com.platform.utils.WeiXinUtil;
+import com.platform.utils.XmlUtil;
+import com.platform.weixin.DingXingConfig;
+import com.platform.weixin.WXPay;
+
+
+
+@Service
+public class ApiPayService {
+    private Logger logger = Logger.getLogger(getClass());
+	
+	@Autowired
+	private ApiOrderMapper orderMapper;
+	@Autowired
+	private ApiGoodsMapper goodsMapper;
+	@Autowired
+	private PayLogService payLogService;
+	@Autowired
+	private ApiUserMapper userMapper;
+	@Autowired
+	private ApiWalletMapper walletMapper;
+	@Autowired
+	private ApiWalletLogMapper walletLogMapper;
+	
+	
+	/**
+	 * 支付
+	 * @param loginUser
+	 * @param oid
+	 * @param pt
+	 * @return
+	 */
+	public Rp payMoney(UserVo loginUser, Integer oid, Integer pt, String ip) {
+		if(pt == null || oid == null || oid <= 0) {
+			return Rp.error("支付失败!!");
+		}
+		
+		if(pt == 1) {
+			//支付宝支付
+			return payMoney_Ali(loginUser, oid, ip);
+		}
+		else if(pt == 2) {
+
+			return payMoney_WeiXin(loginUser, oid, ip);
+		}
+		
+		return Rp.error("更多支付方式，敬请期待...");
+	}
+	
+	/**
+	 * 支付宝支付
+	 * @param loginUser
+	 * @param oid
+	 * @return
+	 */
+	private Rp payMoney_Ali(UserVo loginUser, Integer oid, String ip) {
+
+		Integer plat = loginUser.getPlatType();		
+		if(plat == null) {
+			plat = 1;
+		}
+
+		CouponOrderVo orderInfo = orderMapper.queryObject(oid);
+        if (null == orderInfo) {
+			return Rp.error("订单已经取消！");
+        }
+        
+        Boolean isSuccess = false;
+        
+        if(orderInfo.getOrderStatus() == 0 || orderInfo.getOrderStatus() == 2) {
+        	isSuccess = true;
+        }
+        
+        if(!isSuccess) {
+        	return Rp.error("订单已经取消！");
+        }
+		
+		// 商户订单号，商户网站订单系统中唯一订单号，必填
+	    String out_trade_no = orderInfo.getOrderSn();
+		// 订单名称，必填
+	    String subject = String.format("%s平台", plat == 1 ? "鼎鑫" : "惠友");
+		System.out.println(subject);
+	    // 付款金额，必填
+	    String total_amount= orderInfo.getOrderPrice().toString();
+	    // 商品描述，可空
+	    String body = String.format("%s %s",  orderInfo.getTopName() + "|" + orderInfo.getParentName(), "1张");
+	    // 超时时间 可空
+	   String timeout_express="2m";
+	    // 销售产品码 必填
+	    String product_code=AlipayConfigUtil.getProcode(plat);
+	    /**********************/
+	    // SDK 公共请求类，包含公共请求参数，以及封装了签名与验签，开发者无需关注签名与验签     
+	    //调用RSA签名方式
+	    AlipayClient client = new DefaultAlipayClient(AlipayConfigUtil.getUrl(plat),
+	    		AlipayConfigUtil.getAppId(plat),
+	    		AlipayConfigUtil.getKey(plat),
+	    		AlipayConfigUtil.getFormat(plat),
+	    		AlipayConfigUtil.getCharset(plat),
+	    		AlipayConfigUtil.getPubkey(plat),
+	    		AlipayConfigUtil.getSigntype(plat));
+	    AlipayTradeWapPayRequest alipay_request=new AlipayTradeWapPayRequest();
+	    
+	    // 封装请求支付信息
+	    AlipayTradeWapPayModel model=new AlipayTradeWapPayModel();
+	    model.setOutTradeNo(out_trade_no);
+	    model.setSubject(subject);
+	    model.setTotalAmount(total_amount);
+	    model.setBody(body);
+	    model.setTimeoutExpress(timeout_express);
+	    model.setProductCode(product_code);
+	    alipay_request.setBizModel(model);
+	    // 设置异步通知地址
+	    alipay_request.setNotifyUrl(AlipayConfigUtil.getNotifyurl(plat));
+	    // 设置同步地址
+	    alipay_request.setReturnUrl(AlipayConfigUtil.getReturnurl(plat));   
+	    
+	    // form表单生产
+	    String form = "";
+		try {
+			// 调用SDK生成表单
+			form = client.pageExecute(alipay_request).getBody();
+			return Rp.ok().putDt("from", form);
+		} catch (AlipayApiException e) {
+			// TODO Auto-generated catch block
+			return Rp.error(e.getMessage());
+//			e.printStackTrace();
+		} 
+	}
+
+	/**
+	 * 支付宝支付返回
+	 * @param request
+	 * @param response
+	 * @param clientIp
+	 */
+	public void alpayback(HttpServletRequest request, HttpServletResponse response, String clientIp) {
+
+        float pay_money = 0f;
+        int pay_status = 2;
+        //申请支付日志
+        PayLogEntity payLog = new PayLogEntity();
+        payLog.setCtime(new Date());
+        payLog.setIp(clientIp);
+        payLog.setPayType(2);
+        payLog.setTraType(2);
+        
+		StringBuffer msg = new StringBuffer();
+		msg.append("支付宝测试数据  \n");
+		try {
+
+			// TODO Auto-generated method stub
+			//获取支付宝POST过来反馈信息
+			Map<String,String> params = new HashMap<String,String>();
+			Map requestParams = request.getParameterMap();
+			for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext();) {
+				String name = (String) iter.next();
+				String[] values = (String[]) requestParams.get(name);
+				String valueStr = "";
+				for (int i = 0; i < values.length; i++) {
+					valueStr = (i == values.length - 1) ? valueStr + values[i]
+							: valueStr + values[i] + ",";
+				}
+				//乱码解决，这段代码在出现乱码时使用。如果mysign和sign不相等也可以使用这段代码转化
+				//valueStr = new String(valueStr.getBytes("ISO-8859-1"), "gbk");
+				params.put(name, valueStr);
+			}
+			//获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以下仅供参考)//
+				//商户订单号
+			String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"),"UTF-8");
+			//支付宝交易号
+			String trade_no = new String(request.getParameter("trade_no").getBytes("ISO-8859-1"),"UTF-8");
+			//交易状态
+			String trade_status = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"),"UTF-8");
+
+			msg.append("获取到数据:\n");
+			msg.append("订单号:" + out_trade_no + "\n");
+			msg.append("支付宝交易号: " + trade_no + "\n");
+			msg.append("支付宝交易号: " + trade_status + "\n");
+			
+	        response.setCharacterEncoding("UTF-8");
+	        response.setContentType("text/html;charset=UTF-8");
+	        response.setHeader("Access-Control-Allow-Origin", "*");
+
+            CouponOrderVo orderInfo = orderMapper.queryOrderByNo(out_trade_no);
+	        if (null == orderInfo) {
+	        	response.getWriter().write("fail");
+	        	msg.append("支付宝支付:   跳出代码 :" + "没有找到订单");
+//	        	return Rp.error("订单不存在！");
+				return ;
+	        }
+
+            if(orderInfo.getPayStatus() == 1) {
+	        	response.getWriter().write("fail");
+	        	msg.append("交易成功不需要再次支付:   跳出代码 ");
+//	        	return Rp.error("订单不存在！");
+            	return;
+            }
+            
+	        
+	        msg.append("获取用户:" + orderInfo.getUserId() + "\n");
+	        UserVo orderUser = userMapper.queryObject(orderInfo.getUserId());
+	        Integer plat = orderUser.getPlatType();
+	        msg.append("平台id:" + plat + "\n");
+	        
+//	        Boolean isSuccess = false;
+//	        
+//	        if(orderInfo.getOrderStatus() == 0 || orderInfo.getOrderStatus() == 2) {
+//	        	isSuccess = true;
+//	        }
+//	        
+//	        if(!isSuccess) {
+//	        	response.getWriter().write("fail");
+//	        	msg.append("跳出代码：订单已经取消！");
+//	        	return;
+////	        	return Rp.error("订单已经取消！");
+//	        }
+			
+			//获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以上仅供参考)//
+			//计算得出通知验证结果
+			//boolean AlipaySignature.rsaCheckV1(Map<String, String> params, String publicKey, String charset, String sign_type)
+
+	        msg.append("支付宝开始验证签名\n");
+
+	        String pubkey = AlipayConfigUtil.getPubkey(plat);
+	        String charset = AlipayConfigUtil.getCharset(plat);
+	        msg.append("公钥:" + pubkey + "\n");
+	        msg.append("编码:" + charset + "\n");
+	        
+			boolean verify_result = AlipaySignature.rsaCheckV1(params, 
+					pubkey, 
+					charset, "RSA2");
+	        
+			if(verify_result){//验证成功
+				//////////////////////////////////////////////////////////////////////////////////////////
+				//请在这里加上商户的业务逻辑程序代码
+
+
+                //订单编号
+            	pay_status = 1;
+
+                payLog.setOrderNo(out_trade_no);
+                
+                // 业务处理
+                pay_money = orderInfo.getOrderPrice().floatValue();
+
+                
+
+				msg.append("更新订单  \n");
+                if(orderInfo != null) {
+                    payLog.setOId(orderInfo.getId());
+                    payLog.setUId(orderInfo.getUserId());
+                    payLog.setUName(orderInfo.getNickname());
+                }
+                
+                orderInfo.setPayStatus(1);
+                orderInfo.setOrderStatus(1);
+                orderInfo.setPayTime(new Date());
+                orderInfo.setPayType(0);
+                orderMapper.update(orderInfo);
+
+				msg.append("更新消费明细  \n");
+                CouponWalletVo walletInfo = new CouponWalletVo();
+                walletInfo.setUid(orderInfo.getUserId());
+                walletInfo.setMoney(orderInfo.getOrderPrice());
+                walletInfo.setWtype1(1);
+                walletInfo.setWtype2(4);
+                walletInfo.setOrderSn(out_trade_no);
+                walletInfo.setTransactionId(trade_no);
+                walletInfo.setOutTradeNo(trade_no);
+                
+                walletInfo.setPreMoney(orderUser.getMoney());
+                walletInfo.setEndMoney(orderUser.getMoney());
+                walletInfo.setCtime(new Date());
+                walletMapper.save(walletInfo);
+
+				msg.append("更新消费明细日志  \n");
+                CouponWalletLogVo walletInfoLog = new CouponWalletLogVo();
+                walletInfoLog.setContent("用户：" + orderUser.getNickname() + " 下单：" + out_trade_no + " 支付：" + orderInfo.getOrderPrice() );
+                walletInfoLog.setCtime(new Date());
+                walletInfoLog.setMoney(orderInfo.getOrderPrice());
+                walletInfoLog.setWtype1(walletInfo.getWtype1());
+                walletInfoLog.setWtype2(walletInfo.getWtype2());
+                walletInfoLog.setTitle(walletInfoLog.getWtype2Str() + " " + walletInfoLog.getWtype1Str());
+                walletInfoLog.setUid(walletInfo.getUid());
+                walletInfoLog.setWid(walletInfo.getId());
+                
+                walletLogMapper.save(walletInfoLog);
+
+				msg.append("更新支付日志  \n");
+                payLog.setStatus(pay_status);
+                payLog.setMoney(new BigDecimal(pay_money));
+                payLogService.save(payLog);
+
+                
+				//——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
+				
+				if(trade_status.equals("TRADE_FINISHED")){
+					//判断该笔订单是否在商户网站中已经做过处理
+						//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+						//请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
+						//如果有做过处理，不执行商户的业务程序
+						
+					//注意：
+					//如果签约的是可退款协议，退款日期超过可退款期限后（如三个月可退款），支付宝系统发送该交易状态通知
+					//如果没有签约可退款协议，那么付款完成后，支付宝系统发送该交易状态通知。
+				} else if (trade_status.equals("TRADE_SUCCESS")){
+					//判断该笔订单是否在商户网站中已经做过处理
+						//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+						//请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
+						//如果有做过处理，不执行商户的业务程序
+						
+					//注意：
+					//如果签约的是可退款协议，那么付款完成后，支付宝系统发送该交易状态通知。
+
+				}
+				//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
+//				out.println("success");	//请不要修改或删除
+	        	response.getWriter().write("success");
+				//////////////////////////////////////////////////////////////////////////////////////////
+			}else{//验证失败
+				msg.append("验证失败  \n");
+	        	response.getWriter().write("fail");
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			msg.append("调用支付异常  \n");
+			msg.append(e.getMessage());
+
+            pay_status = 3;
+            payLog.setStatus(pay_status);
+            payLog.setMoney(new BigDecimal(pay_money));
+            payLogService.save(payLog);
+            
+		} finally {
+			logger.info(msg.toString());
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+
+
+	/**
+	 * 微信支付
+	 * @param loginUser
+	 * @param oid
+	 * @return
+	 */
+	public Rp payMoney_WeiXin(UserVo loginUser, Integer oid, String ip) {
+		
+		UserVo nowUser = userMapper.queryObject(loginUser.getId());
+		
+		Integer plat = nowUser.getPlatType();		
+		if(plat == null) {
+			plat = 1;
+		}
+
+		CouponOrderVo orderInfo = orderMapper.queryObject(oid);
+        if (null == orderInfo) {
+			return Rp.error("订单已经取消！");
+        }
+        
+        Boolean isSuccess = false;
+        
+        if(orderInfo.getOrderStatus() == 0 || orderInfo.getOrderStatus() == 2) {
+        	isSuccess = true;
+        }
+        
+        if(!isSuccess) {
+        	return Rp.error("订单已经取消！");
+        }
+        
+//        String nonceStr = CharUtil.getRandomString(32);
+        //https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=7_7&index=3
+
+        int pay_money = 0;
+        int pay_status = 2;
+        //申请支付日志
+        PayLogEntity payLog = new PayLogEntity();
+        payLog.setCtime(new Date());
+        payLog.setIp(ip);
+        payLog.setOId(orderInfo.getId());
+        payLog.setOrderNo(orderInfo.getOrderSn());
+        payLog.setPayType(11);
+        payLog.setTraType(1);
+        payLog.setUId(nowUser.getId());
+        payLog.setUName(nowUser.getNickname());
+        
+        try {
+        	
+        	
+        	
+            Map<Object, Object> parame = new TreeMap<Object, Object>();
+            parame.put("appid", WeiXinUtil.getAppId(plat));
+            // 商家账号。
+            parame.put("mch_id", WeiXinUtil.getMchId(plat));
+            String randomStr = CharUtil.getRandomNum(18).toUpperCase();
+            // 随机字符串
+            parame.put("nonce_str", randomStr);
+            // 商品描述
+            parame.put("body", "商城支付");
+            
+            logger.info("开始获取商品");
+            //订单的商品
+            List<CouponGoodsVo> orderGoods = goodsMapper.queryGoodsByOId(oid, nowUser.getId());
+            if(orderGoods.size() != 0) logger.info(orderGoods.get(0).toString());
+            if (orderGoods != null && orderGoods.size() != 0) {            	
+                String body = "商城支付-";              
+                for (CouponGoodsVo goodsVo : orderGoods) {                	
+                    body = body + goodsVo.getcName() + "、";
+                }
+                if (body.length() > 0) {
+                    body = body.substring(0, body.length() - 1);
+                }
+                // 商品描述
+                parame.put("body", body);
+            }
+            pay_money = orderInfo.getOrderPrice().multiply(new BigDecimal(100)).intValue();
+            //支付金额
+            parame.put("total_fee", pay_money);
+            
+            // 商户订单编号
+            parame.put("out_trade_no", orderInfo.getOrderSn());
+            // 回调地址
+            parame.put("notify_url", WeiXinUtil.getNotifyUrl(plat));
+            // 交易类型APP
+            parame.put("trade_type", WeiXinUtil.getTradeType(plat));
+            
+            parame.put("spbill_create_ip", ip);
+            // openId
+            parame.put("openid", nowUser.getWeixinOpenid());
+            
+            String sign = WechatUtil.arraySign(parame, WeiXinUtil.getPaySignKey(plat));
+            // 数字签证
+            parame.put("sign", sign);
+            
+            String xml = MapUtils.convertMap2Xml(parame);
+            logger.info("xml:" + xml);
+            String rtXml =  WechatUtil.requestOnceCoupon(WeiXinUtil.getUniformorder(plat), xml,plat);
+            logger.info("rtxml:" + rtXml);
+            Map<String, Object> resultUn = XmlUtil.xmlStrToMap(rtXml);
+
+            String return_code = MapUtils.getString("return_code", resultUn);
+            String return_msg = MapUtils.getString("return_msg", resultUn);
+//
+//        	
+//        	
+//        	
+        	
+//    	  logger.info("开始获取商品");
+//    	  String body = "";
+////          //订单的商品
+//          List<CouponGoodsVo> orderGoods = goodsMapper.queryGoodsByOId(oid, nowUser.getId());
+//          if(orderGoods.size() != 0) logger.info(orderGoods.get(0).toString());
+//          if (orderGoods != null && orderGoods.size() != 0) {            	
+//              body = "商城支付-";              
+//              for (CouponGoodsVo goodsVo : orderGoods) {                	
+//                  body = body + goodsVo.getcName() + "、";
+//              }
+//              if (body.length() > 0) {
+//                  body = body.substring(0, body.length() - 1);
+//              }
+//          }
+//          pay_money = orderInfo.getOrderPrice().multiply(new BigDecimal(100)).intValue();
+//          
+//        	
+//        	DingXingConfig config = new DingXingConfig();
+//        	
+//            WXPay wxpay = new WXPay(config);
+//
+//            Map<String, String> data = new HashMap<String, String>();
+//            
+//            data.put("body", body);
+//            data.put("out_trade_no", orderInfo.getOrderSn());
+//            data.put("device_info", "WEB");
+//            data.put("openid", nowUser.getWeixinOpenid());
+//            data.put("fee_type", "CNY");
+//            data.put("total_fee", pay_money + "");
+//            data.put("spbill_create_ip", ip);
+//            data.put("notify_url", WeiXinUtil.getNotifyUrl(plat));
+//            data.put("trade_type", WeiXinUtil.getTradeType(plat));  // 此处指定为扫码支付
+////            data.put("product_id", "12");
+//
+//      	  	logger.info("组织支付参数");
+//            for(Map.Entry<String, String> entry : data.entrySet()){  
+//                logger.info("Key = "+entry.getKey()+",value="+entry.getValue());  
+//            }
+//
+//            Map<String, String> resultUn = wxpay.unifiedOrder(data);
+//
+//      	  	logger.info("返回参数");
+//            for(Map.Entry<String, String> entry : resultUn.entrySet()){  
+//                logger.info("Key = "+entry.getKey()+",value="+entry.getValue());  
+//            }
+            
+            // 响应报文
+//            String return_code = MapExtUtils.getString("return_code", resultUn);
+//            String return_msg = MapExtUtils.getString("return_msg", resultUn);
+            //
+            
+            if (return_code.equalsIgnoreCase("FAIL")) {
+                return Rp.error("支付失败," + return_msg);
+            } else if (return_code.equalsIgnoreCase("SUCCESS")) {
+
+                pay_status = 1;
+                // 返回数据
+//                String result_code = MapExtUtils.getString("result_code", resultUn);
+//                String err_code_des = MapExtUtils.getString("err_code_des", resultUn);
+                String result_code = MapUtils.getString("result_code", resultUn);
+                String err_code_des = MapUtils.getString("err_code_des", resultUn);
+                
+                if (result_code.equalsIgnoreCase("FAIL")) {
+                    return Rp.error("支付失败," + err_code_des);
+                } else if (result_code.equalsIgnoreCase("SUCCESS")) {
+                	
+//                	String nonce_str = create_nonce_str();
+                	String nonce_str = CharUtil.getRandomNum(18).toUpperCase();
+                	String timestamp = create_timestamp();
+                    String prepay_id = MapUtils.getString("prepay_id", resultUn);
+//                    String prepay_id = MapExtUtils.getString("prepay_id", resultUn);
+                    String md5Pre = String.format("appId=%s&nonceStr=%s&package=%s&signType=MD5&timeStamp=%s&key=%s",
+                        WeiXinUtil.getAppId(plat),
+                        nonce_str, 
+                        "prepay_id=" + prepay_id,
+                        timestamp, 
+                        WeiXinUtil.getPaySignKey(plat));
+                	logger.info("组织签名参数 " + md5Pre);
+                	
+                	String endSing = MD5.getMessageDigest(md5Pre);
+                	logger.info("加密后 " + endSing);
+
+                    Map<String, String> resultObj = new HashMap<String, String>();
+                    resultObj.put("timestamp", timestamp);
+                    resultObj.put("nonceStr", nonce_str);
+                    resultObj.put("package", prepay_id);
+                    resultObj.put("signType", "MD5");
+                    resultObj.put("paySign", endSing);
+                    // 业务处理
+//                  orderInfo.setPay_id(prepay_id);
+//                    orderInfo.setPayStatus(1);
+//                    orderMapper.update(orderInfo);
+
+              	  	logger.info("最终返回参数");
+                    for(Map.Entry<String, String> entry : resultObj.entrySet()){  
+                        logger.info("Key = "+entry.getKey()+",value="+entry.getValue());  
+                    }
+                    
+                    return Rp.ok("微信统一订单下单成功").putDt("pay", resultObj);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            pay_status = 3;
+            return Rp.error("微信下单失败,error=" + e.getMessage());
+        }
+        finally {
+            payLog.setStatus(pay_status);
+            payLog.setMoney(new BigDecimal(pay_money));
+            payLogService.save(payLog);
+		}
+        return Rp.error("下单失败");
+		
+	}
+	
+    //返回微信服务
+    public String setXml(String return_code, String return_msg) {
+        return "<xml><return_code><![CDATA[" + return_code + "]]></return_code><return_msg><![CDATA[" + return_msg + "]]></return_msg></xml>";
+    }
+
+    //模拟微信回调接口
+    public String callbakcXml(String orderNum) {
+        return "<xml><appid><![CDATA[wx2421b1c4370ec43b]]></appid><attach><![CDATA[支付测试]]></attach><bank_type><![CDATA[CFT]]></bank_type><fee_type><![CDATA[CNY]]></fee_type> <is_subscribe><![CDATA[Y]]></is_subscribe><mch_id><![CDATA[10000100]]></mch_id><nonce_str><![CDATA[5d2b6c2a8db53831f7eda20af46e531c]]></nonce_str><openid><![CDATA[oUpF8uMEb4qRXf22hE3X68TekukE]]></openid> <out_trade_no><![CDATA[" + orderNum + "]]></out_trade_no>  <result_code><![CDATA[SUCCESS]]></result_code> <return_code><![CDATA[SUCCESS]]></return_code><sign><![CDATA[B552ED6B279343CB493C5DD0D78AB241]]></sign><sub_mch_id><![CDATA[10000100]]></sub_mch_id> <time_end><![CDATA[20140903131540]]></time_end><total_fee>1</total_fee><trade_type><![CDATA[JSAPI]]></trade_type><transaction_id><![CDATA[1004400740201409030005092168]]></transaction_id></xml>";
+    }
+
+    private static String create_timestamp() {
+        return Long.toString(System.currentTimeMillis() / 1000);
+    }
+
+    private static String create_nonce_str() {
+        return UUID.randomUUID().toString();
+    }
+	/**
+	 * 微信返回支付
+	 * @param request
+	 * @param response
+	 * @param clientIp
+	 * @return
+	 */
+	public void wxpayback(HttpServletRequest request, HttpServletResponse response, String clientIp) {
+		// TODO Auto-generated method stub
+
+        float pay_money = 0f;
+        int pay_status = 2;
+        //申请支付日志
+        PayLogEntity payLog = new PayLogEntity();
+        payLog.setCtime(new Date());
+        payLog.setIp(clientIp);
+        payLog.setPayType(11);
+        payLog.setTraType(2);
+        
+    	logger.info("微信支付响应返回");
+        try {
+        	
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("text/html;charset=UTF-8");
+            response.setHeader("Access-Control-Allow-Origin", "*");
+            InputStream in = request.getInputStream();
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int len = 0;
+            while ((len = in.read(buffer)) != -1) {
+                out.write(buffer, 0, len);
+            }
+            out.close();
+            in.close();
+            //xml数据
+            String reponseXml = new String(out.toByteArray(), "utf-8");
+
+        	logger.info("响应数据:" + reponseXml);
+        	
+            WechatRefundApiResult result = (WechatRefundApiResult) XmlUtil.xmlStrToBean(reponseXml, WechatRefundApiResult.class);
+            
+        	logger.info("响应数据解析:" + result.toString());
+        	
+            String result_code = result.getResult_code();
+            if (result_code.equalsIgnoreCase("FAIL")) {
+                //订单编号
+                String out_trade_no = result.getOut_trade_no();
+
+                CouponOrderVo orderInfo = orderMapper.queryOrderByNo1(out_trade_no);
+                if(orderInfo != null) {
+                    payLog.setOId(orderInfo.getId());
+                    payLog.setUId(orderInfo.getUserId());
+                    payLog.setUName(orderInfo.getNickname());
+                }
+                payLog.setOrderNo(out_trade_no);
+                
+                logger.error("订单" + out_trade_no + "响应支付失败");
+
+                payLog.setStatus(pay_status);
+                payLog.setMoney(new BigDecimal(pay_money));
+                payLogService.save(payLog);
+                
+                response.getWriter().write(setXml("SUCCESS", "OK"));
+            } else if (result_code.equalsIgnoreCase("SUCCESS")) {
+            	
+                //订单编号
+            	pay_status = 1;
+                String out_trade_no = result.getOut_trade_no();
+
+                payLog.setOrderNo(out_trade_no);
+                pay_money = Integer.parseInt(result.getTotal_fee());
+                
+                logger.info("订单" + out_trade_no + "支付成功");
+                // 业务处理
+                CouponOrderVo orderInfo = orderMapper.queryOrderByNo1(out_trade_no);
+                
+                if(orderInfo.getPayStatus() == 2) {
+
+                    logger.info("订单已付款无需修改状态!");
+                    response.getWriter().write(setXml("SUCCESS", "OK"));
+                    return;
+                }
+                
+                if(orderInfo != null) {
+                    payLog.setOId(orderInfo.getId());
+                    payLog.setUId(orderInfo.getUserId());
+                    payLog.setUName(orderInfo.getNickname());
+                }
+                else {
+                	logger.info("异常查找的订单失败.");
+                }
+                
+                
+                orderInfo.setPayStatus(1);
+                orderInfo.setOrderStatus(1);
+                orderInfo.setPayTime(new Date());
+                orderInfo.setPayType(0);
+                orderMapper.update(orderInfo);
+
+                logger.info("增加资金流水信息");
+
+                UserVo orderUser = userMapper.queryObject(orderInfo.getId());
+                
+                CouponWalletVo walletInfo = new CouponWalletVo();
+                walletInfo.setUid(orderInfo.getUserId());
+                walletInfo.setMoney(orderInfo.getOrderPrice());
+                walletInfo.setWtype1(1);
+                walletInfo.setWtype2(3);
+                walletInfo.setOrderSn(out_trade_no);
+                walletInfo.setTransactionId(result.getOut_trade_no());
+                walletInfo.setOutTradeNo(result.getOut_trade_no());
+                
+                walletInfo.setPreMoney(orderUser.getMoney());
+                walletInfo.setEndMoney(orderUser.getMoney());
+                
+                walletInfo.setCtime(new Date());
+                
+                walletMapper.save(walletInfo);
+                
+                CouponWalletLogVo walletInfoLog = new CouponWalletLogVo();
+                walletInfoLog.setContent("用户：" + orderUser.getNickname() + " 下单：" + out_trade_no + " 支付：" + orderInfo.getOrderPrice() );
+                walletInfoLog.setCtime(new Date());
+                walletInfoLog.setMoney(orderInfo.getOrderPrice());
+                walletInfoLog.setWtype1(walletInfo.getWtype1());
+                walletInfoLog.setWtype2(walletInfo.getWtype2());
+                walletInfoLog.setTitle(walletInfoLog.getWtype2Str() + " " + walletInfoLog.getWtype1Str());
+                walletInfoLog.setUid(walletInfo.getUid());
+                walletInfoLog.setWid(walletInfo.getId());
+                
+                walletLogMapper.save(walletInfoLog);
+
+                payLog.setStatus(pay_status);
+                payLog.setMoney(new BigDecimal(pay_money));
+                payLogService.save(payLog);
+
+                logger.info("增加资金流水信息成功！");
+                
+                response.getWriter().write(setXml("SUCCESS", "OK"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            pay_status = 3;
+            logger.info("支付返回异常:");
+            logger.info(e.getMessage());
+
+            payLog.setStatus(pay_status);
+            payLog.setMoney(new BigDecimal(pay_money));
+            payLogService.save(payLog);
+            return;
+        }
+        finally {
+		}
+		
+		
+		return ;
+	}
+
+	
+	
+	
+	
+	
+	
+	
+}

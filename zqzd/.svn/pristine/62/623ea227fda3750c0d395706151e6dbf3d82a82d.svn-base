@@ -1,0 +1,18 @@
+package com.platform.dao;
+
+import java.util.Map;
+
+import com.platform.entity.ZdGoodsInfoEntity;
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-05-30 13:59:14
+ */
+public interface ZdGoodsInfoDao extends BaseDao<ZdGoodsInfoEntity> {
+
+	
+	int updateStatus(Map<String, Object> map);
+}

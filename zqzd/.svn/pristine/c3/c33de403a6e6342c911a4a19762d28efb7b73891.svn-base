@@ -1,0 +1,199 @@
+package com.platform.controller;
+
+import com.alibaba.fastjson.JSON;
+import com.platform.annotation.SysLog;
+import com.platform.dto.ConfigConDto;
+import com.platform.dto.ConfigContactDto;
+import com.platform.dto.ConfigCreditDto;
+import com.platform.dto.CouponConfigUpdateDto;
+import com.platform.entity.SysConfigEntity;
+import com.platform.service.SysConfigService;
+import com.platform.utils.Constant;
+import com.platform.utils.PageUtils;
+import com.platform.utils.Query;
+import com.platform.utils.R;
+import com.platform.utils.StringUtils;
+import com.platform.validator.ValidatorUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 系统配置信息Controller
+ *
+ * @author zy
+ * @email zgyxszyd@qq.com
+ * @date 2019-05-10
+ */
+@RestController
+@RequestMapping("/coupon/config")
+public class CouponSysConfigController extends AbstractController {
+    @Autowired
+    private SysConfigService sysConfigService;
+
+    /**
+     * 所有配置列表
+     *
+     * @param params 请求参数
+     * @return R
+     */
+    @RequestMapping("/list")
+    @RequiresPermissions("coupon:config:list")
+    public R list(@RequestParam Map<String, Object> params) {
+        //查询列表数据
+        Query query = new Query(params);
+        List<SysConfigEntity> configList = sysConfigService.queryList(query);
+        int total = sysConfigService.queryTotal(query);
+
+        PageUtils pageUtil = new PageUtils(configList, total, query.getLimit(), query.getPage());
+
+        return R.ok().put("page", pageUtil);
+    }
+
+    @RequestMapping("/load")
+    @RequiresPermissions("coupon:config:load")
+    public R load() {
+    	
+        ConfigCreditDto configCredit = sysConfigService.getConfigObject(Constant.KEY_CREDIT, ConfigCreditDto.class);
+        ConfigConDto configCon = sysConfigService.getConfigObject(Constant.KEY_CON, ConfigConDto.class);
+        ConfigContactDto configContact = sysConfigService.getConfigObject(Constant.KEY_CONTACT, ConfigContactDto.class);
+        String about = sysConfigService.getValue(Constant.KEY_ABOUT, "");
+        
+        return R.ok().put("credit", configCredit)
+        		.put("con", configCon)
+        		.put("contact", configContact)
+        		.put("about", about);    
+    }
+
+    /**
+     * 根据主键获取配置信息
+     *
+     * @param id 主键
+     * @return R
+     */
+    @RequestMapping("/info/{id}")
+    @RequiresPermissions("coupon:config:info")
+    public R info(@PathVariable("id") Long id) {
+        SysConfigEntity config = sysConfigService.queryObject(id);
+
+        return R.ok().put("config", config);
+    }
+
+    /**
+     * 新增配置
+     *
+     * @param config 配置
+     * @return R
+     */
+    @SysLog("新增配置")
+    @RequestMapping("/save")
+    @RequiresPermissions("coupon:config:save")
+    public R save(@RequestBody SysConfigEntity config) {
+        ValidatorUtils.validateEntity(config);
+
+        sysConfigService.save(config);
+
+        return R.ok();
+    }
+
+    /**
+     * 修改配置
+     *
+     * @param config 配置
+     * @return R
+     */
+    @SysLog("修改配置")
+    @RequestMapping("/update")
+    @RequiresPermissions("coupon:config:update")
+    public R update(@RequestBody CouponConfigUpdateDto config) {
+
+        ValidatorUtils.validateEntity(config);
+    	
+        logger.info(config.toString());
+        
+    	List<SysConfigEntity> saveEn = new ArrayList<>();
+    	
+    	SysConfigEntity sysConfigEntity = new SysConfigEntity();
+		sysConfigEntity.setKey(Constant.KEY_CONTACT);
+		sysConfigEntity.setValue(config.getContact() == null ? "" : JSON.toJSONString(config.getContact()));
+		saveEn.add(sysConfigEntity);
+		
+		sysConfigEntity = new SysConfigEntity();
+		sysConfigEntity.setKey(Constant.KEY_CREDIT);
+		sysConfigEntity.setValue(config.getCredit() == null ? "" : JSON.toJSONString(config.getCredit()));
+		saveEn.add(sysConfigEntity);
+		
+		sysConfigEntity = new SysConfigEntity();
+		sysConfigEntity.setKey(Constant.KEY_CON);
+		sysConfigEntity.setValue(config.getCon() == null ? "" : JSON.toJSONString(config.getCon()));
+		saveEn.add(sysConfigEntity);
+
+		sysConfigEntity = new SysConfigEntity();
+		sysConfigEntity.setKey(Constant.KEY_ABOUT);
+		sysConfigEntity.setValue(config.getAbout());
+		saveEn.add(sysConfigEntity);
+		
+//    	
+//    	for (SysConfigEntity sysConfigEntity : config) {
+//			
+//    		if(sysConfigEntity.getKey() == "credit") {
+//    			
+//    			sysConfigEntity.setKey(Constant.KEY_CREDIT);
+//    			saveEn.add(sysConfigEntity);
+//    		}
+//    		else if(sysConfigEntity.getKey() == "con") {
+//
+//    			sysConfigEntity.setKey(Constant.KEY_CON);
+//    			saveEn.add(sysConfigEntity);
+//    		}
+//    		else if(sysConfigEntity.getKey() == "contact") {
+//
+//    			sysConfigEntity.setKey(Constant.KEY_CONTACT);
+//    			saveEn.add(sysConfigEntity);
+//    		}
+//    		else if(sysConfigEntity.getKey() == "about") {
+//
+//    			sysConfigEntity.setKey(Constant.KEY_ABOUT);
+//    			saveEn.add(sysConfigEntity);
+//    		}
+//		}
+    	
+    	for (SysConfigEntity sysConfigEntity1 : saveEn) {
+    		SysConfigEntity qsce = sysConfigService.getByKey(sysConfigEntity1.getKey());
+    		if(qsce == null) {
+    			logger.info("进入添加");
+        		logger.info(sysConfigEntity1.toString());
+        		sysConfigEntity1.setStatus(1);
+                sysConfigService.save(sysConfigEntity1);
+    		}
+    		else {
+    			logger.info("进入修改");
+        		logger.info(sysConfigEntity1.toString());
+    			qsce.setValue(sysConfigEntity1.getValue());
+                sysConfigService.update(qsce);
+    		}
+		}
+
+        return R.ok();
+    }
+
+    /**
+     * 删除配置
+     *
+     * @param ids 主键集
+     * @return R
+     */
+    @SysLog("删除配置")
+    @RequestMapping("/delete")
+    @RequiresPermissions("coupon:config:delete")
+    public R delete(@RequestBody Long[] ids) {
+        sysConfigService.deleteBatch(ids);
+
+        return R.ok();
+    }
+
+}

@@ -1,0 +1,5 @@
+import './components'
+import './methods'
+import './globalData'
+import './filters'
+import './mixins'

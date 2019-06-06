@@ -1,0 +1,60 @@
+package com.platform.dto;
+
+import java.io.Serializable;
+
+public class CouponConfigUpdateDto  implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private ConfigCreditDto credit;
+	
+	private ConfigConDto con;
+	
+	private ConfigContactDto contact;
+	
+	private String about;
+	
+	@Override
+	public String toString() {
+		return "{credit:" + credit + ", con:" + con + ", contact:" + contact + ", about:" + about + "}";
+	}
+
+	public String getAbout() {
+		return about;
+	}
+
+	public void setAbout(String about) {
+		this.about = about;
+	}
+
+	public ConfigCreditDto getCredit() {
+		return credit;
+	}
+
+	public void setCredit(ConfigCreditDto credit) {
+		this.credit = credit;
+	}
+
+	public ConfigConDto getCon() {
+		return con;
+	}
+
+	public void setCon(ConfigConDto con) {
+		this.con = con;
+	}
+
+	public ConfigContactDto getContact() {
+		return contact;
+	}
+
+	public void setContact(ConfigContactDto contact) {
+		this.contact = contact;
+	}
+	
+	
+	
+	
+}

@@ -1,0 +1,15 @@
+package com.platform.dao;
+
+
+import com.platform.entity.CouponUserIntegralVo;
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-23 10:55:21
+ */
+public interface ApiUserIntegralMapper extends BaseDao<CouponUserIntegralVo> {
+
+}

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.OrderAskMsgDao">
+
+    <resultMap type="com.platform.entity.OrderAskMsgEntity" id="orderAskMsgMap">
+        <result property="id" column="id"/>
+        <result property="askid" column="askId"/>
+        <result property="msg" column="msg"/>
+        <result property="uid" column="uId"/>
+        <result property="uName" column="u_name"/>
+        <result property="handerId" column="hander_id"/>
+        <result property="handerName" column="hander_name"/>
+        <result property="status" column="status"/>
+        <result property="ctime" column="ctime"/>
+        <result property="msgType" column="msgType"/>
+        <result property="readStatus" column="readStatus"/>
+        <result property="msgWay" column="msgWay"/>
+        
+    </resultMap>
+
+
+
+
+	<select id="queryObject" resultType="com.platform.entity.OrderAskMsgEntity" resultMap="orderAskMsgMap">
+		select
+			`id`,
+			`askId`,
+			`msg`,
+			`uId`,
+			`u_name`,
+			`hander_id`,
+			`hander_name`,
+			`status`,
+			`msgType`,
+			`readStatus`,
+			`msgWay`,
+			`ctime`
+		from nideshop_order_ask_msg
+		where id = #{id}
+	</select>
+
+	<select id="queryList" resultType="com.platform.entity.OrderAskMsgEntity" resultMap="orderAskMsgMap">
+		select
+		oam.`id`,
+		oam.`askId`,
+		oam.`msg`,
+		oam.`uId`,
+		u.nickname as `u_name`,
+		oam.`hander_id`,
+		su.username as `hander_name`,
+		oam.`status`,
+		oam.`msgType`,
+		oam.`readStatus`,
+		oam.`msgWay`,
+		oam.`ctime`
+		from nideshop_order_ask_msg oam
+		left join nideshop_user u on oam.uId = u.id
+		left join sys_user su on oam.hander_id = su.user_id
+		WHERE 1=1
+		<if test="name != null and name.trim() != ''">
+			AND oam.msg LIKE concat('%',#{name},'%')
+		</if>
+		<if test="msgtp != null and msgtp != 0">
+			AND oam.msgType = #{msgtp}
+		</if>
+		<if test="adkid != null and adkid != 0">
+			AND oam.askId = #{adkid}
+		</if>
+		<if test="readStatus != null">
+			AND oam.readStatus = #{readStatus}
+		</if>
+		<if test="msgWay != null">
+			AND oam.msgWay = #{msgWay}
+		</if>
+		<if test="handerId != null">
+			AND oam.hander_id = #{handerId}
+		</if>
+		<if test="status != null">
+			AND oam.status = #{status}
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by ctime desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from nideshop_order_ask_msg
+		WHERE 1=1
+		<if test="name != null and name.trim() != ''">
+			AND msg LIKE concat('%',#{name},'%')
+		</if>
+		<if test="msgtp != null and msgtp != 0">
+			AND msgType = #{msgtp}
+		</if>
+		<if test="adkid != null and adkid != 0">
+			AND askId = #{adkid}
+		</if>
+		<if test="readStatus != null">
+			AND readStatus = #{readStatus}
+		</if>
+		<if test="msgWay != null">
+			AND msgWay = #{msgWay}
+		</if>
+		<if test="handerId != null">
+			AND oam.hander_id = #{handerId}
+		</if>
+		<if test="status != null">
+			AND oam.status = #{status}
+		</if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.OrderAskMsgEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into nideshop_order_ask_msg(
+			`askId`,
+			`msg`,
+			`uId`,
+			`u_name`,
+			`hander_id`,
+			`hander_name`,
+			`status`,
+			`msgType`,
+			`readStatus`,
+			`msgWay`,
+			`ctime`)
+		values(
+			#{askid},
+			#{msg},
+			#{uid},
+			#{uName},
+			#{handerId},
+			#{handerName},
+			#{status},
+			#{msgType},
+			#{readStatus},
+			#{msgWay},
+			#{ctime})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.OrderAskMsgEntity">
+		update nideshop_order_ask_msg 
+		<set>
+			<if test="askid != null">`askId` = #{askid}, </if>
+			<if test="msg != null">`msg` = #{msg}, </if>
+			<if test="uid != null">`uId` = #{uid}, </if>
+			<if test="uName != null">`u_name` = #{uName}, </if>
+			<if test="handerId != null">`hander_id` = #{handerId}, </if>
+			<if test="handerName != null">`hander_name` = #{handerName}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="msgType != null">`msgType` = #{msgType}, </if>
+			<if test="readStatus != null">`readStatus` = #{readStatus}, </if>
+			<if test="msgWay != null">`msgWay` = #{msgWay}, </if>
+			<if test="ctime != null">`ctime` = #{ctime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from nideshop_order_ask_msg where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from nideshop_order_ask_msg where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+
+	<update id="cleanNotRead" >
+		update nideshop_order_ask_msg set readStatus = 1 where hander_id = #{sysuid} and uId = #{uid} and msgType = 1 and msgWay = 1
+	</update>
+
+</mapper>

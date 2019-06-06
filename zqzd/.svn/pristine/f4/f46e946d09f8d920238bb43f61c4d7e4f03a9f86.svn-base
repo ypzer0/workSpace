@@ -1,0 +1,49 @@
+package com.platform.api;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.platform.annotation.IgnoreAuth;
+import com.platform.entity.CouponCategoryVo;
+import com.platform.service.ApiCategoryService;
+import com.platform.util.ApiBaseAction;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@Api(tags = "商品种类接口")
+@RestController
+@RequestMapping("/cpapi")
+public class ApiCategoryController extends ApiBaseAction{
+	@Autowired
+	private ApiCategoryService service;
+	
+	@ApiOperation(value = "买家首页一级分类接口", response = Map.class)
+	@PostMapping("/goods/nav/list")
+	@IgnoreAuth
+	public Object goodsList() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> rtMap= service.goodsList(map);
+		return toResponsSuccess(rtMap);
+	}
+	
+	@ApiOperation(value = "买家二级分类接口", response = Map.class)
+	@PostMapping("/goods/buyers/calssify")
+	@IgnoreAuth
+	public Object buyersGoodsCalssify(@RequestParam(value="cid") Integer parentId) {
+		Map<String, Object> rtMap = service.buyersGoodsCalssify(parentId);
+		return toResponsSuccess(rtMap);
+	}
+	
+	
+}

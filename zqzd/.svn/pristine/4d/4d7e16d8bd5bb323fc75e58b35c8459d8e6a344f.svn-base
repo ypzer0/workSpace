@@ -1,0 +1,192 @@
+$(function () {
+    $("#jqGrid").Grid({
+        url: '../couponwalletinfo/listm',
+        colModel: [
+			/*{label: 'id', name: 'id', index: 'id', key: true, hidden: true},*/
+			{label: '用户Id', name: 'uCode', index: 'u_code', width: 80, sortable: false, align: 'center',
+				formatter: function (value, dt, rowObject) {
+					var plat = rowObject.platType == 1 ? "DX" : "HY";
+                    return plat + value;
+                }
+			},
+			
+			{label: '用户昵称', name: 'nickname', index: 'nickname', width: 80, sortable: false, align: 'center'},
+			{label: '下级id', name: 'fuCose', index: 'fu_cose', width: 80, sortable: false, align: 'center',
+
+				formatter: function (value, dt, rowObject) {
+					var plat = rowObject.platType == 1 ? "DX" : "HY";
+                    return plat + value;
+                }
+			},
+			{label: '下级昵称', name: 'fnickname', index: 'fnickname', width: 80, sortable: false, align: 'center'},
+			{label: '消费金额', name: 'orderPrice', index: 'order_price', width: 80, sortable: false, align: 'center',
+				formatter: "currency", formatoptions: 
+				{decimalSeparator:".", prefix:"￥", decimalPlaces: 2}
+			},
+			{label: '变动数量', name: 'money', index: 'money', width: 80, sortable: false, align: 'center',
+				formatter: "currency", formatoptions: 
+				{decimalSeparator:".", prefix:"￥", decimalPlaces: 2}
+			},
+			{label: '备注', name: 'remark', index: 'remark', width: 180, sortable: false, align: 'center'},
+			{label: '消费时间', name: 'payTime', index: 'pay_time', width: 180, sortable:false, align: 'center',
+				formatter: function (value) {
+                    return transDate(value);
+                }
+			},
+			
+			/*{label: '变动情况', name: 'wtype1', index: 'wtype1', width: 80,
+				formatter: function (value, dd, row) {
+					var iostr = row.wtype1 == 1 ? "收入" : "支出";
+					return iostr;
+				}	
+			},
+			{label: '佣金汇总', name: 'endMoney', index: 'end_money', width: 80, formatter: "currency", formatoptions: {decimalSeparator:".", prefix:"￥", decimalPlaces: 2}},
+			{label: '状态', name: 'fStatus', index: 'f_status', width: 80,
+				formatter: function (value, dd, row) {
+					var iostr = row.fStatus == 0 ? "正常" : "冻结中";
+					return iostr;
+				}
+			},
+			
+			
+
+			{label: '消费时间', name: 'ctime', index: 'ctime', width: 80,
+				formatter: function (value) {
+                    return transDate(value);
+                }
+			}*/
+			],
+			footerrow: true,
+			gridComplete: function() {
+	        },
+	        loadComplete: function(xhr){
+	    		
+	        	var total = {
+	        		money: 0
+	        	};
+	        	if(xhr.total != null){
+	        		total.money = xhr.total.money;
+	        	}
+	        	
+				var rows = $("#jqGrid").jqGrid("getRowData");
+	        	$("#jqGrid").jqGrid("footerData", "set", { nickname: "--合计--", money: total.money});
+	        }
+    });
+});
+
+let vm = new Vue({
+	el: '#rrapp',
+	data: {
+        showList: true,
+        title: null,
+		CouponwalletInfo: {},
+		ruleValidate: {
+			name: [
+				{required: true, message: '名称不能为空', trigger: 'blur'}
+			]
+		},
+		q: {
+		    name: '',
+		    inOut: '',
+		    fstatus: ''
+		}
+	},
+	methods: {
+		query: function () {
+			vm.reload();
+		},
+		add: function () {
+			vm.showList = false;
+			vm.title = "新增";
+			vm.CouponwalletInfo = {};
+		},
+		update: function (event) {
+            let id = getSelectedRow("#jqGrid");
+			if (id == null) {
+				return;
+			}
+			vm.showList = false;
+            vm.title = "修改";
+
+            vm.getInfo(id)
+		},
+		saveOrUpdate: function (event) {
+            let url = vm.CouponwalletInfo.id == null ? "../couponwalletinfo/save" : "../couponwalletinfo/update";
+            Ajax.request({
+			    url: url,
+                params: JSON.stringify(vm.CouponwalletInfo),
+                type: "POST",
+			    contentType: "application/json",
+                successCallback: function (r) {
+                    alert('操作成功', function (index) {
+                        vm.reload();
+                    });
+                }
+			});
+		},
+		del: function (event) {
+            let ids = getSelectedRows("#jqGrid");
+			if (ids == null){
+				return;
+			}
+
+			confirm('确定要删除选中的记录？', function () {
+                Ajax.request({
+				    url: "../couponwalletinfo/delete",
+                    params: JSON.stringify(ids),
+                    type: "POST",
+				    contentType: "application/json",
+                    successCallback: function () {
+                        alert('操作成功', function (index) {
+                            vm.reload();
+                        });
+					}
+				});
+			});
+		},
+		getInfo: function(id){
+            Ajax.request({
+                url: "../couponwalletinfo/info/"+id,
+                async: true,
+                successCallback: function (r) {
+                    vm.CouponwalletInfo = r.CouponwalletInfo;
+                }
+            });
+		},
+		reload: function (event) {
+			vm.showList = true;
+            let page = $("#jqGrid").jqGrid('getGridParam', 'page');
+            var btime = vm.q.payTimeBegin != '' ? vm.q.payTimeBegin.dateFormat("yyyy-MM-dd") : '';
+            var etime = vm.q.payTimeEnd != '' ? vm.q.payTimeEnd.dateFormat("yyyy-MM-dd") : '';
+            var str = "";
+            if(vm.q.uCode !== undefined && vm.q.uCode != null){
+            	str = vm.q.uCode.replace(/[a-zA-Z]+/gi, "");
+            }
+			$("#jqGrid").jqGrid('setGridParam', {
+                postData: {'name': vm.q.name, 'uCode':str,
+                	'payTimeBegin': btime, 'payTimeEnd' : etime
+                	, 'inOut' : vm.q.inOut, 'fstatus' : vm.q.fstatus},
+                page: page
+            }).trigger("reloadGrid");
+            vm.handleReset('formValidate');
+		},
+        reloadSearch: function() {
+            vm.q = {
+                name: ''
+            }
+            vm.reload();
+        },
+        handleSubmit: function (name) {
+            handleSubmitValidate(this, name, function () {
+                vm.saveOrUpdate()
+            });
+        },
+        handleReset: function (name) {
+            handleResetForm(this, name);
+        },
+        download:function(){
+        	var params = $.param(vm.q);
+        	parent.parent.window.location.href='../couponwalletinfo/listCommissionExcel?' + params;
+        }
+	}
+});

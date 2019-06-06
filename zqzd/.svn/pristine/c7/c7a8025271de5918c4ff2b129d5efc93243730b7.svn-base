@@ -1,0 +1,62 @@
+package com.platform.dto;
+
+import java.io.Serializable;
+import java.util.Date;
+
+public class ImgBatchAddDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private String code;
+	private String img;
+	private String time;
+	private Date timeConvert;
+	
+	public ImgBatchAddDto() {
+		super();
+	}
+	
+	public Date getTimeConvert() {
+		return timeConvert;
+	}
+	public void setTimeConvert(Date timeConvert) {
+		this.timeConvert = timeConvert;
+	}
+	
+	
+	public ImgBatchAddDto(String code, String img, String time) {
+		super();
+		this.code = code;
+		this.img = img;
+		this.time = time;
+	}
+	@Override
+	public String toString() {
+		return "ImgBatchAddDto [code=" + code + ", img=" + img + ", time=" + time + "]";
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
+	public String getImg() {
+		return img;
+	}
+	public void setImg(String img) {
+		this.img = img;
+	}
+	public String getTime() {
+		return time;
+	}
+	public void setTime(String time) {
+		this.time = time;
+	}
+	
+	
+	
+	
+}

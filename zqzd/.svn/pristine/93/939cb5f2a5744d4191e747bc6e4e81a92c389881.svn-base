@@ -1,0 +1,125 @@
+package com.platform.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.platform.dao.CouponIssueHandleDao;
+import com.platform.entity.CouponIssueHandleEntity;
+import com.platform.entity.CouponIssueHandleLogEntity;
+import com.platform.entity.SysUserEntity;
+import com.platform.service.CouponIssueHandleLogService;
+import com.platform.service.CouponIssueHandleService;
+import com.platform.service.SysOperLogService;
+import com.platform.utils.R;
+import com.platform.utils.ShiroUtils;
+import com.platform.utils.Constant.OperLogFlag;
+
+/**
+ * Service实现类
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-24 13:46:57
+ */
+@Service("CouponissueHandleService")
+public class CouponIssueHandleServiceImpl implements CouponIssueHandleService {
+    @Autowired
+    private CouponIssueHandleDao CouponissueHandleDao;
+    @Autowired
+    private CouponIssueHandleLogService CouponissueHandleLogService;
+    @Autowired
+    protected SysOperLogService sysOperLogService;
+
+    @Override
+    public CouponIssueHandleEntity queryObject(Integer id) {
+        return CouponissueHandleDao.queryObject(id);
+    }
+
+    @Override
+    public List<CouponIssueHandleEntity> queryList(Map<String, Object> map) {
+        return CouponissueHandleDao.queryList(map);
+    }
+
+    @Override
+    public int queryTotal(Map<String, Object> map) {
+        return CouponissueHandleDao.queryTotal(map);
+    }
+
+    @Override
+    public int save(CouponIssueHandleEntity CouponissueHandle) {
+    	getLogEntiyt(CouponissueHandle);
+        return CouponissueHandleDao.save(CouponissueHandle);
+    }
+
+    @Override
+    public int update(CouponIssueHandleEntity CouponissueHandle) {
+    	getLogEntiyt(CouponissueHandle);
+        return CouponissueHandleDao.update(CouponissueHandle);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return CouponissueHandleDao.delete(id);
+    }
+
+    @Override
+    public int deleteBatch(Integer[] ids) {
+        return CouponissueHandleDao.deleteBatch(ids);
+    }
+    private void getLogEntiyt(CouponIssueHandleEntity CouponissueHandle) {
+    	SysUserEntity sysUserEntity = ShiroUtils.getUserEntity();
+    	CouponIssueHandleLogEntity couponIssueHandleLog = new CouponIssueHandleLogEntity();
+    	couponIssueHandleLog.setAddTime(CouponissueHandle.getAddTime());
+    	couponIssueHandleLog.setHandlerId(sysUserEntity.getDeptId().intValue());
+    	couponIssueHandleLog.setHandlerName(sysUserEntity.getDeptName());
+    	couponIssueHandleLog.setIhId(CouponissueHandle.getId());
+    	couponIssueHandleLog.setMsg(CouponissueHandle.getMsg());
+    	couponIssueHandleLog.setOrderSn(CouponissueHandle.getOrderSn());
+    	couponIssueHandleLog.setReason(CouponissueHandle.getReason());
+    	couponIssueHandleLog.setStatus(CouponissueHandle.getStatus());
+    	couponIssueHandleLog.setUid(CouponissueHandle.getUid().toString());
+    	couponIssueHandleLog.setUname(CouponissueHandle.getUname());
+    	couponIssueHandleLog.setContent(""+CouponissueHandle.getUname()+"用户的纠纷订单");
+    	couponIssueHandleLog.setTitle("纠纷订单");
+    	CouponissueHandleLogService.save(couponIssueHandleLog);
+    }
+
+	@Override
+	public R IssueHandle(CouponIssueHandleEntity oldEntity,int operuid) {
+		CouponIssueHandleEntity couponIssueHandle = CouponissueHandleDao.queryObject(oldEntity.getId());
+		if (couponIssueHandle == null) {
+			return R.error("数据异常！");
+		}
+		Integer status = oldEntity.getStatus();
+		if (status.equals(1)) {
+			return R.error("该订单已处理！");
+		}
+		couponIssueHandle.setStatus(1);
+		couponIssueHandle.setMsg(oldEntity.getMsg());
+		CouponissueHandleDao.update(couponIssueHandle);
+		sysOperLogService.AddOperLog("纠纷订单处理", "Old:" + couponIssueHandle.toString() + " New:" + oldEntity.toString(), OperLogFlag.User, operuid);
+		return R.ok();
+	}
+
+	@Override
+	public R orderMsg(Integer id, int operuid) {
+		/*
+		 * Map<String, Object> map = new HashMap<String, Object>(); map.put("ids", new
+		 * Integer[] { id }); List<CouponIssueHandleEntity> cih =
+		 * CouponissueHandleDao.queryList(map); 
+		 * if(cih == null || cih.size() == 0) {
+		 * return R.error("数据异常"); 
+		 * }
+		 */
+    	CouponIssueHandleEntity issueHandleMsg = CouponissueHandleDao.queryObject(id);
+    	if (issueHandleMsg == null) {
+    		return R.error("数据异常"); 
+		}
+		sysOperLogService.AddOperLog("查看纠纷单详情", "", OperLogFlag.User, operuid);
+    	return R.ok().put("CouponissueHandle", issueHandleMsg);
+	}
+}

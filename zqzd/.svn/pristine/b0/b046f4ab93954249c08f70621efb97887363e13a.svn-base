@@ -1,0 +1,104 @@
+import * as types from './mutation-types'
+import {api} from '@/service/api'
+import {toast} from '@/libs/cube-ui'
+//import session from '@/libs/session'
+
+export const actions = {
+  //更换手机-修改绑定手机号
+  async getChangePhone ({dispatch, commit, state}, o) {
+    //debugger;
+      let para;
+      para = {
+        old: state.mobile.rawMobile,
+        new: state.mobile.newMobile,
+        code: state.mobile.newCode,
+      };
+      let res = await api.y_change_phone.changePhone(para)
+      //debugger;
+      if (res.success) {
+        commit(types.INIT_CHANGE_PHONE, res.data)
+      } else {
+        toast(res.msg, 'warn')
+      }
+  },
+
+  //更换手机-验证是否有手机号
+  async getMobileValidatep ({dispatch, commit, state}, o) {
+      let res = await api.y_change_phone.mobileValidatep(o)
+      // debugger;
+      state.mobileValidatep = res.success;
+      if (!res.success) {
+        toast(res.msg, 'warn')
+      }
+      //debugger;
+  },
+
+  //更换手机-获取验证码
+  async getMobileSendchange ({dispatch, commit, state}, o) {
+    //debugger;
+    let para;
+      para = {
+        old: state.mobile.rawMobile,
+        new: state.mobile.newMobile,
+      };
+      let res = await api.y_change_phone.mobileSendchange(para)
+      //debugger;
+      if (res.success) {
+        commit(types.INIT_MOBILE_SENDCHANGE, res.data)
+      } else {
+        toast(res.msg, 'warn')
+      }
+  },
+
+
+  //获取验证码方法
+  async getVerificationCode ({dispatch, commit, state}, o) {
+    let rawMobile = state.mobile.rawMobile;
+    let newMobile = state.mobile.newMobile;
+    if(rawMobile == "" && newMobile == ""){
+      toast('手机号不能为空！', 'warn')
+      return;
+    }else if(!(/^1[3|5|7|8][0-9]\d{4,8}$/.test(rawMobile)) && !(/^1[3|5|7|8][0-9]\d{4,8}$/.test(newMobile))){
+      toast('不是完整的11位手机号，或者正确的前七位', 'warn')
+      return;
+    }else{
+      dispatch("getMobileSendchange");
+    }
+  },
+
+
+
+  // async getrawMobile ({dispatch, commit, state}, o) {
+  //   //debugger;
+  //   let rawMobile = state.mobile.rawMobile;
+  //   let newMobile = state.mobile.newMobile;
+  //   if(rawMobile == "" && newMobile == ""){
+  //     toast('手机号不能为空！', 'warn')
+  //     return;
+  //   }else if(!(/^1[3|5|7|8][0-9]\d{4,8}$/.test(rawMobile)) && !(/^1[3|5|7|8][0-9]\d{4,8}$/.test(newMobile))){
+  //     toast('不是完整的11位手机号，或者正确的前七位', 'warn')
+  //     return;
+  //   }else{
+  //     dispatch("getChangePhone");
+  //   }
+  // },
+
+  //提交方法
+  async subMobile ({dispatch, commit, state}, o) {
+    //debugger;
+    let rawMobile = state.mobile.rawMobile;
+    let newMobile = state.mobile.newMobile;
+    let newCode = state.mobile.newCode;
+    if(rawMobile == "" && newMobile == "" && newCode == ""){
+      toast('手机号不能为空！', 'warn')
+      return;
+    }else if(!(/^1[3|5|7|8][0-9]\d{4,8}$/.test(rawMobile)) && !(/^1[3|5|7|8][0-9]\d{4,8}$/.test(newMobile))){
+      toast('不是完整的11位手机号，或者正确的前七位', 'warn')
+      return;
+    }else{
+      dispatch("getChangePhone");
+    }
+    toast('保存成功', 'warn');
+  },
+
+}

@@ -1,0 +1,37 @@
+package com.platform.dao;
+
+import com.platform.entity.ZdUser;
+import com.platform.entity.ZdUserExample;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
+public interface ZdUserMapper {
+	
+	Integer queryTotal(Map<String, Object> map);
+	
+	List<ZdUser> list(Map<String, Object> params);
+	
+    long countByExample(ZdUserExample example);
+
+    int deleteByExample(ZdUserExample example);
+
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(ZdUser record);
+
+    int insertSelective(ZdUser record);
+
+    List<ZdUser> selectByExample(ZdUserExample example);
+
+    ZdUser selectByPrimaryKey(Integer id);
+
+    int updateByExampleSelective(@Param("record") ZdUser record, @Param("example") ZdUserExample example);
+
+    int updateByExample(@Param("record") ZdUser record, @Param("example") ZdUserExample example);
+
+    int updateByPrimaryKeySelective(ZdUser record);
+
+    int updateByPrimaryKey(ZdUser record);
+}

@@ -1,0 +1,180 @@
+$(function () {
+    $("#jqGrid").Grid({
+        colModel: [
+        	{label: 'uid', name: 'uid', index: 'uid', hidden: true, width: 80, sortable: false, align: 'center'},
+        	{label: '用户Id', name: 'uCode', index: 'u_code', width: 80, sortable: false, align: 'center',
+				formatter: function (value, dt, rowObject) {
+					var plat = rowObject.platType == 1 ? "DX" : "HY";
+					console.log(rowObject);
+                    return plat + value;
+                }		
+			},
+        	{label: '用户昵称', name: 'nickname', index: 'nickname', width: 80, sortable: false, align: 'center'},
+        	{label: '变动前', name: 'preCredit', index: 'pre_credit', width: 80, sortable: false, align: 'center'},
+        	{label: '变动数量', name: 'credit', index: 'credit', width: 80, sortable: false, align: 'center',
+        		formatter: function (value, dt, rowObject) {
+					var plat = rowObject.ctype == 2 ? "-" : "";
+                    return plat + value;
+                }
+        	},
+        	{label: '变动后', name: 'endCredit', index: 'end_credit', width: 80, sortable: false, align: 'center'},
+        	{label: '变动时间', name: 'addTime', index: 'add_time', width: 80, sortable: false, align: 'center',
+        		formatter: function (value) {
+                    return transDate(value);
+                }	
+        	},
+        	{label: '操作人', name: 'roleName', index: 'role_name', width: 80, sortable: false, align: 'center'},
+        	{label: '变动原因', name: 'reson', index: 'reson', width: 80, sortable: false, align: 'center'},
+		  /*{label: 'id', name: 'id', index: 'id', key: true, hidden: true},
+        	{label: '操作人', name: 'handlerId', index: 'handler_id', width: 80},
+			{label: '信用明细类型, 1:增加  2:减少', name: 'cType', index: 'c_type', width: 80},*/
+			],
+			footerrow: true,
+			gridComplete: function() {
+	        },
+	        loadComplete: function(xhr){
+	    		
+	        	var total = {
+	        		credit: 0
+	        	};
+	        	if(xhr.total != null){
+	        		total.credit = xhr.total.page.credit;
+	        	}
+	        	
+				var rows = $("#jqGrid").jqGrid("getRowData");
+	        	$("#jqGrid").jqGrid("footerData", "set", { nickname: "--合计--", credit: total.credit});
+	        }
+    });
+});
+
+let vm = new Vue({
+	el: '#rrapp',
+	data: {
+        showList: true,
+        title: null,
+		CouponuserCreditInfo: {},
+		ruleValidate: {
+			name: [
+				{required: true, message: '名称不能为空', trigger: 'blur'}
+			]
+		},
+		q: {
+		    name: '',
+		    uCode: $.GetQueryString("uCode") || '',
+		},
+		updateCredit:{}
+	},
+	created(){
+		var that = this;
+		setTimeout(() => {
+			that.reload();
+		}, 100);
+	},
+	methods: {
+		query: function () {
+			vm.reload();
+		},
+		add: function () {
+			vm.showList = false;
+			vm.title = "新增";
+			vm.CouponuserCreditInfo = {};
+		},
+		update: function (event) {
+            let id = getSelectedRow("#jqGrid");
+			if (id == null) {
+				return;
+			}
+			vm.updateCredit = {};
+			vm.updateCredit.cid = id;
+			
+			//获取选中行的全部信息
+		    var row = getSelectedRowData("jqGrid");
+		    vm.CouponuserCreditInfo = {
+		    	endCredit: row.endCredit,
+		    	uCode: row.uCode
+		    }
+		    
+			vm.showList = false;
+            vm.title = "修改";
+
+		},
+		saveOrUpdate: function (event) {
+            let url = "../couponusercreditinfo/updateCredit";
+            Ajax.request({
+			    url: url,
+                params: JSON.stringify(vm.updateCredit),
+                type: "POST",
+			    contentType: "application/json",
+                successCallback: function (r) {
+                    alert('操作成功', function (index) {
+                        vm.reload();
+                    });
+                }
+			});
+		},
+		del: function (event) {
+            let ids = getSelectedRows("#jqGrid");
+			if (ids == null){
+				return;
+			}
+
+			confirm('确定要删除选中的记录？', function () {
+                Ajax.request({
+				    url: "../couponusercreditinfo/delete",
+                    params: JSON.stringify(ids),
+                    type: "POST",
+				    contentType: "application/json",
+                    successCallback: function () {
+                        alert('操作成功', function (index) {
+                            vm.reload();
+                        });
+					}
+				});
+			});
+		},
+		getInfo: function(id){
+            Ajax.request({
+                url: "../couponusercreditinfo/info/"+id,
+                async: true,
+                successCallback: function (r) {
+                    vm.CouponuserCreditInfo = r.CouponuserCreditInfo;
+                }
+            });
+		},
+		reload: function (event) {
+			vm.showList = true;
+            let page = $("#jqGrid").jqGrid('getGridParam', 'page');
+            var beginTime = vm.q.confirmTimeBegin != '' ? vm.q.confirmTimeBegin.dateFormat("yyyy-MM-dd") : '';
+            var endTime = vm.q.confirmTimeEnd != '' ? vm.q.confirmTimeEnd.dateFormat("yyyy-MM-dd") : '';
+            var str = "";
+            if(vm.q.uCode !== undefined && vm.q.uCode != null){
+            	str = vm.q.uCode.replace(/[a-zA-Z]+/gi, "");
+            }
+			$("#jqGrid").jqGrid('setGridParam', {
+                postData: {
+                	'uCode': str, 
+                	"confirmTimeBegin":beginTime,
+                	"confirmTimeEnd":endTime
+                	},
+                page: page,
+                url: '../couponusercreditinfo/creditMsg',
+            }).trigger("reloadGrid");
+            vm.handleReset('formValidate');
+		},
+        reloadSearch: function() {
+            vm.q = {
+                name: ''
+            }
+            vm.reload();
+        },
+        handleSubmit: function (name) {
+            handleSubmitValidate(this, name, function () {
+                vm.saveOrUpdate()
+            });
+        },
+        handleReset: function (name) {
+            handleResetForm(this, name);
+        },
+        
+	}
+});

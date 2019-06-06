@@ -1,0 +1,48 @@
+<template>
+  <div class="goods-number">
+    <goods-cell title="数量：" @click.native="updateGoodsNumber">
+      <span>{{ count }}</span>
+    </goods-cell>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import goodsCell from './common/goods-cell'
+import goodsNumberPanel from './goods-number-panel'
+
+export default {
+  props: ['info', 'count', 'spro'],
+  components: {
+    goodsCell,
+    goodsNumberPanel
+  },
+  methods: {
+    updateGoodsNumber () {
+      this.$mPopup({
+        mask: true
+      }, (h) => {
+        return h(goodsNumberPanel, {
+          on: {
+            change: this.changeHandler
+          },
+          props:{
+            spro: this.spro,
+            info: this.info,
+            count: this.count
+          }
+        })
+      })
+    },
+    changeHandler (o) {
+      this.$emit('change', o)
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .goods-number {
+    margin-bottom: 10px;
+    background: white;
+  }
+</style>

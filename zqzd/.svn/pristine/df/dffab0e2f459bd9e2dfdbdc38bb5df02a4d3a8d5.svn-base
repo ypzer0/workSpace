@@ -1,0 +1,24 @@
+import * as types from './mutation-types'
+
+export const mutations = {
+  // [types.INIT_ORDER] (state, o) {
+  //   state.goodsNavList = o.tabList;
+  // },
+
+  //商品详情页面数据
+  [types.INIT_GoodsDetail] (state, o) {
+    state.goodsDetail = o;
+  },
+
+  //商品详情加入收藏
+  [types.INIT_JOIN_COLLECT] (state, o) {
+    state.joinCollect = o;
+  },
+
+  //商品详情取消收藏
+  [types.INIT_COLLECT_CANCEL] (state, o) {
+    state.collectCancel = o;
+  },
+
+  
+}

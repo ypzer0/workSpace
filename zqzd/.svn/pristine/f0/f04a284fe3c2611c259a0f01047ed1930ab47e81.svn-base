@@ -1,0 +1,59 @@
+package com.platform.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.dao.ZdCategoryDao;
+import com.platform.entity.ZdCategoryEntity;
+import com.platform.service.ZdCategoryService;
+
+/**
+ * Service实现类
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-05-30 14:28:27
+ */
+@Service("ZdcategoryService")
+public class ZdCategoryServiceImpl implements ZdCategoryService {
+    @Autowired
+    private ZdCategoryDao ZdcategoryDao;
+
+    @Override
+    public ZdCategoryEntity queryObject(Integer id) {
+        return ZdcategoryDao.queryObject(id);
+    }
+
+    @Override
+    public List<ZdCategoryEntity> queryList(Map<String, Object> map) {
+        return ZdcategoryDao.queryList(map);
+    }
+
+    @Override
+    public int queryTotal(Map<String, Object> map) {
+        return ZdcategoryDao.queryTotal(map);
+    }
+
+    @Override
+    public int save(ZdCategoryEntity Zdcategory) {
+        return ZdcategoryDao.save(Zdcategory);
+    }
+
+    @Override
+    public int update(ZdCategoryEntity Zdcategory) {
+        return ZdcategoryDao.update(Zdcategory);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return ZdcategoryDao.delete(id);
+    }
+
+    @Override
+    public int deleteBatch(Integer[] ids) {
+        return ZdcategoryDao.deleteBatch(ids);
+    }
+}

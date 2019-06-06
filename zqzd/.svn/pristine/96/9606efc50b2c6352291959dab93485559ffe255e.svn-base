@@ -1,0 +1,214 @@
+package com.platform.entity;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ * 实体
+ * 表名 coupon_cash_drawal_log
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-24 15:49:54
+ */
+public class CouponCashDrawalLogVo implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    //
+    private Integer id;
+    //提现id
+    private Integer cid;
+    //用户id
+    private Integer uid;
+    //用户名
+    private String uname;
+    //提现金额
+    private BigDecimal cash;
+    //提现类型,1:提现申请
+    private Integer cType;
+    //状态   0，申请中  1，已通过  2，已拒绝
+    private Integer status;
+    //处理意见
+    private String msg;
+    //添加时间
+    private Date addTime;
+    //标题
+    private String title;
+    //内容
+    private String content;
+    //操作人Id
+    private Integer handlerId;
+    //操作人名
+    private String handlerName;
+
+    /**
+     * 设置：
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * 获取：
+     */
+    public Integer getId() {
+        return id;
+    }
+    /**
+     * 设置：提现id
+     */
+    public void setCid(Integer cid) {
+        this.cid = cid;
+    }
+
+    /**
+     * 获取：提现id
+     */
+    public Integer getCid() {
+        return cid;
+    }
+    /**
+     * 设置：用户id
+     */
+    public void setUid(Integer uid) {
+        this.uid = uid;
+    }
+
+    /**
+     * 获取：用户id
+     */
+    public Integer getUid() {
+        return uid;
+    }
+    /**
+     * 设置：用户名
+     */
+    public void setUname(String uname) {
+        this.uname = uname;
+    }
+
+    /**
+     * 获取：用户名
+     */
+    public String getUname() {
+        return uname;
+    }
+    /**
+     * 设置：提现金额
+     */
+    public void setCash(BigDecimal cash) {
+        this.cash = cash;
+    }
+
+    /**
+     * 获取：提现金额
+     */
+    public BigDecimal getCash() {
+        return cash;
+    }
+    /**
+     * 设置：提现类型,1:提现申请
+     */
+    public void setCType(Integer cType) {
+        this.cType = cType;
+    }
+
+    /**
+     * 获取：提现类型,1:提现申请
+     */
+    public Integer getCType() {
+        return cType;
+    }
+    /**
+     * 设置：状态   0，申请中  1，已通过  2，已拒绝
+     */
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    /**
+     * 获取：状态   0，申请中  1，已通过  2，已拒绝
+     */
+    public Integer getStatus() {
+        return status;
+    }
+    /**
+     * 设置：处理意见
+     */
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    /**
+     * 获取：处理意见
+     */
+    public String getMsg() {
+        return msg;
+    }
+    /**
+     * 设置：添加时间
+     */
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+    /**
+     * 获取：添加时间
+     */
+    public Date getAddTime() {
+        return addTime;
+    }
+    /**
+     * 设置：标题
+     */
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    /**
+     * 获取：标题
+     */
+    public String getTitle() {
+        return title;
+    }
+    /**
+     * 设置：内容
+     */
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    /**
+     * 获取：内容
+     */
+    public String getContent() {
+        return content;
+    }
+    /**
+     * 设置：操作人Id
+     */
+    public void setHandlerId(Integer handlerId) {
+        this.handlerId = handlerId;
+    }
+
+    /**
+     * 获取：操作人Id
+     */
+    public Integer getHandlerId() {
+        return handlerId;
+    }
+    /**
+     * 设置：操作人名
+     */
+    public void setHandlerName(String handlerName) {
+        this.handlerName = handlerName;
+    }
+
+    /**
+     * 获取：操作人名
+     */
+    public String getHandlerName() {
+        return handlerName;
+    }
+}

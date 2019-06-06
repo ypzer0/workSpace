@@ -1,0 +1,15 @@
+import * as types from './mutation-types'
+
+export const mutations = {
+  //收藏页面列表
+  [types.INIT_Favorites] (state, o) {
+    state.favorites = o.data;
+  },
+
+  //收藏页面列表 取消收藏
+  [types.INIT_COLLECT_REMOVE] (state, o) {
+    state.collectRemove = o;
+  },
+
+  
+}

@@ -1,0 +1,114 @@
+package com.platform.service;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.platform.dao.ApiCategoryMapper;
+import com.platform.dao.ApiGoodsMapper;
+import com.platform.dao.ApiOrderMapper;
+import com.platform.entity.CouponCategoryVo;
+import com.platform.entity.CouponGoodsVo;
+import com.platform.entity.CouponOrderDetailVo;
+import com.platform.entity.CouponOrderVo;
+import com.platform.entity.UserVo;
+import com.platform.utils.DateUtils;
+import com.platform.utils.DecimalUtil;
+import com.platform.utils.R;
+import com.platform.utils.Rp;
+
+@Service
+public class ApiBuyService {
+
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
+	@Autowired 
+	private ApiGoodsMapper goodsMapper;
+	@Autowired 
+	private ApiOrderMapper orderMapper;
+	
+	@Autowired 
+	private ApiCategoryMapper categoryMapper;
+	
+	/**
+	 * 立即获取业务
+	 * @param loginUser
+	 * @param cid
+	 * @param count
+	 * @return
+	 */
+	public Rp nowBuy(UserVo loginUser, Integer cid, Integer count) {
+
+		if(cid == null || count == null || count <= 0) {
+			return Rp.error("数据异常");
+		}
+		//查询当前商品分类
+		CouponCategoryVo cgv = categoryMapper.queryObjectBuy(cid);
+
+		//验证商品
+		if(cgv == null) {
+			return Rp.error("数据异常");
+		}
+
+		logger.info("goods: " + cgv.toString() );
+		//判断库存
+		if(cgv.getGoodsNumber() <= 0) {
+			return Rp.error("该商品库存不足");
+		}
+		
+		//
+		if(cgv.getGoodsNumber() < count) {
+			return Rp.error("该商品库存不足");
+		}
+		
+		float totalPrice = count * DecimalUtil.GetValueOrDefault(cgv.getSalePrice()).floatValue();
+		
+		//新增订单
+		CouponOrderVo order = new CouponOrderVo();
+		order.setAddTime(new Date());
+		order.setBuyCount(count);
+		
+		order.setOrderSn("O" + DateUtils.format(new Date(), "yyyyMMddHHmmssSS"));
+		order.setUserId(loginUser.getId());
+		order.setOrderStatus(0);
+		order.setConfirmTime(new Date());
+		order.setPayStatus(0);
+		order.setOrderPrice(new BigDecimal(totalPrice));
+		order.setOrderType(0);//正常订单
+		order.setgId(cgv.getId());
+		
+		orderMapper.save(order);
+
+		//新增
+		List<CouponGoodsVo> glist = goodsMapper.queryTopNoEff(count, cid);
+		
+		List<Integer> goodsIds = new ArrayList<>(); 
+		for (CouponGoodsVo gv : glist) {
+			goodsIds.add(gv.getId());
+			CouponOrderDetailVo odv = new CouponOrderDetailVo();
+			odv.setAddTime(new Date());
+			odv.setBuyCount(1);
+			odv.setBuyPrice(gv.getSalePrice());
+			odv.setGoodsId(gv.getId());
+			odv.setGoodsSn(gv.getGoodsSn());
+			odv.setOrderId(order.getId());
+			odv.setOrderSn(order.getOrderSn());
+			
+			orderMapper.saveOrderDetail(odv);
+		}
+		
+		//修改商品为已售状态
+		goodsMapper.updateGoodsToSale(2, goodsIds.toArray(new Integer[0]));
+//		CouponOrderVo orderVo = new CouponOrderVo();
+//		orderVo.setPayStatus(1);
+//		orderMapper.update(orderVo);
+		return Rp.ok().putDt("oid", order.getId()).putDt("num", order.getOrderSn());
+	}
+	
+	
+}

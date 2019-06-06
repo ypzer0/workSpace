@@ -1,0 +1,114 @@
+package com.platform.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.dao.CouponOrderDao;
+import com.platform.dto.CouponGoodsInfoDto;
+import com.platform.entity.CouponOrderEntity;
+import com.platform.service.CouponOrderService;
+
+/**
+ * Service实现类
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-22 11:10:01
+ */
+@Service("CouponorderService")
+public class CouponOrderServiceImpl implements CouponOrderService {
+    @Autowired
+    private CouponOrderDao CouponorderDao;
+
+    @Override
+    public CouponOrderEntity queryObject(Integer id) {
+        return CouponorderDao.queryObject(id);
+    }
+
+    @Override
+    public List<CouponOrderEntity> queryList(Map<String, Object> map) {
+        return CouponorderDao.queryList(map);
+    }
+
+    @Override
+    public int queryTotal(Map<String, Object> map) {
+        return CouponorderDao.queryTotal(map);
+    }
+
+    @Override
+    public int save(CouponOrderEntity Couponorder) {
+        return CouponorderDao.save(Couponorder);
+    }
+
+    @Override
+    public int update(CouponOrderEntity Couponorder) {
+        return CouponorderDao.update(Couponorder);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return CouponorderDao.delete(id);
+    }
+
+    @Override
+    public int deleteBatch(Integer[] ids) {
+        return CouponorderDao.deleteBatch(ids);
+    }
+
+	@Override
+	public List<CouponOrderEntity> queryListInfo(Map<String, Object> map) {
+		return CouponorderDao.queryListInfo(map);
+	}
+
+	@Override
+	public int queryTotalInfo(Map<String, Object> map) {
+		return CouponorderDao.queryTotalInfo(map);
+	}
+
+	@Override
+	public Map<String, Object> rptQueryPriceCountSum(Map<String, Object> map) {
+		
+		return CouponorderDao.rptQueryPriceCountSum(map);
+	}
+
+	@Override
+	public Map<String, Object> QueryOrderPriceCountSum(Map<String, Object> map) {
+		
+		return CouponorderDao.QueryOrderPriceCountSum(map);
+	}
+
+	@Override
+	public List<CouponGoodsInfoDto> QuertGoodsCount(Map<String, Object> map) {
+		return CouponorderDao.QuertGoodsCount(map);
+	}
+
+    /**
+     * 超过24h没有支付的订单进行关闭
+     * */
+
+    @Override
+    public int orderClose24h() {
+        return CouponorderDao.orderClose24h();
+    }
+    /**
+     * 超过7天没有已收货、退款、退货的订单进行关闭
+     * */
+
+    @Override
+    public int orderClose7d() {
+        return CouponorderDao.orderClose7d();
+    }
+    
+
+    /**
+     * 支付完成订单1小时后完成
+     * */
+
+    @Override
+    public int orderFinish1h() {
+        return CouponorderDao.orderFinish1h();
+    }
+}

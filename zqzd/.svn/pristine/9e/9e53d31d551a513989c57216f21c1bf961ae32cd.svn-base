@@ -1,0 +1,187 @@
+<template>
+  <page
+      ref="scroll"
+      :better-scroll="true"
+      :header-immerse="true"
+      @scroll="scroll">
+    <goods-header
+        slot="top"
+        :scroll-y="scrollY"
+        @clickTab="clickTab" :active-tab="activeTab"
+        @gotoHome="gotoHome"></goods-header>
+    <goods-swipper :swipperList="goodsD.gallery"></goods-swipper>
+    <goods-info :info="goodsD.info" :spro="goodsD.selectedPro"></goods-info>
+    <goods-number :count="goodsD.count" :info="goodsD.info"
+      @change="goodsNumberChange" :spro="goodsD.selectedPro"></goods-number>
+    <goods-spec @prop-cli="propCli" :info="goodsD.info" :specifies="goodsD.specifies" :pros="goodsD.productList" :spro="goodsD.selectedPro"></goods-spec>
+    <goods-instructions></goods-instructions>
+    <goods-evaluate :comment="goodsD.comment" @show-comment="showComment"></goods-evaluate>
+    <!-- <goods-shop></goods-shop> --> <!--暂时不要吧-->
+    <goods-details @jump-goods="jumpGoods" @jump-problem="jumpProblem()" :detailsSet="detailsSet" :info="goodsD.info" :issue="goodsD.issue" :productList="goodsD.productList"></goods-details>
+    <goods-action :info="goodsD.info" :productList="goodsD.productList" :specifies="goodsD.specifies" :count="goodsD.count" slot="bottom"></goods-action>
+  </page>
+</template>
+
+<script type="text/ecmascript-6">
+import goodsHeader from './goods-header'
+import goodsSwipper from './goods-swipper'
+import goodsInfo from './goods-info'
+import goodsNumber from './goods-number'
+import goodsSpec from './goods-spec'
+import goodsInstructions from './goods-instructions'
+import goodsEvaluate from './goods-evaluate'
+import goodsShop from './goods-shop'
+import goodsDetails from './goods-details'
+import goodsAction from './goods-action'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
+export default {
+  data () {
+    return {
+      swipperList: [
+      ],
+      detailsSet: {
+        summary: [
+        ]
+      },
+      scrollY: 0,
+      goodsId: function(){
+        var id = this.$route.params.id;
+        if(id == undefined || id == null || id == '') return 0;
+        return parseInt(id)
+      },
+      proId: function(){
+        var pid = this.$route.params.pid;
+        if(pid == undefined || pid == null || pid == '') return 0;
+        return parseInt(pid);
+      },
+      activeTab: 0
+    }
+  },
+  computed:{
+    ...mapState('goods', ['goodsD']),
+  },
+  components: {
+    goodsHeader,
+    goodsSwipper,
+    goodsInfo,
+    goodsNumber,
+    goodsSpec,
+    goodsInstructions,
+    goodsEvaluate,
+    goodsShop,
+    goodsDetails,
+    goodsAction
+  },
+  methods: {
+    
+    ...mapActions('goods', ['getGoodsInfo']),
+    ...mapMutations('goods', ['COMPILE_GOODS']),
+    propCli(d){
+
+      //记录原来的id信息
+      var oldCheckAttrId = 0;
+      for(var j = 0; j < d.p.valueList.length; j ++){
+        var nowv = d.p.valueList[j];
+        if(nowv.isCheck){
+          oldCheckAttrId = nowv.id;
+        }
+        nowv.isCheck = false;
+      }
+      d.o.isCheck = true;
+
+      this.COMPILE_GOODS();
+      //如果没有修改规格就还原颜色
+      if(!this.goodsD.isChangeSelectedPro){
+        // debugger;
+        for(var j = 0; j < d.p.valueList.length; j ++){
+          var nowv = d.p.valueList[j];
+          if(nowv.id === oldCheckAttrId){
+            nowv.isCheck = true;
+          }
+          else{
+            nowv.isCheck = false;
+          }
+        }
+      }
+
+      if(this.goodsD.selectedPro.id != undefined){
+        if(this.proId() != this.goodsD.selectedPro.id){
+          this.$go('/goods/' + this.goodsId() + '/' + this.goodsD.selectedPro.id)
+        }
+      }
+
+    },
+    scroll (e) {
+      this.scrollY = e.y
+    },
+    clickTab (n) {
+      this.activeTab = n;
+      if (n === 0) {
+        this.$refs.scroll.scrollTo([0, 0, 800])
+      }
+      if (n === 1) {
+        this.$refs.scroll.scrollTo('#goods-details')
+      }
+      if (n === 2) {
+        this.$go('/evaluate/' + this.goodsD.info.id)
+      }
+    },
+    gotoHome(){
+      this.$go('/home')
+    },
+    goodsNumberChange (o) {
+
+      // @TODO
+      var nowCount = 0;
+
+      if( o.type == 'sub' ){
+        nowCount = o.number - 1;
+      }
+      else if( o.type == 'add' ){
+        nowCount = o.number + 1;
+      }
+
+      var kc = this.goodsD.info.goods_number;
+      if(nowCount > kc){
+        this.goodsD.count = kc;
+      }
+      else if(nowCount < 1){
+        this.goodsD.count = 1;
+      }
+      else{
+        this.goodsD.count = nowCount;
+      }
+
+    },
+    showComment(){
+      this.clickTab(2);
+    },
+    jumpProblem(){
+      this.$refs.scroll.scrollTo('#problem')
+    },
+    jumpGoods(d){
+      this.$go('/goods/' + d.goods_id + '/' + d.id)
+      this.init();
+      this.clickTab(0);
+    },
+    init(){
+
+      this.goodsD.firstSdProId = this.proId();
+      this.getGoodsInfo({
+        id:this.goodsId(),
+        referrer: 0
+      });
+    }
+  },
+  created() {
+    this.init();
+  },
+  updated(){
+    
+  }
+
+
+
+}
+</script>

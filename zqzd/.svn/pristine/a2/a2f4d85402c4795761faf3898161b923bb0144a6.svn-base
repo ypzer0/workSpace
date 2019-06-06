@@ -1,0 +1,164 @@
+<template>
+  <page :better-scroll="true" page-background="white">
+    <search-header
+      slot="top"
+      :step="step"
+      :keyData="keyData"
+      @change-sort="changeSort"
+      @search="search"
+      @key-change="change" ref="myheader"></search-header>
+    <search-default
+        :hot="hot"
+        :history="history"
+        @select-hot="selectHot"
+        @select-history="selectHistory"
+        @clear-history="clearHistory"
+        v-if="step === 1"></search-default>
+    <search-auto
+        :recommend="recommend"
+        :searchList="searchList"
+        @jump-goods="jumpGoods"
+        v-if="step === 2"></search-auto>
+    <search-list
+      :list="searchList"
+      v-if="step === 3"></search-list>
+  </page>
+</template>
+
+<script type="text/ecmascript-6">
+import Vue from 'vue'
+import {mapActions} from 'vuex'
+import session from '@/libs/session'
+import searchHeader from './search-header'
+import searchDefault from './search-default'
+import searchAuto from './search-auto'
+import searchList from './search-list'
+export default {
+  data () {
+    return {
+      step: 1,
+      sbackstep: 2,
+      keyData: {
+        searchKey: '',
+        defaultKey: '',
+      },
+      hot: [],
+      history: session.getHistory(),
+      recommend: null,
+      searchList: [],
+      kwischange: false,
+    }
+  },
+  components: {
+    searchHeader,
+    searchDefault,
+    searchAuto,
+    searchList
+  },
+  methods: {
+    ...mapActions('search', ['getSearchHot', 'getSearchListBykeyword']),
+    changeSearch(v){
+      // this.searchKey = v;
+      this.$refs.myheader.changeSearch(v);
+    },
+    change (key) {
+      key = key.trim();
+      if(key == ""){
+        this.step = 1
+        return;
+      }
+      this.loadSearchGoods(key);
+
+    },
+    loadSearchGoods(key, sort, order){
+
+      var para = {
+        keyword: key,
+        order: order,
+        sort: sort
+      }
+      this.searchList = [];
+      
+      this.getSearchListBykeyword(para).then(res => {
+        
+        this.recommend = null;//禁用大家都在看功能
+        
+        this.searchList = res.goodsList
+        this.step = this.sbackstep//2
+
+      })
+    },
+
+    search (val) {
+      if (val) {
+        this.step = 3
+        session.addHistory(val)
+      } else {
+        this.$toast('搜索关键字不能为空', 'warn')
+      }
+    },
+    selectHot (o) {
+      // @TODO
+      this.sbackstep = 2;
+      var endVal = o.keyword;
+
+      if(endVal.length == this.keyData.searchKey.length){
+        endVal = endVal + ' ';
+      }
+      this.changeSearch(endVal);
+
+      // this.searchKey = endVal;
+
+    },
+    selectHistory (s) {
+      this.sbackstep = 3;
+      this.changeSearch(s + ' ');
+      // this.searchKey = s + ' ';
+
+    },
+    clearHistory () {
+      session.clearHistory()
+      this.history = []
+    },
+    init () {
+      this.getSearchHot().then(res => {
+
+        this.hot = res.hotKeywordList
+        // this.history = res.historyKeywordList
+        if(res.defaultKeyword != null){
+          this.keyData.defaultKey = res.defaultKeyword.keyword
+        }
+
+      })
+    },
+    jumpGoods(g){
+      this.$go('/goods/' + g.id)
+    },
+    changeSort(s){
+
+      this.sbackstep = 3;
+      switch (s) {
+        case 0:
+          this.loadSearchGoods(this.keyData.searchKey.trim());
+          break;
+        case 1:
+          this.loadSearchGoods(this.keyData.searchKey.trim(), 'desc', 'price');
+          break;
+        case 2:
+          this.loadSearchGoods(this.keyData.searchKey.trim(), 'desc', 'brand');
+          break;
+        case 3:
+          this.loadSearchGoods(this.keyData.searchKey.trim(), 'desc', 'category');
+          break;
+      
+        default:
+          break;
+      }
+    }
+  },
+  created () {
+    
+    this.init()
+  }
+}
+</script>

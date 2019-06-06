@@ -1,0 +1,46 @@
+<template>
+  <page ref="scroll">
+    <urse-top></urse-top>
+    <urse-category></urse-category>
+  </page>
+</template>
+
+<script type="text/ecmascript-6">
+import Vue from 'vue'
+import urseTop from './urse-top'
+import urseCategory from './urse-category'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
+export default {
+  data (){
+    return{
+      listShow: 0,
+    }
+  },
+
+  computed: {
+    //...mapState('user', ['isLogin']),
+    
+  },
+  components: {
+    urseTop,
+    urseCategory,
+  },
+  methods: {
+    //...mapActions('cart', ['updateUserCartGoods', 'deleteUserCartGoods', 'checkout', 'LoadCar', 'GoodsChecked', 'UpdateGoodsNumber', 'CartDelete']),
+    
+  },
+  created() {
+
+  },
+  activated(){
+
+  },
+  
+}
+</script>
+
+
+<style lang="less" scoped>
+
+</style>

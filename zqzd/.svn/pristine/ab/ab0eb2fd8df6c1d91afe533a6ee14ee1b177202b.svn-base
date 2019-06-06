@@ -1,0 +1,25 @@
+import {z_register} from './z_register'
+import {z_home} from './z_home'
+import {z_urse} from './z_urse'
+import {z_service} from './z_service'
+
+import {zd_consult} from './zd_consult'
+import {zd_order} from './zd_order'
+import {zd_order_msg} from './zd_order_msg'
+import {zd_my_consult} from './zd_my_consult'
+import {zd_service} from './zd_service'
+import {zd_goods_detail} from './zd_goods_detail'
+
+
+export const api = {
+  z_register,
+  z_home,
+  z_urse,
+  z_service,
+  zd_consult,
+  zd_order,
+  zd_order_msg,
+  zd_my_consult,
+  zd_service,
+  zd_goods_detail
+}

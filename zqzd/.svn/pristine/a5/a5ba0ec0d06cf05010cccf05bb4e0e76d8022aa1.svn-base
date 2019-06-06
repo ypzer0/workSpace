@@ -1,0 +1,35 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api.js'
+export const y_commission_detail = {
+    
+  //我的推广-我的推广
+  promote: (params) => {
+    
+    return axios.request({
+      url: api.Y_ExtMyext,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  //我的推广-佣金明细
+  commission: (params) => {
+    
+    return axios.request({
+      url: api.Y_ExtExtdetail,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  //我的推广-我的下级
+  junior: (params) => {
+    
+    return axios.request({
+      url: api.Y_ExtMysub,
+      data: params,
+      method: 'post'
+    })
+  },
+
+}

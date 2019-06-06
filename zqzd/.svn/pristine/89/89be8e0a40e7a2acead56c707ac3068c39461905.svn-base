@@ -1,0 +1,59 @@
+<template>
+<div>
+  <div class="pay-goods">
+    <div class="pay-goods-message">商品信息：</div>
+    <div class="pay-Caution-prompt">商品类别：{{goodsMsg.goodsCategory}}</div>
+    <div class="pay-Caution-prompt">数量：{{goodsMsg.quantity}}</div>
+    <div class="pay-Caution-prompt">单价：{{goodsMsg.price}}</div>
+    <div class="pay-Caution-prompt">总价：{{goodsMsg.allPrice}}</div>
+  </div>
+  <div class="pay-goods">
+    <div class="pay-goods-message">商品详情：</div>
+    <div class="pay-Caution-prompt">{{goodsMsg.goodsDetails}}</div>
+  </div>
+</div>
+</template>
+
+<script type="text/ecmascript-6">
+export default {
+  props:['goodsMsg'],
+   data(){
+    return{
+
+    }
+  },
+  computed: {
+   
+  },
+  components: {
+   
+  },
+  methods:{
+   
+
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .pay-goods{
+    width: 100%;
+    margin: 0 auto;
+    padding-bottom: 30px;
+    border-bottom: 20px solid #eeeded;
+    .pay-goods-message{
+      width: 92%;
+      margin: 0 auto;
+      font-size: 32px;
+      color: #333333;
+      margin-top: 32px;
+    }
+    .pay-Caution-prompt{
+      width: 92%;
+      margin: 0 auto;
+      font-size: 28px;
+      color: #838383;
+      margin-top: 30px;
+    }
+  }
+</style>

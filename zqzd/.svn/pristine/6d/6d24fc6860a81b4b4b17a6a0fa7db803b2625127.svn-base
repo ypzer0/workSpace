@@ -1,0 +1,158 @@
+package com.platform.service.impl;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.alibaba.druid.sql.visitor.functions.Now;
+import com.platform.dao.CouponUserCreditInfoDao;
+import com.platform.dto.UpdateCreditDto;
+import com.platform.entity.CouponUserCreditInfoEntity;
+import com.platform.entity.CouponUserEntity;
+import com.platform.service.CouponUserCreditInfoService;
+import com.platform.service.CouponUserService;
+import com.platform.service.SysOperLogService;
+import com.platform.utils.RRException;
+import com.platform.utils.Constant.OperLogFlag;
+import com.platform.utils.PageUtils;
+import com.platform.utils.Query;
+import com.platform.utils.R;
+
+/**
+ * Service实现类
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-23 10:55:21
+ */
+@Service("CouponuserCreditInfoService")
+public class CouponUserCreditInfoServiceImpl implements CouponUserCreditInfoService {
+    @Autowired
+    private CouponUserCreditInfoDao CouponuserCreditInfoDao;
+    @Autowired
+    private CouponUserService CouponuserService;
+    @Autowired
+    protected SysOperLogService sysOperLogService;
+
+    @Override
+    public CouponUserCreditInfoEntity queryObject(Integer id) {
+        return CouponuserCreditInfoDao.queryObject(id);
+    }
+
+    @Override
+    public List<CouponUserCreditInfoEntity> queryList(Map<String, Object> map) {
+        return CouponuserCreditInfoDao.queryList(map);
+    }
+
+    @Override
+    public int queryTotal(Map<String, Object> map) {
+        return CouponuserCreditInfoDao.queryTotal(map);
+    }
+
+    @Override
+    public int save(CouponUserCreditInfoEntity CouponUserCreditInfo) {
+    	return CouponuserCreditInfoDao.save(CouponUserCreditInfo);
+    }
+
+    @Override
+    public R updateCredit(UpdateCreditDto para, int operuid) {
+    	if (para.getCid() == null) {
+			return R.error("数据异常，请选择一个用户");
+		}
+    	CouponUserCreditInfoEntity newCouponuserCreditInfo =CouponuserCreditInfoDao.queryObject(para.getCid());
+    	CouponUserEntity couponuser = CouponuserService.queryObject(newCouponuserCreditInfo.getUId());
+    	if (para.getOtype() == null) {
+    		return R.error("操作失败，请选择变动类型");
+		}
+    	Integer cType = para.getOtype();
+    	if (para.getCreadit() == null) {
+			return R.error("操作失败，变动积分不能为空");
+		}
+    	if (para.getCreadit() < 0) {
+			return R.error("请填写大于等于0的变动积分");
+		}
+    	Integer credit = para.getCreadit();
+    	newCouponuserCreditInfo.setCType(cType);
+    	newCouponuserCreditInfo.setCredit(credit);
+    	if (cType == null) {
+    		return R.error("操作失败，请选择变动类型");
+		}else if (cType.equals(2)) {
+			credit = -credit;
+		}
+    	Integer endCredit = newCouponuserCreditInfo.getEndCredit()+credit;
+    	if (endCredit<0) {
+    		return R.error("减少的信用分不能超过剩余信用分的最大值，请重新选择！");
+		}
+    	newCouponuserCreditInfo.setPreCredit(newCouponuserCreditInfo .getEndCredit());
+    	newCouponuserCreditInfo.setEndCredit(endCredit);
+    	newCouponuserCreditInfo.setReson(para.getReason());
+    	newCouponuserCreditInfo.setAddTime(new Date());
+    	
+    	couponuser.setCredit(endCredit);
+    	
+    	CouponuserService.update(couponuser);
+    	int low = CouponuserCreditInfoDao.save(newCouponuserCreditInfo);
+    	sysOperLogService.AddOperLog("修改信用积分", "Old:" + newCouponuserCreditInfo.toString() + " New:" + para.toString(), OperLogFlag.User, operuid);
+    	
+    	return R.ok();
+    }
+    @Override
+    public int update(CouponUserCreditInfoEntity CouponuserCreditInfo) {
+        return CouponuserCreditInfoDao.update(CouponuserCreditInfo);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return CouponuserCreditInfoDao.delete(id);
+    }
+
+    @Override
+    public int deleteBatch(Integer[] ids) {
+        return CouponuserCreditInfoDao.deleteBatch(ids);
+    }
+
+	@Override
+	public R creditChangeMsg(Map<String, Object> map, int operuid) {
+//		Object idObj = map.get("id");
+//		if(idObj == null) {
+//			return R.error("数据异常");
+//		}
+//		Integer id = Integer.parseInt(idObj.toString());
+//		
+//		CouponUserCreditInfoEntity newCouponuserCreditInfo =CouponuserCreditInfoDao.queryObject(id);
+//		Integer uid = newCouponuserCreditInfo.getUId();
+//		
+//		map.put("uId", uid);
+		
+        //查询列表数据
+        Query query = new Query(map);
+		List<CouponUserCreditInfoEntity> rtList = CouponuserCreditInfoDao.queryListMsg(query);
+		
+        int total = CouponuserCreditInfoDao.queryTotalMsg(query);
+
+        PageUtils pageUtil = new PageUtils(rtList, total, query.getLimit(), query.getPage());
+        
+        R creditMsgRSum = QueryCreditMsgCountSum(query);
+        
+		return R.ok().put("page", pageUtil).put("total", creditMsgRSum);
+	}
+
+	@Override
+	public R QueryCreditCountSum(Map<String, Object> map) {
+		Map<String, Object> cs = CouponuserCreditInfoDao.QueryCreditCountSum(map);
+		return R.ok().put("page", cs);
+	}
+
+	@Override
+	public R QueryCreditMsgCountSum(Map<String, Object> map) {
+		Map<String, Object> cms = CouponuserCreditInfoDao.QueryCreditMsgCountSum(map);
+		return R.ok().put("page", cms);
+	}
+
+}

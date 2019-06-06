@@ -1,0 +1,174 @@
+<template>
+  <page :better-scroll="true">
+    <account-warm slot="extra-top"></account-warm>
+    <template slot="bottom">
+      <checkout-address-tip :addr="checkOut.address"></checkout-address-tip>
+      <checkout-pay :total="checkOut.total" @pay="payHandler"></checkout-pay>
+    </template>
+    <checkout-address
+        :address="checkOut.address"
+        @click.native="onSelectAddr"></checkout-address>
+    <checkout-pay-way :pay="checkOut.pay"></checkout-pay-way>
+    <checkout-goods-details :goods="checkOut.goods"></checkout-goods-details>
+  </page>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+import accountWarm from '../common/account-warm'
+import checkoutPay from './checkout-pay'
+import checkoutAddressTip from './checkout-address-tip'
+import checkoutAddress from './checkout-address'
+import checkoutPayWay from './checkout-pay-way'
+import checkoutGoodsDetails from './checkout-goods-details'
+import {toast} from '@/libs/cube-ui'
+export default{
+  data () {
+    return {
+      thisOid : 0
+    }
+  },
+  computed:{
+    ...mapState('cart', ['checkOut'])
+    
+  },
+  components: {
+    accountWarm,
+    checkoutPay,
+    checkoutAddressTip,
+    checkoutAddress,
+    checkoutPayWay,
+    checkoutGoodsDetails
+  },
+  methods: {
+    ...mapActions('cart', ['getCheckoutInfo', 'pay', 'checkout', 'paySubmit']),
+    showDialog (fn) {
+      this.$createDialog({
+        type: 'confirm',
+        content: '便宜不等人，请三思而行~',
+        confirmBtn: {
+          text: '继续支付',
+          active: true,
+          disabled: false,
+          href: 'javascript:;'
+        },
+        cancelBtn: {
+          text: '取消',
+          active: false,
+          disabled: false,
+          href: 'javascript:;'
+        },
+        onConfirm: () => {
+          // @TODO
+        },
+        onCancel: () => {
+          fn()
+        }
+      }).show()
+    },
+    payHandler () {
+      this.payLoader();
+    },
+    payLoader () {
+      // this.pay(this.checkoutId).then(() => {
+      //   this.$go('/transaction/25875', false)
+      // })
+      
+      var nowObj = this.$getGlobal();
+      var aid = parseInt(nowObj.SedAddrId);
+      if(isNaN(aid) || aid == 0) 
+      {
+        toast("请选择收货地址！");
+        return;
+      }
+      var pas = {
+        addr:{
+          msg : '下次再来买',
+          couponId: 0,
+          type: this.checkOut.buyType,
+          aid: aid
+        }
+      }
+      this.pay(pas).then((res) => {
+        if(res.success){
+          var oid = res.data.orderInfo.id;
+          var pas1 = {
+            oid : oid
+          }
+          this.paySubmit(pas1).then((res) => {
+            if(res.success){
+              // var aurl = document.getElementById("payurl");
+              // aurl.href = res.data.url + "&redirect_url=" + window.location.origin + "/dx/transaction/" + oid;
+              // aurl.click();
+              const div = document.createElement('iframe');
+              div.onload = this.payLoadSuc
+              this.thisOid = oid;
+              div.src = res.data.url + "&redirect_url=" + window.location.origin + "/dx/transaction/" + oid;
+              document.body.appendChild(div);
+            }
+            // this.$go('/transaction/25875', false)
+          });
+        }
+
+      })
+    },
+    payLoadSuc(e){
+      this.$go("/transaction/" + this.thisOid, false);
+    },
+
+    onSelectAddr(){
+      var nowObj = this.$getGlobal();
+      nowObj.SedAddrId = this.checkOut.address.id;
+      this.$setGlobal(nowObj);
+      this.$go('/checkoutaddress')
+    }
+  },
+  destroyed(){
+    var obj = this.$getGlobal();
+    obj.SedAddrId = 0;
+    this.$setGlobal(obj);
+  },
+  created () {
+    
+    this.checkOut.buyType = this.$route.params.tp;
+
+    var myglobal = this.$getGlobal();
+    var aid = myglobal.SedAddrId;
+    if(aid == undefined) aid = 0;
+    else{
+      aid = parseInt(aid);
+    }
+    var para ={
+      addressId: aid,
+      couponId: 0,
+      type:this.checkOut.buyType
+    }
+    this.checkout(para).then(res => {
+
+      this.checkOut.address = res.checkedAddress;
+      this.checkOut.total = res.orderTotalPrice;
+      this.checkOut.goods = res.checkedGoodsList;
+      
+      if(res.checkedAddress != undefined && res.checkedAddress.id != undefined){
+        myglobal.SedAddrId = res.checkedAddress.id;
+        this.$setGlobal(myglobal);
+      }
+
+      var aurl = document.getElementById("payurl");
+      aurl.href = "javascript:void(0);";
+      // this.payLoader();
+    })
+
+    
+  },
+  beforeRouteLeave (to, from, next) {
+    if (to.path === '/cart') {
+      this.showDialog(() => {
+        next()
+      })
+    } else {
+      next()
+    }
+  }
+}
+</script>

@@ -1,0 +1,14 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api.js'
+export const y_use_explain = {
+    
+  //加载支付页面数据
+  useExplain: (params) => {
+    
+    return axios.request({
+      url: api.Y_UseAsk,
+      data: params,
+      method: 'post'
+    })
+  },
+}

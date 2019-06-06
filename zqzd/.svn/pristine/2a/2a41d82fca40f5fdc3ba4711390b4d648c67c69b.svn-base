@@ -1,0 +1,193 @@
+package com.platform.entity;
+
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * 实体
+ * 表名 coupon_user_integral_info
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-23 10:55:21
+ */
+public class CouponUserIntegralVo implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    //
+    private Integer id;
+    //信用明细类型, 1:增加  2:减少
+    private Integer iType;
+    //用户ID
+    private Integer uId;
+    //变动积分
+    private Integer integral;
+    //变动前
+    private Integer preIntegral;
+    //变动后
+    private Integer endIntegral;
+    //变动原因
+    private String reson;
+    //操作人
+    private Integer handlerId;
+    //操作时间
+    private Date addTime;
+    //用户昵称
+    private String nickname;
+    //用户code
+    private Integer uCode;
+
+    private Integer platType;
+
+    
+    
+	@Override
+	public String toString() {
+		return "CouponUserIntegralInfoEntity [id=" + id + ", iType=" + iType + ", uId=" + uId + ", integral=" + integral
+				+ ", preIntegral=" + preIntegral + ", endIntegral=" + endIntegral + ", reson=" + reson + ", handlerId="
+				+ handlerId + ", addTime=" + addTime + ", nickname=" + nickname + ", uCode=" + uCode + ", platType="
+				+ platType + "]";
+	}
+
+	public Integer getPlatType() {
+		return platType;
+	}
+
+	public void setPlatType(Integer platType) {
+		this.platType = platType;
+	}
+
+	public Integer getuCode() {
+		return uCode;
+	}
+
+	public void setuCode(Integer uCode) {
+		this.uCode = uCode;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+    /**
+     * 设置：
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * 获取：
+     */
+    public Integer getId() {
+        return id;
+    }
+    /**
+     * 设置：信用明细类型, 1:增加  2:减少
+     */
+    public void setIType(Integer iType) {
+        this.iType = iType;
+    }
+
+    /**
+     * 获取：信用明细类型, 1:增加  2:减少
+     */
+    public Integer getIType() {
+        return iType;
+    }
+    /**
+     * 设置：用户ID
+     */
+    public void setUId(Integer uId) {
+        this.uId = uId;
+    }
+
+    /**
+     * 获取：用户ID
+     */
+    public Integer getUId() {
+        return uId;
+    }
+    /**
+     * 设置：变动积分
+     */
+    public void setIntegral(Integer integral) {
+        this.integral = integral;
+    }
+
+    /**
+     * 获取：变动积分
+     */
+    public Integer getIntegral() {
+        return integral;
+    }
+    /**
+     * 设置：变动前
+     */
+    public void setPreIntegral(Integer preIntegral) {
+        this.preIntegral = preIntegral;
+    }
+
+    /**
+     * 获取：变动前
+     */
+    public Integer getPreIntegral() {
+        return preIntegral;
+    }
+    /**
+     * 设置：变动后
+     */
+    public void setEndIntegral(Integer endIntegral) {
+        this.endIntegral = endIntegral;
+    }
+
+    /**
+     * 获取：变动后
+     */
+    public Integer getEndIntegral() {
+        return endIntegral;
+    }
+    /**
+     * 设置：变动原因
+     */
+    public void setReson(String reson) {
+        this.reson = reson;
+    }
+
+    /**
+     * 获取：变动原因
+     */
+    public String getReson() {
+        return reson;
+    }
+    /**
+     * 设置：操作人
+     */
+    public void setHandlerId(Integer handlerId) {
+        this.handlerId = handlerId;
+    }
+
+    /**
+     * 获取：操作人
+     */
+    public Integer getHandlerId() {
+        return handlerId;
+    }
+    /**
+     * 设置：操作时间
+     */
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+    /**
+     * 获取：操作时间
+     */
+    public Date getAddTime() {
+        return addTime;
+    }
+}

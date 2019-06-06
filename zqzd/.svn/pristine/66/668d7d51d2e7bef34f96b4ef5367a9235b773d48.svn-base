@@ -1,0 +1,14 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api.js'
+export const y_money_detail = {
+    
+  //加载支付页面数据
+  moneyDetail: (params) => {
+    
+    return axios.request({
+      url: api.Y_MoneyDetail,
+      data: params,
+      method: 'post'
+    })
+  },
+}

@@ -1,0 +1,28 @@
+import * as types from './mutation-types'
+
+export const mutations = {
+  [types.INIT_HOME] (state, o) {
+    // state.home.recommend = o.recommend
+    state.home.section = o.section
+  }
+  ,[types.INIT_HOME_BANNER](state, o){
+    state.banner.list = o.banner;
+  }
+  ,[types.INIT_HOME_BANND](state, o){
+    state.brand.list = o.brandList;
+  }
+  ,[types.INIT_HOME_NEWGOODS](state, o){
+    state.newGoods.list = o.newGoodsList;
+  }
+  ,[types.INIT_HOME_GOODSHOT](state, o){
+    state.newGoods.list = o.newGoodsList;
+  },
+
+  [types.LOAD_HOT_GOODS](state, o){
+    state.hotGoods.list = o;
+  },
+  [types.LOAD_TOP_PIC](state, o){
+    state.topPic.list = o;
+  }
+
+}

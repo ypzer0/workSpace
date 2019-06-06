@@ -1,0 +1,12 @@
+export default {
+  category: {
+    categoryList:[],
+    currentCategory:{}
+  },
+  subCategory: {
+    brother:[],
+    current: {},
+    parent:{}
+  },
+  goodsByCategory: []
+}

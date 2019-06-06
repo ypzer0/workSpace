@@ -1,0 +1,6 @@
+export const INIT_SERVICE = 'INIT_SERVICE'
+export const INIT_CUSTOMER_LOAD = 'INIT_CUSTOMER_LOAD'
+
+
+
+

@@ -1,0 +1,101 @@
+<template>
+  <div class="box">
+    <div class="page-header" slot="top">
+      <div class="header-left" @click="$back">
+        <!-- <i class="iconfont">&#xe601;</i> -->
+      </div>
+      <h3>我的</h3>
+      <div class="header-right" @click="$go('/y-setting')">
+        <i class="iconfont setting">&#xe615;</i>
+        <!-- <span @click="SaveAddr">保存</span> -->
+      </div>
+    </div>
+
+    <my-material :myCenter="myCenter"></my-material>
+    <my-order></my-order>
+    <my-financial></my-financial>
+    <!-- <my-coupon></my-coupon> -->
+    <my-service-list></my-service-list>
+    <my-credit-alert v-show="testLoginDt.alertCommit == true"></my-credit-alert>
+
+  </div>
+    
+</template>
+
+<script type="text/ecmascript-6">
+import MyMaterial from './my-material'
+import MyOrder from './my-order'
+import MyFinancial from './my-financial'
+import MyCoupon from './my-coupon'
+import MyServiceList from './my-service-list'
+import MyCreditAlert from './my-credit-alert'
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default {
+  computed: {
+    ...mapState('y_my', ['myCenter', 'testLoginDt'])
+  },
+  components: {
+    MyMaterial,
+    MyOrder,
+    MyFinancial,
+    MyCoupon,
+    MyServiceList,
+    MyCreditAlert,
+  },
+  methods:{
+    ...mapActions('y_my', ['getMyCenter']),
+    
+  },
+  created(){
+    this.getMyCenter();
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .box{
+    width: 100%;
+    //height: 100%;
+    background: #eeeded;
+  }
+  .page-header{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 88px;
+    // background: #2eacef;
+    background: -webkit-linear-gradient(left, #ff6839 , #ff4439); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(right, #ff6839, #ff4439); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(right, #ff6839, #ff4439); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to right, #ff6839 , #ff4439); /* 标准的语法 */
+    position: fixed;
+    top: 0;
+    width: 100%;
+    .header-left{
+      position: absolute;
+      top:50%;
+      left:30px;
+      color: #fff;
+      transform: translateY(-50%);
+    }
+    h3{
+      font-size: 30px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .header-right{
+      position: absolute;
+      top:50%;
+      right:30px;
+      transform: translateY(-50%);
+      span{
+        color:#666;
+      }
+      .setting{
+        color: #fff;
+        font-size: 50px;
+      }
+    }
+  }
+</style>

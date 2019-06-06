@@ -1,0 +1,32 @@
+export default {
+  identifyingCode: {
+    timer: null,
+    time: 60
+  },
+  goodsD:{
+    gallery:[],
+    info:{},
+    count:1,
+    specifies:[],
+    checkSpeci:[],
+    productList:[],
+    selectedPro: {
+      goods_name:'',
+      retail_price: 0,
+      list_pic_url: '',
+      goods_specification_ids: '',
+      id: 0,
+      market_price: 0,
+      goods_number: 0
+    },
+    isChangeSelectedPro: false,
+
+    comment: {
+      count: 0,
+      list: []
+    },
+    issue: [],
+    firstSdProId: 0
+  }
+
+}

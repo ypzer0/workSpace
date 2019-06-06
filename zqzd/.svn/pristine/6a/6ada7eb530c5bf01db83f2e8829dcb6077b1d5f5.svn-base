@@ -1,0 +1,20 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api'
+
+export const search = {
+  getSearchHot: (params) => {
+    return axios.request({
+      url: api.SearchIndex,
+      data: params,
+      method: 'post'
+    })
+  },
+  getSearchHelpBykeyword: (params) => {
+    
+    return axios.request({
+      url: api.SearchHelper,
+      data: params,
+      method: 'post'
+    })
+  }
+}

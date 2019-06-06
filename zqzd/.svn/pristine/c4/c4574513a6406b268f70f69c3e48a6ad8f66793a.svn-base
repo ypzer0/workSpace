@@ -1,0 +1,90 @@
+
+<template>
+	<div>
+		<form class="pay-way">
+			<label class="pay-way-message">支付宝支付 <input name="Fruit" v-model="payDt.payt" type='radio' checked="checked" value="1" class='input-checkbox pay-checkbox'></label>
+			<label class="pay-way-message">微信支付 <input name="Fruit" v-model="payDt.payt" type='radio' value="2" class='input-checkbox pay-checkbox'></label>
+		</form>
+	</div>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default {
+  computed: {
+    ...mapState('y_pay', ['payDt'])
+  },
+  components: {
+  },
+  methods:{
+  },
+  created(){
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.pay-way{
+    width: 100%;
+    height: 110px;
+    //border-bottom: 1px solid #e5e5e5;
+    margin: 0 auto;
+    // display: flex;
+    // justify-content: space-between;
+    .pay-way-message{
+		display: block;
+        font-size: 32px;
+        color: #333333;
+        line-height: 110px;
+		padding-left: 30px;
+		border-bottom: 1px solid #e5e5e5;
+		display: flex;
+    	justify-content: space-between;
+    }
+    .pay-checkbox{
+        margin-right: 30px;
+        margin-top: 30px;
+    }
+}
+  
+//checkbox优化
+.input-checkbox:checked {
+	background:#1673ff
+}
+.input-checkbox {
+	width:50px;
+	height:50px;
+	background-color:#ffffff;
+	border:solid 1px #838383;
+	-webkit-border-radius:50%;
+	border-radius:50%;
+	font-size:20px;
+	margin:22px 0;
+	padding:0;
+	position:relative;
+	display:inline-block;
+	vertical-align:top;
+	cursor:default;
+	-webkit-appearance:none;
+	-webkit-user-select:none;
+	user-select:none;
+	-webkit-transition:background-color ease 0.1s;
+	transition:background-color ease 0.1s;
+}
+.input-checkbox:checked::after {
+	content:'';
+	top:10px;
+	left:10px;
+	position:absolute;
+	background:transparent;
+	border:#fff solid 4px;
+	border-top:none;
+	border-right:none;
+	height:10px;
+	width:20px;
+	-moz-transform:rotate(-45deg);
+	-ms-transform:rotate(-45deg);
+	-webkit-transform:rotate(-45deg);
+    transform:rotate(-45deg);
+}
+</style>

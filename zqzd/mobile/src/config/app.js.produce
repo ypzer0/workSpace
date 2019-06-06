@@ -1,0 +1,23 @@
+// const root = '/platform/api/'
+//线上测试修改为/api
+var root = '/api/'
+if(process.env.NODE_ENV === 'development'){
+    root = '/platform/api/'
+    // root = '/api/'
+}
+else{
+    root = '/api/'
+}
+// export const IS_MOCK = true
+export const IS_MOCK = false
+//发布时将最后一个 http://192.168.1.152:5111 换成发布网站
+export const API_BASE_URL = IS_MOCK ? '/mock/' : (process.env.NODE_ENV === 'development' 
+? 'http://192.168.1.137:8080' + root 
+: 'https://api.qzhkj.cn' + root)
+// export const API_BASE_URL = IS_MOCK ? '/mock/' : (process.env.NODE_ENV === 'development' ? 'http://api.qzhkj.cn' + root : 'http://api.qzhkj.cn' + root)
+console.log(process.env.NODE_ENV)
+export const TOKEN_KEY = 'X-COUPON-BYZY-Token'
+export const HISTORY_KEY = 'History-Key'
+//global Data
+export const GLOBALDATA_KEY = 'GLOBALDATA_KEY'
+

@@ -1,0 +1,23 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api.js'
+export const y_after_sales = {
+    
+  //售后-出售
+  afterSales: (params) => {
+    
+    return axios.request({
+      url: api.Y_IssueSalelist,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  //售后-购买
+  afterBuy: (params) => {
+    return axios.request({
+      url: api.Y_IssueBuylist,
+      data: params,
+      method: 'post'
+    })
+  },
+}

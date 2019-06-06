@@ -1,0 +1,15 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api.js'
+export const y_withdrawal = {
+    
+  //加载页面数据
+  withdrawalSub: (params) => {
+    
+    return axios.request({
+      url: api.Y_WithdrawalSub,
+      data: params,
+      method: 'post'
+    })
+  },
+
+}

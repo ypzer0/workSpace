@@ -1,0 +1,6 @@
+export const INIT_GOODS_CATEGORY = 'INIT_GOODS_CATEGORY'
+export const INIT_HOME = 'INIT_HOME'
+
+
+
+

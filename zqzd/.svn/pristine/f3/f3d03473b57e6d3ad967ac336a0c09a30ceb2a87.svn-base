@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ApiZdReportMapper">
+
+    <resultMap type="com.platform.entity.ZdReportVo" id="ZdreportMap">
+        <result property="id" column="id"/>
+        <result property="reportName" column="report_name"/>
+        <result property="checkStatus" column="check_status"/>
+        <result property="reportPath" column="report_path"/>
+        <result property="addtime" column="add_time"/>
+        <result property="uId" column="u_id"/>
+        <result property="uploadStatus" column="upload_status"/>
+        
+    </resultMap>
+
+	<select id="queryObject" resultType="com.platform.entity.ZdReportVo">
+		select
+			`id`,
+			`report_name`,
+			`check_status`,
+			`report_path`,
+			`upload_status`,
+			`u_id`,
+			`add_time`
+		from zd_report
+		where id = #{id}
+	</select>
+	
+	<select id="queryById" resultType="com.platform.entity.ZdReportVo">
+		select
+			`id`,
+			`report_name`,
+			`check_status`,
+			`report_path`,
+			`upload_status`,
+			`u_id`,
+			`add_time`
+		from zd_report
+		where id = #{id}
+	</select>
+	
+	<select id="queryReportList" resultType="com.platform.entity.ZdReportVo">
+		select
+			`id`,
+			`report_name`,
+			`check_status`,
+			`upload_status`,
+			`report_path`,
+			`u_id`,
+			`add_time`
+		from zd_report
+		where user_id = #{userId}
+		And check_status=1
+		limit 0,20
+	</select>
+
+	<select id="queryList" resultType="com.platform.entity.ZdReportVo">
+		select
+    		`id`,
+    		`report_name`,
+    		`check_status`,
+    		`upload_status`,
+    		`add_time`,
+    		`report_path`,
+    		`u_id`
+		from zd_report
+		WHERE 1=1
+		<if test="name != null and name.trim() != ''">
+			AND name LIKE concat('%',#{name},'%')
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from zd_report
+		WHERE 1=1
+        <if test="name != null and name.trim() != ''">
+            AND name LIKE concat('%',#{name},'%')
+        </if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.ZdReportVo" useGeneratedKeys="true" keyProperty="id">
+		insert into zd_report(
+			`report_name`,
+			`check_status`,
+			`add_time`,
+			`report_path`,
+			`upload_status`,
+			`u_id`)
+		values(
+			#{reportName},
+			#{checkStatus},
+			#{addTime},
+			#{reportPath},
+			#{uploadStatus},
+			#{uId})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.ZdReportVo">
+		update zd_report 
+		<set>
+			<if test="reportName != null">`report_name` = #{reportName}, </if>
+			<if test="checkStatus != null">`check_status` = #{checkStatus}, </if>
+			<if test="reportPath != null">`report_path` = #{reportPath},</if>
+			<if test="uId != null">`u_id` = #{uId},</if>
+			<if test="addTime != null">`add_time` = #{addTime},</if>
+			<if test="uploadStatus != null">`upload_status` = #{uploadStatus}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from zd_report where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from zd_report where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

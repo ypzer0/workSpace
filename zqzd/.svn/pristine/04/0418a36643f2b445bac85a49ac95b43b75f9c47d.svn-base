@@ -1,0 +1,185 @@
+<template>
+	<div class="bind-account">
+		<div class="bind-account-bg" @click="childHidenPhone"></div>
+    <div class="bind-account-alert-box">
+      <div class="bind-account-alert-box-title">手机绑定</div>
+      <p class="Phone-verification-phone"><input v-model="valiPhoneData.phone" type="number" placeholder="请输入手机号"/></p>
+      <div class="Phone-verification">
+        <input class="Phone-verification-code" v-model="valiPhoneData.code" type="text" placeholder="请输入验证码"/>
+        <button class="Phone-verification-phone-btn" @click="getgain">发送验证码</button>
+      </div>
+      <button class="bind-account-btn" @click="successfulAlert">验证</button>
+    </div> 
+    
+	</div>
+</template>
+
+
+<script type="text/ecmascript-6">
+import {toast} from '@/libs/cube-ui'
+import {mapState, mapGetters, mapActions} from 'vuex'
+props:[]
+export default {
+  props: [''],
+	data () {
+    return {
+      mobile: "",
+      code: "",
+    }
+  },
+
+  computed: {
+    ...mapState('y_update_category', ['uploadGoods', 'cateDt' , 'mobileSend' , 'mobileValidate', 'valiPhoneData', 'isShowHide'])
+  },
+  components: {
+    
+  },
+  methods:{
+    ...mapActions('y_update_category', ['getUploadGoods', 'getMobileSend', 'getMobileValidate', 'successfulAlert', 'getgain', 'hidefulAlert']),
+    // successfulAlert(){
+    //   this.cateDt.code = this.code;
+    //   if(this.code != '' && this.mobile != ''){
+    //     this.getMobileValidate();
+    //     toast('验证成功', 'warn')
+    //     this.hidePhone = false;
+    //     this.$emit("hide-phone",{ hidePhone: this.hidePhone });
+    //   }else{
+    //     toast('请正确填写手机号和验证码并不能为空', 'warn')
+    //   }
+    // },
+    childHidenPhone(){
+      //debugger;
+      this.isShowHide.isShowValiPhone = false;
+      // this.$emit("child-hiden-phone", { a: 1});
+    },
+
+    hideAlert(){
+
+    },
+
+    // getgain(){
+    //   //debugger;
+    //   console.log("mobile:", this.mobile)
+    //   this.cateDt.mobile = this.mobile;
+    //   if(this.mobile != ''){
+    //     this.getMobileSend();
+    //   }else{
+    //     toast('请正确填写手机号并不能为空', 'warn')
+    //   }
+    //   //this.cateDt.mobile = this.mobile;
+    // }
+
+  },
+  created(){
+    // this.getMobileSend();
+    //this.getMobileValidate();
+  }
+}
+</script>
+
+
+<style lang="less" scoped>
+.bind-account{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 99;
+  .bind-account-bg{
+    background: #333333;
+    width: 100%;
+    height: 100%;
+    background-size: 100%;
+    opacity: 0.4;
+    position: relative;
+  }
+  .bind-account-alert-box{
+    width: 550px;
+    height: 550px;
+    background: #ffffff;
+    position: absolute;
+    top: 30%;
+    left: 12%;
+    border-radius: 6px;
+    .Phone-verification-phone{
+      font-size: 28px;
+      color: #883388;
+      margin-top: 50px;
+      margin-left: 6%;
+      width: 83%;
+      height: 78px;
+      display: block;
+      background: #f7f7f7;
+      border: 1px solid #2eacef;
+      border-radius: 6px;
+      input{
+        width: 90%;
+        line-height: 78px;
+        margin-left: 10px;
+        background: none;
+      }
+    }
+    .Phone-verification{
+      display: flex;
+      margin-top: 55px;
+      .Phone-verification-code{
+        width: 250px;
+        height: 78px;
+        display: block;
+        background: #f7f7f7;
+        border: 1px solid #2eacef;
+        border-radius: 6px;
+        font-size: 30px;
+        color: #838383;
+        padding-left: 10px;
+        margin-right: 20px;
+        margin-left: 6%;
+      }
+      .Phone-verification-phone-btn{
+        width: 180px;
+        height: 78px;
+        display: block;
+        background: #f7f7f7;
+        border: 1px solid #2eacef;
+        border-radius: 6px;
+        font-size: 30px;
+        color: #2eacef;
+        text-align: center;
+        line-height: 78px;
+        margin-top: 2px;
+      }
+    }
+    .bind-account-alert-box-title{
+      font-size: 36px;
+      text-align: center;
+      margin-top: 50px;
+      color: #2eacef;
+    }
+    .bind-account-mark{
+      width: 400px;
+      height: 78px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 50px;
+      background: #f7f7f7;
+      border: 1px solid #2eacef;
+      border-radius: 6px;
+      font-size: 30px;
+      color: #838383;
+      padding-left: 10px;
+    }
+    .bind-account-btn{
+      width: 400px;
+      height: 78px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 60px;
+      background: #2eacef;
+      border: 1px solid #2eacef;
+      border-radius: 6px;
+      font-size: 36px;
+      color: #fff;
+    }
+  }
+}
+</style>

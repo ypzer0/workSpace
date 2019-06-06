@@ -1,0 +1,93 @@
+package com.platform.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.platform.entity.CouponGoodsVo;
+import com.platform.entity.CouponOrderDetailVo;
+import com.platform.entity.CouponOrderVo;
+
+import io.swagger.models.auth.In;
+
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-22 11:10:01
+ */
+public interface ApiOrderMapper extends BaseDao<CouponOrderVo> {
+	/**
+	 * 分页查询
+	 *
+	 * @param map 参数
+	 * @return list
+	 */
+	List<CouponOrderVo> queryListInfo(Map<String, Object> map);
+
+	/**
+	 * 分页统计总数
+	 *
+	 * @param map 参数
+	 * @return 总数
+	 */
+	int queryTotalInfo(Map<String, Object> map);
+
+	//价格统计
+	Map<String, Object> rptQueryPriceCountSum(Map<String, Object> map);
+
+	//订单价格统计
+	Map<String, Object> QueryOrderPriceCountSum(Map<String, Object> map);
+	
+	//根据userId查询商品
+	List<CouponOrderVo> queryByUserId(@Param("userId") Integer userId , @Param("status") Integer status);
+	
+	//根据userId查询商品
+	List<CouponOrderVo> queryGoodsByUserId(@Param("userId") Integer userId , @Param("status") Integer status);
+//	//商品明细导出 
+//	List<CouponGoodsInfoDto> QuertGoodsCount(Map<String, Object> map);
+	 
+	/**
+	 * 查询订单
+	 * @param map
+	 * @return
+	 */
+	List<CouponOrderVo> queryOrderList(Map<String, Object> map);
+
+	int queryOrderTotal(Map<String, Object> map);
+	
+	/*
+	 * 查看卡券
+	 */
+	CouponOrderVo queryGoodsImg(Integer gid);
+	
+	/**
+	 * 保存订单明细
+	 * @param orderDetail
+	 * @return
+	 */
+	int saveOrderDetail(CouponOrderDetailVo orderDetail);
+	
+	
+	int orderClose24h();
+	
+	int orderClose7d();
+	
+	int orderFinish1h();
+
+	/**
+	 * 通过订单号获取订单信息
+	 * @param out_trade_no
+	 * @return
+	 */
+	CouponOrderVo queryOrderByNo(String orderno);
+	
+	CouponOrderVo queryOrderByNo1(String orderno);
+	
+	CouponOrderVo queryGoodsTotal(Integer id);
+	
+	CouponOrderVo queryMSG(Integer id);
+}

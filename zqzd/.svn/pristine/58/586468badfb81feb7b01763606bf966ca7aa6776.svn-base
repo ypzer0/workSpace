@@ -1,0 +1,123 @@
+package com.platform.entity;
+
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * 实体
+ * 表名 zd_opinion
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-05-30 12:54:18
+ */
+public class ZdOpinionVo implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    //
+    private Integer id;
+    //用户ID
+    private Integer userId;
+    //用户昵称
+    private String nickname;
+    //意见
+    private String opinionName;
+    //操作人
+    private Integer handlerId;
+    //添加时间
+    private Date addTime;
+    //是否删除  0-未删除，1-已删除
+    private Integer isDelete;
+
+    /**
+     * 设置：
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * 获取：
+     */
+    public Integer getId() {
+        return id;
+    }
+    /**
+     * 设置：用户ID
+     */
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    /**
+     * 获取：用户ID
+     */
+    public Integer getUserId() {
+        return userId;
+    }
+    /**
+     * 设置：用户昵称
+     */
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    /**
+     * 获取：用户昵称
+     */
+    public String getNickname() {
+        return nickname;
+    }
+    /**
+     * 设置：意见
+     */
+    public void setOpinionName(String opinionName) {
+        this.opinionName = opinionName;
+    }
+
+    /**
+     * 获取：意见
+     */
+    public String getOpinionName() {
+        return opinionName;
+    }
+    /**
+     * 设置：操作人
+     */
+    public void setHandlerId(Integer handlerId) {
+        this.handlerId = handlerId;
+    }
+
+    /**
+     * 获取：操作人
+     */
+    public Integer getHandlerId() {
+        return handlerId;
+    }
+    /**
+     * 设置：添加时间
+     */
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+    /**
+     * 获取：添加时间
+     */
+    public Date getAddTime() {
+        return addTime;
+    }
+    /**
+     * 设置：是否删除  0-未删除，1-已删除
+     */
+    public void setIsDelete(Integer isDelete) {
+        this.isDelete = isDelete;
+    }
+
+    /**
+     * 获取：是否删除  0-未删除，1-已删除
+     */
+    public Integer getIsDelete() {
+        return isDelete;
+    }
+}

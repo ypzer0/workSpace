@@ -1,0 +1,52 @@
+export default {
+  // goodsNavList: [
+  //   // "推荐","饮品","美食","购物","视频","出行","通讯","观影"
+  // ],
+  // goodsList: [
+  //     {
+  //       // "oid": 123,
+  //       // "pic": "/ddddd",
+  //       // "name": "玛呖德 糕点 紫米面包1100g",
+  //       // "status": "待付款",
+  //       // "count": 12,
+  //       // "orderTime": "2019-12-3 23:23:11",
+  //       // "price": 12.33
+  //   }
+  // ]
+
+  //商品详情页面数据
+  goodsDetail: {
+    "gid": 123,
+    "gcode": "12312",
+    "pic": "/123123/123123",
+    "gname": "玛呖德 糕点 紫米面包1100g",
+    "count": 12,
+    "msg": "这个是来源消息",
+    "price": 12.33,
+    "detail": "这个是商品详情"
+  },
+
+  //商品详情收藏商品
+  joinCollect: {
+   
+  },
+
+  //商品详情取消收藏商品
+  collectCancel: {
+   
+  },
+
+
+  goodsDetailDt:{
+    cid: 0,
+    gid: 0,
+    count: 1,
+    buyAlert: false,
+    check1:true,
+    check2:true,
+    collectStatus: false,
+    
+  }
+
+
+}

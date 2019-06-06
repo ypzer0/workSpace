@@ -1,0 +1,126 @@
+<template>
+  <div :better-scroll="true" class="box">
+    <div class="page-header header-nav" slot="top">
+      <div class="header-left" @click="$back">
+        <i class="iconfont">&#xe601;</i>
+      </div>
+      <h3>{{uploadGoods.cname}}</h3>
+      <div class="header-right">
+        <!-- <span @click="SaveAddr">保存</span> -->
+      </div>
+    </div>
+
+    <upload-category-prompt :uploadGoods="uploadGoods"></upload-category-prompt>
+    <upload-category-add-coupon></upload-category-add-coupon>
+    <upload-category-phone v-show="isShowHide.isShowValiPhone" ></upload-category-phone>    
+
+    <div class="pay-btn" @click="submitBtnFun">提交</div>
+
+  </div>
+    
+</template>
+
+<script type="text/ecmascript-6">
+import uploadCategoryPrompt from './upload-category-prompt'
+import uploadCategoryAddCoupon from './upload-category-add-coupon'
+import uploadCategoryPhone from './upload-category-phone'
+import {toast} from '@/libs/cube-ui'
+import {mapState, mapGetters, mapActions} from 'vuex'
+import { debug } from 'util';
+export default {
+  data(){
+    return{
+      
+    }
+  },
+  computed: {
+    ...mapState('y_update_category', ['uploadGoods', 'cateDt', 'mobileValidate', 'getMobile', 'goodsList', 'isShowHide'])
+  },
+  components: {
+    uploadCategoryPrompt,
+    uploadCategoryAddCoupon,
+    uploadCategoryPhone,
+  },
+  methods:{
+    ...mapActions('y_update_category', ['getUploadGoods', 'getMobileGet', 'getSaleBatchAdd', 'submitBtnFun']),
+   
+    childHidenPhone(dt){
+      debugger;
+      this.isShowValiPhone = 0;
+    }
+  },
+  created(){
+    this.cateDt.gid = this.$route.query.gid;
+    //debugger;
+    this.getUploadGoods();
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .box{
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    
+  }
+  .box .header-nav{
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 9;
+  }
+  .page-header{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 88px;
+    background: #2eacef;
+    .header-left{
+      position: absolute;
+      top:50%;
+      left:30px;
+      color: #fff;
+      transform: translateY(-50%);
+    }
+    h3{
+      font-size: 30px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .header-right{
+      position: absolute;
+      top:50%;
+      right:30px;
+      transform: translateY(-50%);
+      span{
+        color:#666;
+      }
+    }
+  }
+
+  .use-information{
+    width: 100%;
+    margin: 0 auto;
+    img{
+      width: 100%;
+    }
+  }
+
+  .pay-btn{
+      width: 100%;
+      height: 98px;
+      margin: 0 auto;
+      text-align: center;
+      line-height: 98px;
+      font-size: 36px;
+      color: #ffffff;
+      position: fixed;
+      bottom: 0;
+      background: #2eacef;
+    }
+
+
+ 
+</style>

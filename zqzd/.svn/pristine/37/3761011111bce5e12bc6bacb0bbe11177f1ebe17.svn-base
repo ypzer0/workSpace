@@ -1,0 +1,68 @@
+export const getters = {
+  // @TODO
+  //zy 2018-12-29
+  getSpeciStr: state => {
+    var rt = '';
+    if(state.goodsD.specifies.length != 0){
+      for(var i = 0; i < state.goodsD.specifies.length; i ++){
+        var nowcs = state.goodsD.specifies[i];
+
+        for(var j = 0; j < nowcs.valueList.length; j ++){
+          var nowv = nowcs.valueList[j];
+          if(nowv.isCheck){
+            rt += nowv.value + '   ';
+            break;
+          }
+        }
+      }
+
+    }
+    return rt;
+    
+  },
+  getProId: state =>{
+    
+    var checkIds = '';
+    const checkProArr = [];
+    for (let i = 0; i < state.goodsD.specifies.length; i++) {
+      const prop = state.goodsD.specifies[i];
+      for (let j = 0; j < prop.valueList.length; j++) {
+        const vl = prop.valueList[j];
+        if(vl.isCheck){
+          checkProArr.push(vl.id);
+          break;
+        }
+      }
+    }
+    checkIds = checkProArr.join('_');
+
+    var productid = 0;
+
+    var pros = state.goodsD.productList.filter(f =>{
+      var endRt = false;
+      for(var i = 0 ; i< checkProArr.length ; i ++){
+        var ckid = checkProArr[i];
+        eval("endRt = /(^"+ckid+"_)|(^"+ckid+",)|(^"+ckid+"$)|(,"+ckid+"_)|(,"+ckid+",)|(,"+ckid+"$)|(_"+ckid+"$)|(_"+ckid+",)|(_"+ckid+"_)/g.test(f.goods_specification_ids)");
+        if(!endRt){
+          return false;
+        }
+      }
+      return true;
+    });
+
+    if(pros.length != 0){
+      productid = pros[0].id;
+    }
+    // for (let p = 0; p < state.goodsD.productList.length; p++) {
+    //   const sf = state.goodsD.productList[p];
+    //   if(sf.goods_specification_ids == checkIds){
+    //     productid = sf.id;
+    //     break;
+    //   }
+      
+    // }
+    return productid;
+
+  }
+
+}

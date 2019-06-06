@@ -1,0 +1,54 @@
+package com.platform.service;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.platform.dao.ApiCashDrawalMapper;
+import com.platform.dao.ApiCategoryMapper;
+import com.platform.dao.ApiOrderMapper;
+import com.platform.dao.ApiUserMapper;
+import com.platform.dao.ApiWalletMapper;
+import com.platform.entity.CouponCashDrawalVo;
+import com.platform.entity.CouponCategoryVo;
+import com.platform.entity.CouponOrderVo;
+import com.platform.entity.CouponWalletVo;
+import com.platform.entity.UserVo;
+import com.platform.utils.Rp;
+
+@Service
+public class ApiCashDrawalService {
+	@Autowired 
+	private ApiCashDrawalMapper mapper;
+	@Autowired 
+	private ApiWalletMapper wmapper;
+	@Autowired
+	private ApiUserMapper umapper;
+	
+	public Rp cashDrawal(UserVo loginUser,BigDecimal money,Integer type) {
+		CouponWalletVo wallet = wmapper.querySumByUid(loginUser.getId());
+		UserVo userVo = umapper.queryObject(loginUser.getId());
+		BigDecimal endMoney = wallet.getEndMoney();
+		if (money.doubleValue() > endMoney.doubleValue()) {
+			return Rp.error("提现金额不能大于当前余额，请重新输入！");
+		}
+		if (money.doubleValue() < 1) {
+			return Rp.error("提现金额需大于1元，请重新输入！");
+		}
+		CouponCashDrawalVo cashDrawalVo = new CouponCashDrawalVo();
+		cashDrawalVo.setAddTime(new Date());
+		cashDrawalVo.setCash(money);
+		cashDrawalVo.setCType(type);
+		cashDrawalVo.setStatus(0);
+		cashDrawalVo.setUid(loginUser.getId());
+		cashDrawalVo.setUname(userVo.getNickname());
+		mapper.save(cashDrawalVo);
+		return Rp.ok("成功");
+	}
+}

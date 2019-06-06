@@ -1,0 +1,15 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api.js'
+export const z_urse = {
+    
+  //个人中心
+  urse: (params) => {
+
+    return axios.request({
+      url: api.z_UserCenter,
+      data: params,
+      method: 'post'
+    })
+  },
+
+}

@@ -1,0 +1,160 @@
+package com.platform.service;
+
+import com.platform.entity.CouponUserEntity;
+import com.platform.utils.R;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Service接口
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-22 11:44:13
+ */
+public interface CouponUserService {
+
+    /**
+     * 根据主键查询实体
+     *
+     * @param id 主键
+     * @return 实体
+     */
+    CouponUserEntity queryObject(Integer id);
+
+    /**
+     * 分页查询
+     *
+     * @param map 参数
+     * @return list
+     */
+    List<CouponUserEntity> queryList(Map<String, Object> map);
+
+    /**
+     * 分页统计总数
+     *
+     * @param map 参数
+     * @return 总数
+     */
+    int queryTotal(Map<String, Object> map);
+
+    /**
+     * 保存实体
+     *
+     * @param Couponuser 实体
+     * @return 保存条数
+     */
+    int save(CouponUserEntity Couponuser);
+
+    /**
+     * 根据主键更新实体
+     *
+     * @param Couponuser 实体
+     * @return 更新条数
+     */
+    int update(CouponUserEntity Couponuser);
+
+    /**
+     * 根据主键删除
+     *
+     * @param id
+     * @return 删除条数
+     */
+    int delete(Integer id);
+
+    /**
+     * 根据主键批量删除
+     *
+     * @param ids
+     * @return 删除条数
+     */
+    int deleteBatch(Integer[] ids);
+    
+    /**
+     * 批量修改用户状态 
+     * zy 2019-04-24
+     * @param id
+     * @return
+     */
+	int changeUserStatus(Map<String, Object> map);
+	
+	
+	
+
+	/**
+	 * 查询鼎鑫用户信息业务
+	 * @param mapData
+	 * @return
+	 */
+	R queryDingXinPage(Map<String, Object> mapData);
+	
+	/**
+	 * 查询鼎鑫用户信息
+	 * @param map
+	 * @return
+	 */
+	List<CouponUserEntity> queryDingXinList(Map<String, Object> map);
+	
+    /**
+     * 鼎鑫用户信息分页统计总数
+     *
+     * @param map 参数
+     * @return 总数
+     */
+    int queryDingXinTotal(Map<String, Object> map);
+	
+    /**
+     * 删除鼎鑫用户
+     * zy 2019-04-24
+     * @param ids
+     * @param operuid
+     * @return
+     */
+	R DingXinDeleteUser(Integer[] ids, int operuid);
+	
+/**
+ * 
+     * 修改鼎鑫用户
+     * zy 2019-04-24
+ * @param oldUser
+ * @param operuid
+ * @return
+ */
+	R DingXinUpdateUser(CouponUserEntity oldUser, int operuid);
+	
+	/**
+	 * 修改惠友圈用户
+	 * @param oldUser 用户信息
+	 * @param operuid 管理员id
+	 * @return
+	 */
+	R huiYouUpdateUser(CouponUserEntity oldUser, int operuid);
+	
+	/**
+     * 删除惠友用户
+     * zy 2019-04-24
+     * @param ids 用户id
+     * @param operuid 管理员id
+     * @return
+     */
+	R huiYouDeleteUser(Integer[] ids, int operuid);
+	
+	/**
+	 * 设为平台推广员
+	 * @param oldUse 用户信息
+	 * @param operuid 管理员id
+	 * @return
+	 */
+	R updateTomanager(Integer[] ids, int operuid);
+	/**
+	 * 
+	     * 查看鼎鑫用户更多信息
+	     * zy 2019-04-24
+	 * @param oldUser
+	 * @param operuid
+	 * @return
+	 */
+	R DingXinUserMsg(Integer id, int operuid);
+		
+}

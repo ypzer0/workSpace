@@ -1,0 +1,122 @@
+$(function () {
+    $("#jqGrid").Grid({
+        url: '../couponwalletinfolog/list',
+        colModel: [
+			{label: 'id', name: 'id', index: 'id', key: true, hidden: true},
+			{label: '流水Id', name: 'wid', index: 'wid', width: 80, sortable: false, align: 'center'},
+			{label: '操作人id', name: 'uid', index: 'uid', width: 80, sortable: false, align: 'center'},
+			{label: '类型:1.支出 2.收入 ', name: 'wtype1', index: 'wtype1', width: 80,sortable: false, align: 'center'},
+			{label: '类型:3.微信 4.支付宝 5:佣金 6:提成:', name: 'wtype2', index: 'wtype2', width: 80, sortable: false, align: 'center'},
+			{label: '变动金额', name: 'money', index: 'money', width: 80, sortable: false, align: 'center'},
+			{label: '原始金额', name: 'preMoney', index: 'pre_money', width: 80, sortable: false, align: 'center'},
+			{label: '当前金额', name: 'endMoney', index: 'end_money', width: 80, sortable: false, align: 'center'},
+			{label: '冻结金额', name: 'fMoney', index: 'f_money', width: 80, sortable: false, align: 'center'},
+			{label: '冻结状态0:正常 1:冻结中', name: 'fStatus', index: 'f_status', width: 80, sortable: false, align: 'center'},
+			{label: '标题', name: 'title', index: 'title', width: 80, sortable: false, align: 'center'},
+			{label: '内容', name: 'content', index: 'content', width: 80, sortable: false, align: 'center'},
+			{label: '创建时间', name: 'ctime', index: 'ctime', width: 80, sortable: false, align: 'center'}]
+    });
+});
+
+let vm = new Vue({
+	el: '#rrapp',
+	data: {
+        showList: true,
+        title: null,
+		CouponwalletInfoLog: {},
+		ruleValidate: {
+			name: [
+				{required: true, message: '名称不能为空', trigger: 'blur'}
+			]
+		},
+		q: {
+		    name: ''
+		}
+	},
+	methods: {
+		query: function () {
+			vm.reload();
+		},
+		add: function () {
+			vm.showList = false;
+			vm.title = "新增";
+			vm.CouponwalletInfoLog = {};
+		},
+		update: function (event) {
+            let id = getSelectedRow("#jqGrid");
+			if (id == null) {
+				return;
+			}
+			vm.showList = false;
+            vm.title = "修改";
+
+            vm.getInfo(id)
+		},
+		saveOrUpdate: function (event) {
+            let url = vm.CouponwalletInfoLog.id == null ? "../couponwalletinfolog/save" : "../couponwalletinfolog/update";
+            Ajax.request({
+			    url: url,
+                params: JSON.stringify(vm.CouponwalletInfoLog),
+                type: "POST",
+			    contentType: "application/json",
+                successCallback: function (r) {
+                    alert('操作成功', function (index) {
+                        vm.reload();
+                    });
+                }
+			});
+		},
+		del: function (event) {
+            let ids = getSelectedRows("#jqGrid");
+			if (ids == null){
+				return;
+			}
+
+			confirm('确定要删除选中的记录？', function () {
+                Ajax.request({
+				    url: "../couponwalletinfolog/delete",
+                    params: JSON.stringify(ids),
+                    type: "POST",
+				    contentType: "application/json",
+                    successCallback: function () {
+                        alert('操作成功', function (index) {
+                            vm.reload();
+                        });
+					}
+				});
+			});
+		},
+		getInfo: function(id){
+            Ajax.request({
+                url: "../couponwalletinfolog/info/"+id,
+                async: true,
+                successCallback: function (r) {
+                    vm.CouponwalletInfoLog = r.CouponwalletInfoLog;
+                }
+            });
+		},
+		reload: function (event) {
+			vm.showList = true;
+            let page = $("#jqGrid").jqGrid('getGridParam', 'page');
+			$("#jqGrid").jqGrid('setGridParam', {
+                postData: {'name': vm.q.name},
+                page: page
+            }).trigger("reloadGrid");
+            vm.handleReset('formValidate');
+		},
+        reloadSearch: function() {
+            vm.q = {
+                name: ''
+            }
+            vm.reload();
+        },
+        handleSubmit: function (name) {
+            handleSubmitValidate(this, name, function () {
+                vm.saveOrUpdate()
+            });
+        },
+        handleReset: function (name) {
+            handleResetForm(this, name);
+        }
+	}
+});

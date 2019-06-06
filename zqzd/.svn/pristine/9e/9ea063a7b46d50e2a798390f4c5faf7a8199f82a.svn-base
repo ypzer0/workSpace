@@ -1,0 +1,34 @@
+<template>
+  <page :better-scroll="true" >
+    <msg-header slot="top"></msg-header>
+    <msg-list :list="list"></msg-list>
+  </page>
+</template>
+
+<script type="text/ecmascript-6">
+import Vue from 'vue'
+import msgHeader from './msg-header'
+import msgList from './msg-list'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
+export default {
+  computed: {
+    ...mapState('msg', ['list']),
+  },
+  components: {
+    msgHeader,
+    msgList,
+  },
+  methods: {
+    ...mapMutations('cart', ['TOGGLE_MODEL', 'SELECT_GOODS', 'SELECT_GROUP', 'SELECT_ALL']),
+    ...mapActions('cart', ['updateUserCartGoods', 'deleteUserCartGoods', 'checkout', 'LoadCar', 'GoodsChecked', 'UpdateGoodsNumber', 'CartDelete']),
+  },
+  created() {
+
+  },
+  activated(){
+
+  },
+  
+}
+</script>

@@ -1,0 +1,49 @@
+<template>
+    <div>
+      <!-- v-if="this.num == 2" -->
+            <ul class="order_goods_box">
+              <li class="order_goods_li">
+                <div class="order_goods_img"><img src="/src/imges/order/goods.png" /></div>
+                <div class="order_goods_introduce">
+                  <div class="order_goods_introduce_title">
+                    <p class="order_goods_introduce_title_name">3333333333玛呖德 糕点 紫米面包1100g</p>
+                    <span class="order_goods_introduce_title_state">已完成</span>
+                  </div>
+                  <p class="order_goods_introduce_number">數量：1</p>
+                  <p class="order_goods_introduce_time">下單時間：2019-05-22 11:30:00</p>
+                  <p class="order_goods_introduce_price">￥29.99</p>
+                </div>
+              </li>
+            </ul>
+    </div>
+</template>
+
+<script type="text/ecmascript-6">
+  //props:['num']
+</script>
+
+
+<style>
+/* 商品列表 */
+  .order_goods_box{
+    width: 100%;
+    margin: 0 auto;
+  }
+  .order_goods_li{
+    display: flex;
+    width: 92%;
+    margin: 4vw auto;
+  }
+  .order_goods_img{
+    width: 22.7vw;
+    height: 22.7vw;
+    background: #333333;
+    margin-right: 2.7vw;
+    border-radius: 2vw;
+  }
+  .order_goods_img img{
+    width: 100%;
+    height: 100%;
+    /* border-radius: 2vw; */
+  }
+</style>

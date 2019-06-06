@@ -1,0 +1,34 @@
+import * as types from './mutation-types'
+import {api} from '@/service/api'
+import {toast} from '@/libs/cube-ui'
+//import session from '@/libs/session'
+
+export const actions = {
+  //售后-出售
+  async getAfterSales ({dispatch, commit}, o) {
+      o = {
+        status: 0
+      }
+      let res = await api.y_after_sales.afterSales(o)
+      if (res.success) {
+        commit(types.INIT_AFTER_SALES, res.data)
+      } else {
+        toast(res.msg, 'warn')
+      }
+  },
+
+
+  //售后-购买
+  async getAfterBuy ({dispatch, commit}, o) {
+    o = {
+      status: 1
+    }
+    let res = await api.y_after_sales.afterBuy(o)
+    if (res.success) {
+      commit(types.INIT_AFTER_BUY, res.data)
+    } else {
+      toast(res.msg, 'warn')
+    }
+},
+
+}

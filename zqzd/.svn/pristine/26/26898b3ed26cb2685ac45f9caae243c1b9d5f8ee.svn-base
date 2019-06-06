@@ -1,0 +1,187 @@
+package com.platform.service;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.platform.dao.ApiCategoryMapper;
+import com.platform.dao.ApiGoodsMapper;
+import com.platform.dto.ImgBatchAddDto;
+import com.platform.entity.CouponCategoryVo;
+import com.platform.entity.CouponGoodsVo;
+import com.platform.entity.UserVo;
+import com.platform.utils.Rp;
+import com.platform.utils.StringUtils;
+
+@Service
+public class ApiUploadService {
+	@Autowired 
+	private ApiGoodsMapper mapper;
+	@Autowired 
+	private ApiCategoryMapper cmapper;
+	@Autowired
+	private ApiUserService service;
+	@Autowired 
+	private ApiGoodsMapper gmapper;
+
+	public Rp add(UserVo loginUser,Integer cid,String img,String code,String time) {
+		try {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = sdf.parse(time);
+		date.setHours(23);
+		date.setMinutes(59);
+		date.setSeconds(59);
+		if (date.getTime() <= (new Date()).getTime()) {
+			return Rp.error("请添加大于当前时间的有限期！");
+		}
+		if (StringUtils.isEmpty(img)) {
+			return Rp.error("请添加需要上传的图片！");
+		}
+		if (StringUtils.isEmpty(code)) {
+			return Rp.error("请填写兑换码！");
+		}
+		CouponCategoryVo CategoryVo = cmapper.queryObject(cid);
+		CouponGoodsVo goodsVo = new CouponGoodsVo();
+		goodsVo.setAddTime(new Date());
+		goodsVo.setcId(cid);
+		goodsVo.setcName(CategoryVo.getName());
+		goodsVo.setEffTimeEnd((date.getTime()) - (new Date().getTime()));
+		goodsVo.setGoodsNumber(1);
+		goodsVo.setIsDelete(0);
+		goodsVo.setIsOnSale(1);
+		goodsVo.setIsPlat(1);
+		goodsVo.setIsUsed(1);
+		goodsVo.setName(CategoryVo.getParentName()+"|"+CategoryVo.getName());
+		goodsVo.setCreateUserId(loginUser.getId());
+		goodsVo.setImgPath(img);
+		goodsVo.setRedeemCode(code);
+		goodsVo.setEffTime(date);
+		mapper.save(goodsVo);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return Rp.ok("成功");
+	}
+
+	public Rp batchAdd(UserVo loginUser, Integer cid, List<ImgBatchAddDto> goods) throws Exception{
+		// TODO Auto-generated method stub
+		if(goods.size() == 0) {
+			return Rp.error("您还没有上传商品！");
+		}
+		
+//		UserVo userVo = service.queryObject(loginUser.getId().longValue());
+//		//查询当前用户的信用分
+//		Integer credit = userVo.getCredit();
+//		//查询当前用户的上传数量
+//		Integer sum = gmapper.querySum(loginUser.getId());
+//		if (credit/10 < sum+goods.size()) {
+//			return Rp.error("您上传的数量超过您信用分可以允许上传的最大值！您可上传的总数为"+(credit/10)+"张优惠劵,本次最多还可上传"+(credit/10-sum)+"张优惠劵!");
+//		}
+		
+		for (ImgBatchAddDto imgBatchAddDto : goods) {
+
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = sdf.parse(imgBatchAddDto.getTime());
+			date.setHours(23);
+			date.setMinutes(59);
+			date.setSeconds(59);
+			if (date.getTime() <= (new Date()).getTime()) {
+				return Rp.error("请添加大于当前时间的有限期！");
+			}
+			if (StringUtils.isEmpty(imgBatchAddDto.getImg())) {
+				return Rp.error("请添加需要上传的图片！");
+			}
+			if (StringUtils.isEmpty(imgBatchAddDto.getCode())) {
+				return Rp.error("请填写兑换码！");
+			}
+			
+			imgBatchAddDto.setTimeConvert(date);
+		}
+		
+		
+		for (ImgBatchAddDto imgBatchAddDto : goods) {
+			CouponCategoryVo CategoryVo = cmapper.queryObject(cid);
+			CouponGoodsVo goodsVo = new CouponGoodsVo();
+			goodsVo.setAddTime(new Date());
+			goodsVo.setcId(cid);
+			goodsVo.setcName(CategoryVo.getName());
+			goodsVo.setEffTimeEnd((imgBatchAddDto.getTimeConvert().getTime()) - (new Date().getTime()));
+			goodsVo.setGoodsNumber(1);
+			goodsVo.setIsDelete(0);
+			goodsVo.setIsOnSale(1);
+			goodsVo.setIsPlat(1);
+			goodsVo.setIsUsed(1);
+			goodsVo.setName("");
+			goodsVo.setCcId(loginUser.getId());;
+			goodsVo.setImgPath(imgBatchAddDto.getImg());
+			goodsVo.setRedeemCode(imgBatchAddDto.getCode());
+			goodsVo.setEffTime(imgBatchAddDto.getTimeConvert());
+			goodsVo.setGoodsSn(goodsVo.GenGoodsCode());
+			mapper.save(goodsVo);
+			
+		}
+		
+		return Rp.ok("成功");
+	}
+	
+
+//	public Rp batchAdd1(UserVo loginUser, Integer cid, JsonArray array) throws Exception{
+//		// TODO Auto-generated method stub
+//		if(array.size() == 0) {
+//			return Rp.error("您还没有上传商品！");
+//		}	
+////		for (ImgBatchAddDto imgBatchAddDto : goods) {
+////
+////			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+////			Date date = sdf.parse(imgBatchAddDto.getTime());
+////			date.setHours(23);
+////			date.setMinutes(59);
+////			date.setSeconds(59);
+////			if (date.getTime() <= (new Date()).getTime()) {
+////				return Rp.error("请添加大于当前时间的有限期！");
+////			}
+////			if (StringUtils.isEmpty(imgBatchAddDto.getImg())) {
+////				return Rp.error("请添加需要上传的图片！");
+////			}
+////			if (StringUtils.isEmpty(imgBatchAddDto.getCode())) {
+////				return Rp.error("请填写兑换码！");
+////			}
+////			
+////			imgBatchAddDto.setTimeConvert(date);
+////		}
+//		for (int i = 0; i < array.size(); i++) {
+//			JsonObject subObject=array.get(i).getAsJsonObject();
+//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//			Date date = sdf.parse(subObject.get("time").getAsString());
+//			date.setHours(23);
+//			date.setMinutes(59);
+//			date.setSeconds(59);
+//			String img = subObject.get("img").getAsString();
+//			String code = subObject.get("code").getAsString();
+//			System.out.println("date"+date+",img"+img+",code"+code);
+//			CouponCategoryVo CategoryVo = cmapper.queryObject(cid);
+//			CouponGoodsVo goodsVo = new CouponGoodsVo();
+//			goodsVo.setAddTime(new Date());
+//			goodsVo.setcId(cid);
+//			goodsVo.setcName(CategoryVo.getName());
+//			goodsVo.setEffTimeEnd((date.getTime()) - (new Date().getTime()));
+//			goodsVo.setGoodsNumber(1);
+//			goodsVo.setIsDelete(0);
+//			goodsVo.setIsOnSale(1);
+//			goodsVo.setIsPlat(1);
+//			goodsVo.setIsUsed(1);
+//			goodsVo.setName("");
+//			goodsVo.setCreateUserId(loginUser.getId());
+//			goodsVo.setImgPath(img);
+//			goodsVo.setRedeemCode(code);
+//			goodsVo.setEffTime(date);
+//			mapper.save(goodsVo);	
+//		}
+//		
+//		return Rp.ok("成功");
+//	}
+}

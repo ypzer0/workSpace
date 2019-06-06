@@ -1,0 +1,222 @@
+package com.platform.service;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSONObject;
+import com.platform.cache.J2CacheUtils;
+import com.platform.dao.ApiCategoryMapper;
+import com.platform.dao.ApiGoodsMapper;
+import com.platform.dao.ApiOrderMapper;
+import com.platform.dao.ApiUserMapper;
+import com.platform.entity.CouponCategoryVo;
+import com.platform.entity.CouponGoodsVo;
+import com.platform.entity.CouponOrderDetailVo;
+import com.platform.entity.CouponOrderVo;
+import com.platform.entity.CouponUserVo;
+import com.platform.entity.UserVo;
+import com.platform.util.CommonUtil;
+import com.platform.util.wechat.MD5;
+import com.platform.utils.CharUtil;
+import com.platform.utils.DateUtils;
+import com.platform.utils.DecimalUtil;
+import com.platform.utils.R;
+import com.platform.utils.ResourceUtil;
+import com.platform.utils.Rp;
+import com.platform.utils.StringUtils;
+import com.platform.utils.WeiXinUtil;
+
+@Service
+public class ApiConfigService {
+
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
+	@Autowired 
+	private ApiGoodsMapper goodsMapper;
+	@Autowired 
+	private ApiOrderMapper orderMapper;
+	@Autowired 
+	private ApiCategoryMapper categoryMapper;
+	@Autowired 
+	private ApiUserMapper userMapper;
+	
+	private static final String DINGXING_TOKEN = "DINGXING_TOKEN";
+	private static final String HUIYOU_TOKEN = "HUIYOU_TOKEN";
+	
+	private static final String DINGXING_TIKET = "DINGXING_TIKET";
+	private static final String HUIYOU_TIKET = "HUIYOU_TIKET";
+	
+	
+	private Rp getToken(Integer plat) {
+
+		String TOKEN_TYPE = plat == 1 ? DINGXING_TOKEN : HUIYOU_TOKEN;
+
+        String accessToken = "";
+
+        Object synctoken = J2CacheUtils.getWeiXin(TOKEN_TYPE);
+        logger.info("获取token");
+        logger.info("获取token值 :"  + synctoken);
+        if(synctoken == null || StringUtils.isEmpty(synctoken.toString())) {
+
+    		String appid = WeiXinUtil.getAppId(plat);
+    		String secret = WeiXinUtil.getSecret(plat);
+    		String tokenUrl = WeiXinUtil.getToken(plat);
+    		String reqUrl = String.format(tokenUrl, appid, secret);
+            logger.info("appid:" + appid);
+            logger.info("secret:" + secret);
+            logger.info("tokenUrl:" + tokenUrl);
+            logger.info("reqUrl:" + reqUrl);
+            
+            JSONObject sessionData = CommonUtil.httpsRequest(reqUrl, "GET", null);
+            logger.info("tokent 返回消息：" + sessionData.toJSONString());
+            accessToken = sessionData.getString("access_token");
+            if (null == sessionData || StringUtils.isEmpty(accessToken)) {
+                return Rp.error("加载配置失败");
+            }
+
+            J2CacheUtils.putWeiXin(TOKEN_TYPE, accessToken);
+            accessToken = J2CacheUtils.getWeiXin(TOKEN_TYPE).toString();
+            
+        }
+        else {
+        	accessToken = synctoken.toString();
+        }
+
+        Rp rt = Rp.ok();
+        rt.put("token", accessToken);
+        return rt;
+		
+	}
+	
+	/**
+	 * 获取token
+	 * @param plat
+	 * @return
+	 */
+ 	private Rp getTiket(Integer plat) {
+
+ 		Rp rtToken = getToken(plat);
+ 		
+        if(rtToken.get("success").toString() != "true") {
+        	return rtToken;
+        }
+ 		String accessToken = rtToken.get("token").toString();
+        
+		String TIKET_TYPE = plat == 1 ? DINGXING_TIKET : HUIYOU_TIKET;
+        logger.info("获取tiket");
+        String ticket = "";
+
+        Object synctiket = J2CacheUtils.getWeiXin(TIKET_TYPE);
+        logger.info("获取tiket值 :"  + synctiket);
+        if(synctiket == null || StringUtils.isEmpty(synctiket.toString())) {
+
+    		String tiketUrl = WeiXinUtil.getTiket(plat);
+            logger.info("开始获取证书");
+            logger.info("tiketUrl:" + tiketUrl);
+            String reqUrl = String.format(tiketUrl, accessToken, "jsapi");
+            logger.info("tiket Url: " + reqUrl);
+            JSONObject sessionData1 = CommonUtil.httpsRequest(reqUrl, "GET", null);
+
+            logger.info("tiket 返回消息：" + sessionData1.toJSONString());
+            ticket = sessionData1.getString("ticket");
+            if (null == sessionData1 || StringUtils.isEmpty(ticket)) {
+                return Rp.error("获取证书失败");
+            }
+            String errcode = sessionData1.getString("errcode");
+
+            J2CacheUtils.putWeiXin(TIKET_TYPE, ticket);
+            ticket = J2CacheUtils.getWeiXin(TIKET_TYPE).toString();
+        }
+        else {
+        	ticket = synctiket.toString();
+        }
+        
+        
+        Rp rt = Rp.ok();
+        rt.put("token", accessToken);
+        rt.put("ticket", ticket);
+        return rt;
+
+	}
+	
+	/**
+	 * 获取微信配置
+	 * @param loginUser
+	 * @param cid
+	 * @param count
+	 * @return
+	 */
+	public Rp weiXin(UserVo loginUser, Integer pid, String url) {
+		Integer plat = 0;
+        logger.info("用户是否登录！" + (loginUser == null ? "未登录" : "已登录"));
+		if(loginUser != null) {
+			UserVo user = userMapper.queryObject(loginUser.getId());
+			plat = user.getPlatType();
+		}
+		else {
+			plat = pid;
+		}
+		
+		if(plat == 1 || plat == 2) {
+			
+		}
+		else {
+			return Rp.error("异常参数");
+		}
+		
+//		J2CacheUtils
+		
+		String appid = WeiXinUtil.getAppId(plat);
+		String secret = WeiXinUtil.getSecret(plat);
+        logger.info("appid:" + appid);
+        logger.info("secret:" + secret);
+        
+        Rp rtToken = getTiket(plat);
+        if(rtToken.get("success").toString() != "true") {
+        	return rtToken;
+        }
+
+//        String accessToken = rtToken.get("token").toString();
+        String ticket = rtToken.get("ticket").toString();
+
+        //随机数
+        String randomStr = create_nonce_str();//CharUtil.getRandomNum(18).toUpperCase();
+        String timeSpan = create_timestamp();//(new Date()).getTime();
+
+        logger.info("开始组织加密");
+        String endUrl = url.indexOf("#") >= 0 ? url.substring(0, url.indexOf("#")) : url;
+        logger.info("endUrl" + endUrl);
+        StringBuffer string1Builder = new StringBuffer();
+        string1Builder.append("jsapi_ticket=").append(ticket).append("&")
+                      .append("noncestr=").append(randomStr).append("&")
+                      .append("timestamp=").append(timeSpan).append("&")
+                      .append("url=").append(endUrl);
+
+        logger.info("组织签名：" + string1Builder.toString());
+        String sign = CommonUtil.getSha1(string1Builder.toString());
+        logger.info("sign：" + sign);
+		
+		return Rp.ok().putDt("appid", appid)
+				.putDt("timestamp", timeSpan)
+				.putDt("noncestr", randomStr)
+				.putDt("signature", sign)
+				.putDt("endUrl", endUrl)
+				.putDt("url", url);
+	}
+
+    private static String create_nonce_str() {
+        return UUID.randomUUID().toString();
+    }
+    
+    private static String create_timestamp() {
+        return Long.toString(System.currentTimeMillis() / 1000);
+    }
+	
+}

@@ -1,0 +1,159 @@
+package com.platform.controller;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.platform.dto.CouponGoodsInfoBatchAddDto;
+import com.platform.entity.CouponGoodsInfoEntity;
+import com.platform.service.CouponGoodsInfoService;
+import com.platform.utils.PageUtils;
+import com.platform.utils.Query;
+import com.platform.utils.R;
+
+/**
+ * Controller
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-22 16:02:53
+ */
+@RestController
+@RequestMapping("coupongoodsinfo")
+public class CouponGoodsInfoController extends AbstractController {
+    @Autowired
+    private CouponGoodsInfoService CoupongoodsInfoService;
+    
+    /**
+     * 查看列表
+     */
+    @RequestMapping("/list")
+    @RequiresPermissions("coupongoodsinfo:list")
+    public R list(@RequestParam Map<String, Object> params) {
+        //查询列表数据
+        Query query = new Query(params);
+        query.put("delete", "0");
+        List<CouponGoodsInfoEntity> CoupongoodsInfoList = CoupongoodsInfoService.queryList(query);
+        int total = CoupongoodsInfoService.queryTotal(query);
+        
+        for (CouponGoodsInfoEntity couponGoodsInfoEntity : CoupongoodsInfoList) {
+        	Long endTime = couponGoodsInfoEntity.getEffTime().getTime()- new Date().getTime();
+        	couponGoodsInfoEntity.setEffTimeEnd(endTime);
+		}
+        
+        PageUtils pageUtil = new PageUtils(CoupongoodsInfoList, total, query.getLimit(), query.getPage());
+
+        return R.ok().put("page", pageUtil);
+    }
+
+    /**
+     * 查看信息
+     */
+    @RequestMapping("/info/{id}")
+    @RequiresPermissions("coupongoodsinfo:info")
+    public R info(@PathVariable("id") Integer id) {
+        CouponGoodsInfoEntity CoupongoodsInfo = CoupongoodsInfoService.queryObject(id);
+
+        return R.ok().put("CoupongoodsInfo", CoupongoodsInfo);
+    }
+
+    /**
+     * 保存
+     */
+    @RequestMapping("/save")
+    @RequiresPermissions("coupongoodsinfo:save")
+    public R save(@RequestBody CouponGoodsInfoEntity CoupongoodsInfo) {
+    	R rt = CoupongoodsInfoService.addGoodsInfo(CoupongoodsInfo, getUserId().intValue());
+        return rt;
+    }
+
+    /**
+     * 修改
+     */
+    @RequestMapping("/update")
+    @RequiresPermissions("coupongoodsinfo:update")
+    public R update(@RequestBody CouponGoodsInfoEntity CoupongoodsInfo) {
+    	R rt = CoupongoodsInfoService.updateGoodsInfo(CoupongoodsInfo, getUserId().intValue());
+        return rt;
+    }
+    /**
+     * 批量添加商品
+     */
+    @RequestMapping("/batchAdd")
+    @RequiresPermissions("coupongoodsinfo:batchAdd")
+    public R batchAdd(@RequestBody CouponGoodsInfoBatchAddDto para) {
+    	R rt = CoupongoodsInfoService.addBatchGoodsInfo(para, getUserId().intValue());
+        return rt;
+    }
+
+    /**
+     * 删除
+     */
+    @RequestMapping("/delete")
+    @RequiresPermissions("coupongoodsinfo:delete")
+    public R delete(@RequestBody Integer[] ids) {
+    	
+        R rt = CoupongoodsInfoService.delGoods(ids, getUserId().intValue());
+        return rt;
+    }
+
+    /**
+     * 查看所有列表
+     */
+    @RequestMapping("/queryAll")
+    public R queryAll(@RequestParam Map<String, Object> params) {
+
+        List<CouponGoodsInfoEntity> list = CoupongoodsInfoService.queryList(params);
+
+        return R.ok().put("list", list);
+    }
+    
+    
+
+    /**
+     * 上架
+     */
+    @RequestMapping("/upperShelf")
+    @RequiresPermissions("coupongoodsinfo:upperShelf")
+    public R upperShelf(@RequestBody Integer[] ids) {
+    	
+    	if(ids == null || ids.length == 0) {
+    		return R.error("非法数据！");
+    	}
+    	for (Integer id : ids) {
+    		CouponGoodsInfoEntity CoupongoodsInfo = CoupongoodsInfoService.queryObject(id);
+    		CoupongoodsInfo.setIsOnSale(1);
+    		CoupongoodsInfoService.update(CoupongoodsInfo);
+		}
+
+        return R.ok();
+    }
+    
+    /**
+     * 下架
+     */
+    @RequestMapping("/soldOut")
+    @RequiresPermissions("coupongoodsinfo:soldOut")
+    public R soldOut(@RequestBody Integer[] ids) {
+    	
+    	if(ids == null || ids.length == 0) {
+    		return R.error("非法数据！");
+    	}
+    	for (Integer id : ids) {
+    		CouponGoodsInfoEntity CoupongoodsInfo = CoupongoodsInfoService.queryObject(id);
+    		CoupongoodsInfo.setIsOnSale(0);
+    		CoupongoodsInfoService.update(CoupongoodsInfo);
+		}
+
+        return R.ok();
+    }
+    
+}

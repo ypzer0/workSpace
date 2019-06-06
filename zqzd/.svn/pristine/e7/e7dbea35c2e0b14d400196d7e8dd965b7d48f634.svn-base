@@ -1,0 +1,53 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api.js'
+export const y_goods_detail = {
+
+    goodsDetail: (params) => {
+    
+        return axios.request({
+            url: api.Y_goodsDetail,
+            data: params,
+            method: 'post'
+        })
+    },
+    goodsDetailExt: (params) => {
+    
+        return axios.request({
+            url: api.Y_goodsDetailC,
+            data: params,
+            method: 'post'
+        })
+    },
+    //立即购买
+    nowBuy: (params) => {
+        return axios.request({
+            url: api.Y_BuyNowBuy,
+            data: params,
+            method: 'post'
+        })
+    },
+
+    //加入收藏
+    joinCollect: (params) => {
+        return axios.request({
+            url: api.Y_CollectAddBatch,
+            data: params,
+            method: 'post'
+        })
+    },
+
+    //取消收藏
+    collectCancel: (params) => {
+        return axios.request({
+            url: api.Y_CollectRemove,
+            data: params,
+            method: 'post'
+        },
+        {
+            cp : 'application/json'
+           }
+        )
+    }
+
+
+}

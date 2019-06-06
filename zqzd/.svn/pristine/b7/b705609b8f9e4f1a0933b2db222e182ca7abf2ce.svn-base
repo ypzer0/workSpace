@@ -1,0 +1,34 @@
+package com.platform.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.entity.CouponWalletVo;
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-23 15:21:11
+ */
+public interface ApiWalletMapper extends BaseDao<CouponWalletVo> {
+	//查询佣金信息
+	CouponWalletVo queryCommissionObject(int id);
+	//佣金分页查询
+	List<CouponWalletVo> queryCommissionList(Map<String, Object> map);
+	//佣金分页统计总数
+	int queryCommissionTotal(Map<String, Object> map);
+	//佣金统计
+	Map<String, Object> rptQueryWalletCountSum(Map<String, Object> map);
+	
+	List<CouponWalletVo> queryByUid(int uid);
+	
+	CouponWalletVo querySumByUid(int uid);
+	 
+	List<CouponWalletVo> queryComMoney(Map<String, Object> map);
+	
+	int queryComMoneyTotal(Map<String, Object> map);
+	float queryComMoneySum(Map<String, Object> map);
+	
+}

@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ApiUserCreditMapper">
+
+    <resultMap type="com.platform.entity.CouponUserCreditVo" id="CouponuserCreditInfoMap">
+        <result property="id" column="id"/>
+        <result property="cType" column="c_type"/>
+        <result property="uId" column="u_id"/>
+        <result property="credit" column="credit"/>
+        <result property="preCredit" column="pre_credit"/>
+        <result property="endCredit" column="end_credit"/>
+        <result property="reson" column="reson"/>
+        <result property="handlerId" column="handler_id"/>
+        <result property="addTime" column="add_time"/>
+        <result property="nickname" column="nickname"/>
+        <result property="uCode" column="u_code"/>
+        <result property="username" column="username"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.platform.entity.CouponUserCreditVo">
+		select
+			c.`id`,
+    		c.`c_type`,
+    		c.`u_id`,
+    		c.`credit`,
+    		c.`pre_credit`,
+    		c.`end_credit`,
+    		c.`reson`,
+    		c.`handler_id`,
+    		c.`add_time`,
+    		u.`nickname`,
+    		ub.`u_code`,
+    		su.username
+		from coupon_user_credit_info c
+		left join coupon_user u on c.u_id = u.id
+		left join coupon_user_code_bom ub on ub.u_id = u.id
+		left join sys_user su on c.`handler_id` = su.user_id
+		where c.id = #{id}
+	</select>
+	
+	<select id="queryListMsg" resultType="com.platform.entity.CouponUserCreditVo">
+		select
+			c.`id`,
+    		c.`c_type`,
+    		c.`u_id`,
+    		c.`credit`,
+    		c.`pre_credit`,
+    		c.`end_credit`,
+    		c.`reson`,
+    		c.`handler_id`,
+    		c.`add_time`,
+    		u.`nickname`,
+    		ub.`u_code`,
+    		su.username
+		from coupon_user_credit_info c
+		left join coupon_user u on c.u_id = u.id
+		left join coupon_user_code_bom ub on ub.u_id = u.id
+		left join sys_user su on c.`handler_id` = su.user_id
+		where 1=1
+		<if test="uId != null">
+			AND c.`u_id` = #{uId}
+		</if>
+        <if test="uCode != null and uCode.trim() != ''">
+            AND ub.`u_code` LIKE concat('%',#{uCode},'%')
+        </if>
+		<if test="confirmTimeBegin != null and confirmTimeBegin.trim() != ''">
+			AND c.`add_time` &gt;= #{confirmTimeBegin}
+		</if>
+		
+		<if test="confirmTimeEnd != null and confirmTimeEnd.trim() != ''">
+			AND c.`add_time` &lt;= #{confirmTimeEnd}
+		</if>
+		<choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by c.`add_time` desc
+			</otherwise>
+        </choose>
+         
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+		
+	</select>
+	
+	<select id="queryTotalMsg" resultType="int">
+		select count(*) from coupon_user_credit_info c
+		left join coupon_user u on c.u_id = u.id
+		left join coupon_user_code_bom ub on ub.u_id = u.id
+		left join sys_user su on c.`handler_id` = su.user_id
+		WHERE 1=1
+		<if test="uId != null">
+			AND c.`u_id` = #{uId}
+		</if>
+        <if test="uCode != null and uCode.trim() != ''">
+            AND ub.`u_code` LIKE concat('%',#{uCode},'%')
+        </if>
+		<if test="confirmTimeBegin != null and confirmTimeBegin.trim() != ''">
+			AND c.`add_time` &gt;= #{confirmTimeBegin}
+		</if>
+		
+		<if test="confirmTimeEnd != null and confirmTimeEnd.trim() != ''">
+			AND c.`add_time` &lt;= #{confirmTimeEnd}
+		</if>
+	</select>
+	
+	<select id="queryList" resultType="com.platform.entity.CouponUserCreditVo">
+		select 
+    		c.`id`,
+    		c.`c_type`,
+    		c.`u_id`,
+    		c.`credit`,
+    		c.`pre_credit`,
+    		c.`end_credit`,
+    		c.`reson`,
+    		c.`handler_id`,
+    		c.`add_time`,
+    		u.`nickname`,
+    		ub.`u_code`,
+    		su.username
+		from coupon_user_credit_info c
+		inner join
+		(select Max(ci.id) as id from coupon_user_credit_info ci
+		left join coupon_user u on ci.u_id = u.id
+		left join coupon_user_code_bom ub on ub.u_id = u.id
+		left join sys_user su on ci.`handler_id` = su.user_id
+		where 1 = 1
+		
+		<if test="uCode != null and uCode.trim() != ''">
+			AND ub.`u_code` LIKE concat('%',#{uCode},'%')
+		</if>
+		<if test="confirmTimeBegin != null and confirmTimeBegin.trim() != ''">
+			AND ci.`add_time` &gt;= #{confirmTimeBegin}
+		</if>
+		
+		<if test="confirmTimeEnd != null and confirmTimeEnd.trim() != ''">
+			AND ci.`add_time` &lt;= #{confirmTimeEnd}
+		</if>
+		
+		group by ci.u_id ) pci1 on c.id = pci1.id
+		left join coupon_user u on c.u_id = u.id
+		left join coupon_user_code_bom ub on ub.u_id = u.id
+		left join sys_user su on c.`handler_id` = su.user_id
+		
+		
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by c.`add_time` desc
+			</otherwise>
+        </choose>
+         
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from coupon_user_credit_info c
+		left join coupon_user u on c.u_id = u.id
+		left join coupon_user_code_bom ub on ub.u_id = u.id
+		left join sys_user su on c.`handler_id` = su.user_id
+		WHERE 1=1
+        <if test="name != null and name.trim() != ''">
+            AND ub.`u_code` LIKE concat('%',#{name},'%')
+        </if>
+		<if test="confirmTimeBegin != null and confirmTimeBegin.trim() != ''">
+			AND c.`add_time` &gt;= #{confirmTimeBegin}
+		</if>
+		
+		<if test="confirmTimeEnd != null and confirmTimeEnd.trim() != ''">
+			AND c.`add_time` &lt;= #{confirmTimeEnd}
+		</if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.CouponUserCreditVo" useGeneratedKeys="true" keyProperty="id">
+		insert into coupon_user_credit_info(
+			`c_type`,
+			`u_id`,
+			`credit`,
+			`pre_credit`,
+			`end_credit`,
+			`reson`,
+			`handler_id`,
+			`add_time`)
+		values(
+			#{cType},
+			#{uId},
+			#{credit},
+			#{preCredit},
+			#{endCredit},
+			#{reson},
+			#{handlerId},
+			#{addTime})
+	</insert>
+	<update id="update" parameterType="com.platform.entity.CouponUserCreditVo">
+		update coupon_user_credit_info 
+		<set>
+			<if test="cType != null">`c_type` = #{cType}, </if>
+			<if test="uId != null">`u_id` = #{uId}, </if>
+			<if test="credit != null">`credit` = #{credit}, </if>
+			<if test="preCredit != null">`pre_credit` = #{preCredit}, </if>
+			<if test="endCredit != null">`end_credit` = #{endCredit}, </if>
+			<if test="reson != null">`reson` = #{reson}, </if>
+			<if test="handlerId != null">`handler_id` = #{handlerId}, </if>
+			<if test="addTime != null">`add_time` = #{addTime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from coupon_user_credit_info where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from coupon_user_credit_info where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<select id="QueryCreditCountSum" resultType="java.util.HashMap">
+		select 
+		sum(end_credit ) as endCredit
+		from coupon_user_credit_info c
+		inner join
+		(select Max(ci.id) as id from coupon_user_credit_info ci
+		left join coupon_user u on ci.u_id = u.id
+		left join coupon_user_code_bom ub on ub.u_id = u.id
+		left join sys_user su on ci.`handler_id` = su.user_id
+		where 1 = 1
+		
+		<if test="uCode != null and uCode.trim() != ''">
+			AND ub.`u_code` LIKE concat('%',#{uCode},'%')
+		</if>
+		<if test="confirmTimeBegin != null and confirmTimeBegin.trim() != ''">
+			AND ci.`add_time` &gt;= #{confirmTimeBegin}
+		</if>
+		
+		<if test="confirmTimeEnd != null and confirmTimeEnd.trim() != ''">
+			AND ci.`add_time` &lt;= #{confirmTimeEnd}
+		</if>
+		
+		group by ci.u_id ) pci1 on c.id = pci1.id
+		left join coupon_user u on c.u_id = u.id
+		left join coupon_user_code_bom ub on ub.u_id = u.id
+		left join sys_user su on c.`handler_id` = su.user_id
+	</select>
+	
+	<select id="QueryCreditMsgCountSum" resultType="java.util.HashMap">
+		select 
+		sum(case when c.`c_type` = 1 then c.`credit` else -c.`credit` end ) as credit
+		from coupon_user_credit_info c
+		left join coupon_user u on c.u_id = u.id
+		left join coupon_user_code_bom ub on ub.u_id = u.id
+		left join sys_user su on c.`handler_id` = su.user_id
+		WHERE 1=1
+		<if test="uId != null">
+			AND c.`u_id` = #{uId}
+		</if>
+        <if test="uCode != null and uCode.trim() != ''">
+            AND ub.`u_code` LIKE concat('%',#{uCode},'%')
+        </if>
+		<if test="confirmTimeBegin != null and confirmTimeBegin.trim() != ''">
+			AND c.`add_time` &gt;= #{confirmTimeBegin}
+		</if>
+		
+		<if test="confirmTimeEnd != null and confirmTimeEnd.trim() != ''">
+			AND c.`add_time` &lt;= #{confirmTimeEnd}
+		</if>
+	</select>
+</mapper>

@@ -1,0 +1,9 @@
+export default {
+  //申请纠纷
+  applyDisputes:{
+    // "id": "a1",
+    // "goodsName": "[xxx]店铺满一千减少32元..",
+    // "expireTime": "2019-09-22 11:50:00"
+  },
+
+}

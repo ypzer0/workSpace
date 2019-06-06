@@ -1,0 +1,53 @@
+<template>
+  <page page-background="#eeeded" :better-scroll="true" class="box">
+    <after-sales-nav @click-tab="clickFatherTab"></after-sales-nav>
+    <after-sales-sell :afterSales="afterSales" v-if="showTab == 0"></after-sales-sell>
+    <after-sales-buy v-if="showTab == 1"></after-sales-buy>
+
+  </page>
+</template>
+
+<script type="text/ecmascript-6">
+import afterSalesNav from './after-sales-nav'
+import afterSalesSell from './after-sales-sell'
+import afterSalesBuy from './after-sales-buy'
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default {
+  data(){
+    return{
+      showTab: 0,
+    }
+  },
+  computed: {
+    ...mapState('y_afterSales', ['afterSales']),
+  },
+  components:{
+    afterSalesNav,
+    afterSalesSell,
+    afterSalesBuy,
+  },
+
+  methods: {
+    ...mapActions('y_afterSales', ['getAfterSales']),
+    clickFatherTab(dt){
+      this.showTab = dt.i;
+      console.log(dt);
+    }
+  },
+  created(){
+    this.getAfterSales();
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .box{
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    background: #eeeded;
+  }
+
+
+  
+</style>

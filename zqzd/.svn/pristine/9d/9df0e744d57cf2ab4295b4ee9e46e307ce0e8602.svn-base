@@ -1,0 +1,60 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api'
+
+export const coupon = {
+
+  //获取优惠劵列表
+  list: (params) => {
+    return axios.request({
+      url: api.CouponList,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  //获取商品优惠劵
+  goodsCouponList: (params) => {
+    return axios.request({
+      url: api.GoodsCouponList,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  //兑换优惠劵
+  exchange: (params) => {
+    return axios.request({
+      url: api.ExchangeCoupon,
+      data: params,
+      method: 'post'
+    },
+    {
+      cp : 'application/json'
+    })
+  },
+
+  //领取优惠劵
+  receive: (params) => {
+    return axios.request({
+      url: api.GetCoupon,
+      data: params,
+      method: 'post'
+    },
+    {
+      cp : 'application/json'
+    })
+  },
+
+  //转发领取红包
+  trans: (params) => {
+    return axios.request({
+      url: api.transCoupon,
+      data: params,
+      method: 'post'
+    },
+    {
+      cp : 'application/json'
+    })
+  },
+
+}

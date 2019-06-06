@@ -1,0 +1,10 @@
+import * as types from './mutation-types'
+import { debug } from 'util';
+
+export const mutations = {
+  [types.LOAD_PAGEDATA] (state, d) {
+    // @TODO
+    state.list = d;
+  },
+
+}

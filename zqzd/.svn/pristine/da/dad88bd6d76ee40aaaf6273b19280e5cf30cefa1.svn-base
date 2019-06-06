@@ -1,0 +1,523 @@
+$(function () {
+    $("#jqGrid").Grid({
+        url: '../coupongoodsinfo/list',
+        colModel: [
+			{label: '卡劵分类', name: 'parentCname', index: 'parentCname', width: 80, sortable: false, align: 'center'},
+			{label: '卡劵类目', name: 'cname', index: 'cname', width: 80, sortable: false, align: 'center'},
+			{label: '商品编号', name: 'goodsSn', index: 'goods_sn', width: 80, sortable: false, align: 'center'},
+			{label: '上传用户ID', name: 'uCode', index: 'uCode', width: 80, sortable: false, align: 'center',
+				formatter: function (value, dt, rowObject) {
+					if(value == null){
+						return "后台上传";
+					}
+					var plat = rowObject.platType == 1 ? "DX" : "HY";
+                    return plat + value;
+                }
+			},
+			{label: '兑换码', name: 'redeemCode', index: 'redeem_code', width: 80, sortable: false, align: 'center'},
+			{label: '有效期天数（含当天）', name: 'effTimeEnd', index: 'eff_time_end', width: 80, sortable: false, align: 'center',
+				formatter: function (value) {
+					if(value == null) return "";
+		            return (value/(1000*3600*24)).toFixed(2);
+                }
+			},
+			{label: '商品图片', name: 'imgPath', index: 'img_path', width: 80, sortable: false, align: 'center',
+				formatter: function (value) {
+		            return "<img class='cc-img' src='" + value + "' />";
+                }
+			},
+			{label: '状态', name: 'isOnSale', index: 'is_on_sale', width: 80, sortable: false,
+				align: 'center',
+				formatter: function (value) {
+                	var rt = "";
+                	var cls = "";
+                	cls = 'info';
+                	if (value == '0') {
+                    	cls = 'warning';
+                    	rt =  '下架';
+                    } else if (value == '1') {
+                    	rt =  '上架';
+                    } else if (value == '2') {
+                    	rt =  '已出售';
+                    } 
+                    else{
+                        rt =  '-';
+                    }
+                	return '<span class="label label-'+ cls +'">' + rt + '</span>';
+                }	
+			}
+			]
+    });
+});
+
+let vm = new Vue({
+	el: '#rrapp',
+	data: {
+        showList: true,
+        title: null,
+		CoupongoodsInfo: {},
+        
+		uploadList: [],
+        imgName: '',
+        visible: false,
+        batchAddInfo: {},
+        
+		ruleValidate: {
+//			pId: [
+//				{required: true, message: '上级类目不能为空', trigger: 'change'}
+//			],
+//			cId: [
+//				{required: true, type: 'string', message: '分类不能为空', trigger: 'change' }
+//			],
+			effTime: [
+				{required: true, type: 'date', message: '请选择有效期', trigger: 'change'}
+			],
+			imgPath: [
+				{required: true, message: '请选择图片', trigger: 'blur'}
+			],
+			redeemCode: [
+				{required: true, message: '请输入交换码', trigger: 'blur'}
+			]
+		},
+		q: {
+		    name: '',
+		    pcateg: '',
+		    categ: '',
+		    onsale: ''
+		},
+		parentCategory: [],
+		category: [],
+		m_category: [],
+		m_category_child: []
+	},
+	created(){
+		setTimeout(() => {
+			vm.getParentCate();
+			
+//			vm.addBatch();
+//			vm.update();
+		}, 100);
+		
+
+	},
+	methods: {
+		
+		//上架
+		upperShelf: function(){
+
+			let ids = getSelectedRows("#jqGrid");
+			if (ids == null){
+				return;
+			}
+
+			confirm('确定上架？', function () {
+				Ajax.request({
+				    url: "../coupongoodsinfo/upperShelf",
+	                params: JSON.stringify(ids),
+	                type: "POST",
+				    contentType: "application/json",
+	                successCallback: function (r) {
+	                    alert('上架成功', function (index) {
+	                        vm.reload();
+	                    });
+	                }
+				});
+			});
+			
+		},
+		//上架
+		soldOut: function(){
+
+			let ids = getSelectedRows("#jqGrid");
+			if (ids == null){
+				return;
+			}
+
+			confirm('确定下架？', function () {
+				Ajax.request({
+				    url: "../coupongoodsinfo/soldOut",
+	                params: JSON.stringify(ids),
+	                type: "POST",
+				    contentType: "application/json",
+	                successCallback: function (r) {
+	                    alert('下架成功', function (index) {
+	                        vm.reload();
+	                    });
+	                }
+				});
+			});
+		},
+		query: function () {
+			vm.reload();
+		},
+		add: function () {
+			vm.showList = false;
+			vm.showAdd = true;
+			vm.showBitchAdd = false;
+			
+			vm.title = "新增";
+			vm.CoupongoodsInfo = {
+				pId: '',
+				cId: '',
+				effTime: new Date(),
+				imgPath: '',
+				redeemCode: ''
+			};
+			
+			vm.m_category = [];
+			vm.m_category_child = [];
+			
+        	vm.add_loadParent();
+			
+		},
+		
+		add_loadParent: function(sucCallback){
+			Ajax.request({
+			    url: "../couponcategory/selectParent",
+                params: '',
+                type: "POST",
+			    contentType: "application/json",
+                successCallback: function (r) {
+                	vm.m_category = [
+                		{ key: '', val: '请选择-种类'}
+                	];
+                	vm.m_category.addRange(r.list);
+                	if(sucCallback){
+                		sucCallback(r);
+                	}
+				}
+			});
+		},
+		add_getChild: function(pid){
+			if(pid === undefined || pid === null || pid === ''){
+				return;
+			}
+			vm.m_category_child = [];
+			
+			setTimeout(function(){
+
+	        	Ajax.request({
+				    url: "../couponcategory/selectChild/" + pid,
+	                params: '',
+	                type: "POST",
+				    contentType: "application/json",
+	                successCallback: function (r) {
+	                	vm.q.categ = '';
+	                	vm.m_category_child = [
+	                		{ key: '', val: '请选择-类目'}
+	                	];
+	                	vm.m_category_child.addRange(r.list);
+					}
+				});
+				
+			}, 10)
+			
+		},
+		update: function (event) {
+			
+            let id = getSelectedRow("#jqGrid");
+			if (id == null) {
+				return;
+			}
+
+			vm.showList = false;
+			vm.showAdd = true;
+			vm.showBitchAdd = false;
+			vm.title = "修改";
+			
+            vm.getInfo(id, function(dt){
+            	
+            	vm.CoupongoodsInfo = {
+            			pId: dt.CoupongoodsInfo.parentId,
+            			id: dt.CoupongoodsInfo.id,
+            			cId: dt.CoupongoodsInfo.cId,
+            			effTime: new Date(transDate(dt.CoupongoodsInfo.effTime)),
+            			redeemCode:dt.CoupongoodsInfo.redeemCode, 
+            			imgPath: dt.CoupongoodsInfo.imgPath,
+            	};
+            	
+//            	vm.CoupongoodsInfo.pId = dt.CoupongoodsInfo.parentId;
+//            	vm.CoupongoodsInfo.effTime = new Date(transDate(vm.CoupongoodsInfo.effTime));
+//            	vm.CoupongoodsInfo.effTime = new Date(vm.CoupongoodsInfo.effTime);
+            	
+            	//通过子分类id获取平缓的其它类别
+            	vm.add_loadParent();
+//            	vm.add_getChild(vm.CoupongoodsInfo.pId);
+            	
+            });
+		},
+		saveOrUpdate: function (event) {
+            let url = vm.CoupongoodsInfo.id == undefined || vm.CoupongoodsInfo.id == null ? "../coupongoodsinfo/save" : "../coupongoodsinfo/update";
+            Ajax.request({
+			    url: url,
+                params: JSON.stringify(vm.CoupongoodsInfo),
+                type: "POST",
+			    contentType: "application/json",
+                successCallback: function (r) {
+                    alert('操作成功', function (index) {
+                        vm.reload();
+                    });
+                }
+			});
+		},
+		del: function (event) {
+            let ids = getSelectedRows("#jqGrid");
+			if (ids == null){
+				return;
+			}
+
+			confirm('确定要删除选中的记录？', function () {
+                Ajax.request({
+				    url: "../coupongoodsinfo/delete",
+                    params: JSON.stringify(ids),
+                    type: "POST",
+				    contentType: "application/json",
+                    successCallback: function () {
+                        alert('操作成功', function (index) {
+                            vm.reload();
+                        });
+					}
+				});
+			});
+		},
+		getInfo: function(id, sucCallback){
+            Ajax.request({
+                url: "../coupongoodsinfo/info/"+id,
+                async: true,
+                successCallback: function (r) {
+                    vm.CoupongoodsInfo = r.CoupongoodsInfo;
+                    if(sucCallback){
+                    	sucCallback(r);
+                    }
+                }
+            });
+		},
+		reload: function (event) {
+			vm.showList = true;
+            let page = $("#jqGrid").jqGrid('getGridParam', 'page');
+            
+
+            var beginTime = vm.q.addTimeBegin != '' ? vm.q.addTimeBegin.dateFormat("yyyy-MM-dd") : '';
+            var endTime = vm.q.addTimeEnd != '' ? vm.q.addTimeEnd.dateFormat("yyyy-MM-dd") : '';
+            
+			$("#jqGrid").jqGrid('setGridParam', {
+                postData: {
+                	'addTimeBegin': beginTime,
+                	'addTimeEnd': endTime,
+                	'categ': vm.q.categ,
+                	'pcateg': vm.q.pcateg,
+                	'onsale': vm.q.onsale,
+                	'goodsn': vm.q.goodsn,
+                	'outtime': vm.q.outtime
+                },
+                page: page
+            }).trigger("reloadGrid");
+            vm.handleReset('formValidate');
+            vm.handleReset('addFormValidate');
+		},
+        reloadSearch: function() {
+            vm.q = {
+                name: ''
+            }
+            vm.reload();
+        },
+        handleSubmit: function (name) {
+//        	debugger;
+            handleSubmitValidate(this, name, function () {
+                vm.saveOrUpdate()
+            });
+        },
+        handleReset: function (name) {
+            handleResetForm(this, name);
+        },
+        //批量添加 
+        addBatch: function(){
+
+			vm.showList = false;
+			vm.showAdd = false;
+			vm.showBitchAdd = true;
+			vm.title = "批量添加新增";
+//			vm.uploadList = [
+//				{
+//					status: 'finished',
+//					imgUrl:'https://wsimg.qzhkj.cn/h5/goods/20190429/201541823fe7f.png',
+//					code: 'asdasd'
+//				}
+//				
+//			];
+//			
+//			for (var i = 0; i < 30; i++) {
+//				vm.uploadList.push({
+//					status: 'finished',
+//					imgUrl:'https://wsimg.qzhkj.cn/h5/goods/20190429/201541823fe7f.png',
+//					code: '',
+//					codeClass: []
+//				});
+//			}
+			vm.uploadList = [];
+			
+			vm.batchAddInfo = {
+				effTime: new Date(),
+				cId:'',
+				pId:''
+			};
+			
+			vm.m_category = [];
+			vm.m_category_child = [];
+			
+        	Ajax.request({
+			    url: "../couponcategory/selectParent",
+                params: '',
+                type: "POST",
+			    contentType: "application/json",
+                successCallback: function (r) {
+                	vm.m_category = [
+                		{ key: '', val: '请选择-种类'}
+                	];
+                	vm.m_category.addRange(r.list);
+				}
+			});
+			
+			
+        },
+        
+        handleBatchSubmit:function(name){
+        	
+            handleSubmitValidate(this, name, function () {
+            	
+            	if(vm.uploadList.length == 0){
+                    alert('请上传图片!');
+                    return;
+            	}
+            	var goods = [];
+            	for (var i = 0; i < vm.uploadList.length; i++) {
+					var nowU = vm.uploadList[i];
+					goods.push({
+						img: nowU.imgUrl,
+						code: nowU.code
+					})
+				}
+            	
+            	vm.batchAddInfo.goods = goods;
+                let url = "../coupongoodsinfo/batchAdd";
+                Ajax.request({
+    			    url: url,
+                    params: JSON.stringify(vm.batchAddInfo),
+                    type: "POST",
+    			    contentType: "application/json",
+                    successCallback: function (r) {
+                        alert('操作成功', function (index) {
+                            vm.reload();
+                        });
+                    }
+    			});
+            });
+        },
+        
+        
+        
+        
+        
+        getParentCate:function(){
+        	Ajax.request({
+			    url: "../couponcategory/selectParent",
+                params: '',
+                type: "POST",
+			    contentType: "application/json",
+                successCallback: function (r) {
+                	vm.parentCategory = [
+                		{ key: '', val: '请选择-种类'}
+                	];
+                	vm.parentCategory.addRange(r.list);
+				}
+			});
+        },
+        getChildCate:function(){
+        	var pid = vm.q.pcateg;
+        	if(pid === undefined || pid === null || pid === ''){
+        		return;
+        	}
+        	Ajax.request({
+			    url: "../couponcategory/selectChild/" + pid,
+                params: '',
+                type: "POST",
+			    contentType: "application/json",
+                successCallback: function (r) {
+                	vm.q.categ = '';
+                	vm.category = [
+                		{ key: '', val: '请选择-类目'}
+                	];
+                	vm.category.addRange(r.list);
+                	vm.query();
+				}
+			});
+        },
+        
+        //---------图片
+
+        //商品缩略图
+        handleSuccessPicUrl: function (res, file) {
+            vm.CoupongoodsInfo.imgPath = file.response.url;
+        },
+        eyePicUrl: function () {
+            var url = vm.CoupongoodsInfo.imgPath;
+            eyeImage(url);
+        },//商品大图
+        handleFormatError: function (file) {
+            this.$Notice.warning({
+                title: '文件格式不正确',
+                desc: '文件 ' + file.name + ' 格式不正确，请上传 jpg 或 png 格式的图片。'
+            });
+        },
+        handleMaxSize: function (file) {
+            this.$Notice.warning({
+                title: '超出文件大小限制',
+                desc: '文件 ' + file.name + ' 太大，不能超过 2M。'
+            });
+        },
+        
+        //-----批量上传图片
+        
+        handleView(name) {
+            this.imgName = name;
+            this.visible = true;
+        },
+        handleRemove(file) {
+            // 从 upload 实例删除数据
+            const fileList = this.uploadList;
+            this.uploadList.splice(fileList.indexOf(file), 1);
+        },
+        handleSuccess(res, file) {
+            // 因为上传过程为实例，这里模拟添加 url
+            file.imgUrl = res.url;
+            file.name = res.url;
+            file.codeClass = 'def-border-red';
+            vm.uploadList.add(file);
+        },
+        handleBeforeUpload() {
+            const check = this.uploadList.length < 300;
+            if (!check) {
+                this.$Notice.warning({
+                    title: '最多只能上传 300 张图片。'
+                });
+            }
+            return check;
+        },
+        batchImgValit(imgit){
+        	
+        	if(imgit.code === undefined || 
+        			imgit.code === null || 
+        			imgit.code === '' || 
+        			imgit.code.trim() === '')
+        		{
+        			imgit.codeClass = 'def-border-red';
+        		}
+        	else{
+        		imgit.codeClass = '';
+        	}
+        	
+        }
+        
+        
+	}
+});

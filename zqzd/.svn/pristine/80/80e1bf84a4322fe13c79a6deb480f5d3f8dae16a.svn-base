@@ -1,0 +1,20 @@
+package com.platform.service;
+
+import java.util.Map;
+
+import com.platform.utils.R;
+
+/**
+ * 
+ * @author 杨鹏
+ *
+ */
+public interface ZdUserService {
+	/**
+	 * 	分页查询用户
+	 * @param pageNum 当前页
+	 * @param pageSize 记录条数
+	 * @return 公共响应结果类
+	 */
+	public R list(Map<String, Object> params);
+}

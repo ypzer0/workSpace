@@ -1,0 +1,223 @@
+<template>
+  <page>
+    <div class="page-header border-1px-bottom" slot="top">
+      <div class="header-left" @click="$back">
+        <i class="iconfont">&#xe68c;</i>
+      </div>
+      <h3>地址编辑</h3>
+      <div class="header-right">
+        <span @click="SaveAddr">保存</span>
+      </div>
+    </div>
+    <div class="address-update">
+      <div class="update-item">
+        <div class="item-title">
+          <span>收货人姓名</span>
+        </div>
+        <div class="item-text">
+          <input type="text" placeholder="收货人" v-model="form.userName">
+        </div>
+      </div>
+      <div class="update-item">
+        <div class="item-title">
+          <span>手机号码</span>
+        </div>
+        <div class="item-text">
+          <input type="text" placeholder="手机号码" v-model="form.telNumber">
+        </div>
+      </div>
+      <div class="update-item">
+        <div class="item-title">
+          <span>所在地区</span>
+        </div>
+        <div class="item-text">
+          <p @click="getArea">{{ form.full_region }}</p>
+        </div>
+      </div>
+      <div class="update-item">
+        <div class="item-title">
+          <span>详细地址</span>
+        </div>
+        <div class="item-text">
+          <input type="text" placeholder="详细地址" v-model="form.detailInfo">
+        </div>
+      </div>
+      <div class="update-item">
+        <div class="item-title">
+          <span>邮政编码</span>
+        </div>
+        <div class="item-text">
+          <input type="text" placeholder="邮政编码" v-model="form.postalCode">
+        </div>
+      </div>
+      <div class="update-item">
+        <div class="item-title">
+          <span>是否默认</span>
+        </div>
+        <div class="item-text">
+          <i @click="checkChange()" class="iconfont" v-html="form.is_default ? '&#xe65f;' : '&#58976;'"></i>
+        </div>
+      </div>
+    </div>
+  </page>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapActions} from 'vuex'
+import areaSelect from '../common/area-select'
+import {toast} from '@/libs/cube-ui'
+export default {
+  data () {
+    return {
+      id : this.$route.params.id,
+      form: {
+        userName: '',
+        telNumber: '',
+        detailInfo: '',
+        postalCode: '',
+        is_default: false,
+        provinceName: '安徽省',
+        cityName: '合肥市',
+        countyName: '蜀山区',
+        full_region:'安徽省 合肥市 蜀山区'
+        
+      }
+    }
+  },
+  components:{
+    areaSelect
+  },
+  methods:{
+    ...mapActions('cart', ['getAddressDetail', 'SaveAddress']),
+    SaveAddr(){
+      if(this.form.provinceName == null || this.form.provinceName.trim() == '' || this.form.cityName == null || this.form.cityName.trim() == '' || this.form.countyName == null || this.form.countyName.trim() == ''){
+        toast('请选择地址', 'warn');
+        return;
+      }
+      this.SaveAddress( this.form ).then(res=>{
+        if(res.success){
+          this.$back();
+        }
+      });
+
+    },
+    checkChange(){
+      this.form.is_default = !this.form.is_default;
+    },
+    getArea(){
+      
+      this.$mPopup({
+        mask: true
+      }, (h) => {
+        return h(areaSelect, {
+          on: {
+            change: this.changeHandler
+          },
+          props:{
+            pName: this.form.provinceName,
+            cName: this.form.cityName,
+            ctName: this.form.countyName,
+          }
+        })
+      })
+
+    },
+    changeHandler(d){
+      this.form.provinceName = '';
+      this.form.cityName = '';
+      this.form.countyName = '';
+
+      var str = '';
+      if(d.p.id != undefined){
+        str += d.p.name + ' ';
+        this.form.provinceName = d.p.name;
+        if(d.c.id != undefined){
+          str += d.c.name + ' ';
+          this.form.cityName = d.c.name;
+          if(d.d.id != undefined){
+            str += d.d.name;
+            this.form.countyName = d.d.name;
+          }
+        }
+      }
+      this.form.full_region = str;
+
+    }
+  },
+  created(){
+    if(this.id + "" != "0"){
+      this.getAddressDetail( { id: this.id } ).then(res=>{
+        this.form = res;
+      });
+    }
+
+  }
+}
+</script>
+<style lang="less" scoped>
+  @import '../../static/less/index';
+  .page-header{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 88px;
+    background: white;
+    .header-left{
+      position: absolute;
+      top:50%;
+      left:30px;
+      transform: translateY(-50%);
+    }
+    h3{
+      font-size: 30px;
+      font-weight: 600;
+      color:#333;
+    }
+    .header-right{
+      position: absolute;
+      top:50%;
+      right:30px;
+      transform: translateY(-50%);
+      span{
+        color:#666;
+      }
+    }
+  }
+  .address-update{
+    padding:0 43px;
+    background: white;
+    .update-item{
+      position: relative;
+      display: flex;
+      height: 107px;
+      color:#333;
+      .item-title{
+        display: flex;
+        align-items: center;
+        flex-basis: 172px;
+      }
+      .item-text{
+        display: flex;
+        align-items: center;
+        flex:1;
+        input{
+          border:none;
+          outline: none;
+        }
+      }
+      &:not(:last-child) {
+        &::after {
+          position: absolute;
+          content: '';
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 0;
+          border-bottom: 1px solid @border-color;
+          transform: scaleY(0.5);
+        }
+      }
+    }
+  }
+</style>

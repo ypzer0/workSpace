@@ -1,0 +1,118 @@
+<template>
+  <div class="box">
+    <div class="page-header border-1px-bottom" slot="top">
+      <div class="header-left" @click="$back">
+        <i class="iconfont">&#xe601;</i>
+      </div>
+      <h3>支付成功</h3>
+      <div class="header-right">
+        <!-- <span @click="SaveAddr">保存</span> -->
+      </div>
+    </div>
+
+    <pay-success-feedback></pay-success-feedback>
+    <pay-success-goods :goodsSuccess="goodsSuccess"></pay-success-goods>
+    <pay-success-remind></pay-success-remind>
+
+    <div class="success-btn">
+      <button class="success-btn-home" @click="$go('/y-home')">首页</button>
+      <button class="success-btn-order" @click="$go('/y-order/list')">查看订单</button>
+    </div>
+  </div>
+    
+</template>
+
+<script type="text/ecmascript-6">
+import paySuccessFeedback from './pay-success-feedback'
+import paySuccessGoods from './pay-success-goods'
+import paySuccessRemind from './pay-success-remind'
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default {
+  computed: {
+    ...mapState('y_pay_success', ['goodsSuccess'])
+  },
+  components: {
+    paySuccessFeedback,
+    paySuccessGoods,
+    paySuccessRemind,
+  },
+  methods:{
+    ...mapActions('y_pay_success', ['getGoodsSuccess']),
+
+  },
+  created(){
+    this.getGoodsSuccess({oid: this.$route.query.oid});
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .box{
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    .pay-btn{
+      width: 100%;
+      height: 98px;
+      margin: 0 auto;
+      text-align: center;
+      line-height: 98px;
+      font-size: 36px;
+      color: #ffffff;
+      position: fixed;
+      bottom: 0;
+      background: #2eacef;
+    }
+    .success-btn{
+      margin: 0 auto;
+      margin-top: 70px;
+      padding: 0 105px;
+      button{
+        width: 250px;
+        height: 78px;
+        background: none;
+        border: none;
+      }
+      .success-btn-home{
+        border: 2px solid #838383;
+        color: #838383;
+        border-radius: 6px;
+      }
+      .success-btn-order{
+        border: 2px solid #2eacef;
+        color: #2eacef;
+        border-radius: 6px;
+        margin-left: 30px;
+      }
+    }
+  }
+  .page-header{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 88px;
+    background: #2eacef;
+    .header-left{
+      position: absolute;
+      top:50%;
+      left:30px;
+      color: #fff;
+      transform: translateY(-50%);
+    }
+    h3{
+      font-size: 30px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .header-right{
+      position: absolute;
+      top:50%;
+      right:30px;
+      transform: translateY(-50%);
+      span{
+        color:#666;
+      }
+    }
+  }
+</style>

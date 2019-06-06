@@ -1,0 +1,42 @@
+package com.platform.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.platform.dao.ZdUserMapper;
+import com.platform.entity.CouponUserEntity;
+import com.platform.entity.ZdUser;
+import com.platform.service.ZdUserService;
+import com.platform.utils.PageUtils;
+import com.platform.utils.Query;
+import com.platform.utils.R;
+
+/**
+ * 
+ * @author 杨鹏
+ *
+ */
+@Service
+public class ZdUserServiceImpl implements ZdUserService {
+	@Autowired
+	private ZdUserMapper userMapper;
+	
+	@Override
+	public R list(Map<String, Object> params){
+		//查询列表数据
+        try {
+        	System.out.println(params);
+			Query query = new Query(params);
+			List<ZdUser> CouponuserList = userMapper.list(query);
+			int total = userMapper.queryTotal(query);
+			PageUtils pageUtil = new PageUtils(CouponuserList, total, query.getLimit(), query.getPage());
+			return R.ok().put("page", pageUtil);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return R.error("获取用户信息失败");
+		}
+	}
+}

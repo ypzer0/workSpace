@@ -1,0 +1,19 @@
+import * as types from './mutation-types'
+import { api } from '@/service/api'
+import axios from 'axios'
+import {toast} from '@/libs/cube-ui'
+
+export const actions = {
+
+  async loadList ({commit, state}) {
+
+    let res = await api.coupon.list();
+    if(res.success){
+      commit(types.LOAD_PAGEDATA, res.data)
+    }
+
+  },
+  
+
+  
+}

@@ -1,0 +1,50 @@
+package com.platform.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.dto.CouponCommissionInfoDto;
+import com.platform.dto.CouponGoodsInfoDto;
+import com.platform.entity.CouponOrderEntity;
+import com.platform.entity.CouponUserEntity;
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-22 11:10:01
+ */
+public interface CouponOrderDao extends BaseDao<CouponOrderEntity> {
+	/**
+	 * 分页查询
+	 *
+	 * @param map 参数
+	 * @return list
+	 */
+	List<CouponOrderEntity> queryListInfo(Map<String, Object> map);
+
+	/**
+	 * 分页统计总数
+	 *
+	 * @param map 参数
+	 * @return 总数
+	 */
+	int queryTotalInfo(Map<String, Object> map);
+
+	//价格统计
+	Map<String, Object> rptQueryPriceCountSum(Map<String, Object> map);
+
+	//订单价格统计
+	Map<String, Object> QueryOrderPriceCountSum(Map<String, Object> map);
+
+	//商品明细导出
+	List<CouponGoodsInfoDto> QuertGoodsCount(Map<String, Object> map);
+	
+	
+	int orderClose24h();
+	
+	int orderClose7d();
+	
+	int orderFinish1h();
+}

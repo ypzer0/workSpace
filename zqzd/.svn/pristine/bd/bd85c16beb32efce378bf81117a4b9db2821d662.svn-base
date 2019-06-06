@@ -1,0 +1,73 @@
+<template>
+    <div>
+        <div class="order_tab_list">
+            <ul class="order_tab_list_ul">
+                <li :class="{active:index == num}" v-for='(item,index) in tablist' :key="index" @click="clickTab(index,item)" :num="123456">{{item.name}}</li>
+            </ul>
+        </div>
+    </div>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default {
+    //props:['orderList'],
+  data(){
+    return{
+      num: 0,
+      tablist: [
+            {
+                "oid": 1,
+                "name": "全部订单"
+            },
+            {
+                "oid": 2,
+                "name": "等待付款"
+            },
+            {
+                "oid": 3,
+                "name": "付款完成"
+            }
+        ]
+    }
+  },
+
+  computed: {
+    //...mapState('y_order', ['allOrderList'])
+  },
+
+  components:{
+  },
+
+  methods: {
+    clickTab:function(index,item){
+      this.num = index;
+      this.$emit('click-tab', { i : index, item : item });
+      console.log("num:", this.num);
+      console.log("item:", item);
+    }
+}
+}
+</script>
+
+<style>
+    .order_tab_list{
+        width: 100%;
+        height: 13.1vw;
+        background: #ffffff;
+        border-bottom: 1px solid #e5e5e5;
+        position: fixed;
+        top: 88px;
+        z-index: 99;
+    }
+    .order_tab_list_ul{
+        display: flex;
+        justify-content: space-around;
+        font-size: 4.3vw;
+        line-height: 13.1vw;
+        color: #333333;
+    }
+    .active{
+        color: #ff4439;
+    }
+</style>

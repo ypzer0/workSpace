@@ -1,0 +1,42 @@
+import * as types from './mutation-types'
+import {api} from '@/service/api'
+import {toast} from '@/libs/cube-ui'
+//import session from '@/libs/session'
+
+export const actions = {
+  //我的推广-我的推广
+  async getPromote ({dispatch, commit, state}, o) {
+  
+    let res = await api.y_commission_detail.promote(o)
+    if (res.success) {
+      commit(types.INIT_PROMOTE, res.data)
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+  //我的推广-佣金明细
+  async getCommission ({dispatch, commit, state}, o) {
+  
+    let res = await api.y_commission_detail.commission(o)
+    if (res.success) {
+      commit(types.INIT_COMMISSION, res.data)
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+  //我的推广-我的下级
+  async getJunior ({dispatch, commit, state}, o) {
+  
+    let res = await api.y_commission_detail.junior(o)
+    if (res.success) {
+      commit(types.INIT_JUNIOR, res.data)
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+
+
+}

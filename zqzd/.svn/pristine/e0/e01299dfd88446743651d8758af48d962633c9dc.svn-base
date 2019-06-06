@@ -1,0 +1,300 @@
+<template>
+  <div class="goods-details" id="goods-details" >
+    <div class="details-tab">
+      <div class="tab-item tab-item-active">
+        <span>功能详情</span>
+      </div>
+      <div class="tab-item">
+        <span @click="jumpProblem">常见问题</span>
+      </div>
+    </div>
+
+    <div class="details-content" v-html="info.goods_desc">
+      <!-- <div class="content-item" :key="key" v-for="(item, key) in detailsSet.summary">
+        <img :src="item.img" alt="">
+      </div> -->
+
+    </div>
+    
+    
+    <div class="common-problem" id="problem">
+      <div class="h">
+        <div class="line"></div>
+        <span class="title">常见问题</span>
+      </div>
+      <div class="b">
+        <div class="item" :key="index" v-for="(item, index) in issue">
+          <div class="question-box">
+            <span class="spot"></span>
+            <span class="question">{{item.question}}</span>
+          </div>
+          <div class="answer">
+              {{item.answer}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="related-goods" v-if="productList.length > 0">
+      <div class="h">
+        <div class="line"></div>
+        <span class="title">大家都在看</span>
+      </div>
+      <div class="b">
+        <div class="item" v-for="(item, index) in productList" :key="index">
+          <div @click="jumpGoods(item)">
+            <img class="img" :src="item.list_pic_url" background-size="cover" />
+            <div class="name">{{item.goods_name}}</div>
+            <div class="price">￥{{item.retail_price}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  
+</template>
+
+<script type="text/ecmascript-6">
+export default {
+
+  // data(){
+  //   return {
+  //     GoodsDetailStyle:{
+  //       width:''
+  //     }
+  //   }
+  // },
+  inject:['reload'],
+  props: ['detailsSet', 'info', 'issue', 'productList'],
+  methods:{
+    changeImgWith(){
+      
+      $('.details-content').find('img').css('width', window.innerWidth + 'px');
+      $('.details-content').find('p').css({'line-height': 0});
+    }
+    ,
+    jumpGoods(d){
+      this.$emit('jump-goods', d);
+    },
+    jumpProblem(){
+      this.$emit('jump-problem');
+    }
+  },
+  created(){
+    window.addEventListener('resize', this.changeImgWith);
+  },
+  destroyed(){
+    window.removeEventListener('resize', this.changeImgWith);
+  },
+  updated() {
+    this.changeImgWith();
+  }
+}
+</script>
+
+<style lang="less" scoped>
+
+.related-goods{
+    width: auto;
+    height: auto;
+    overflow: hidden;
+    .h{
+        position: relative;
+        height: 30px;
+        width: auto;
+        padding: 56.25px 0;
+        background: #fff;
+        text-align: center;
+        border-bottom: 1px solid #f4f4f4;
+        .line{
+            display: inline-block;
+            position: absolute;
+            top: 72px;
+            left: 0;
+            z-index: 2;
+            height: 1px;
+            margin-left: 225px;
+            width: 300px;
+            background: #ccc;
+        }
+        .title{
+            display: inline-block;
+            position: absolute;
+            top: 56.125px;
+            left: 0;
+            z-index: 3;
+            height: 33px;
+            margin-left: 285px;
+            width: 180px;
+            background: #fff;
+        }
+      }
+      .b{
+        width: auto;
+        height: auto;
+        overflow: hidden;
+        .item{
+            float: left;
+            background: #fff;
+            width: 41%;
+            height: auto;
+            overflow: hidden;
+            text-align: center;
+            padding: 15px 31.25px;
+            border-right: 1px solid #f4f4f4;
+            border-bottom: 1px solid #f4f4f4;
+
+            .img{
+              width: 311.45px;
+              height: 311.45px;
+            }
+            .name{
+              display: block;
+              margin: 11.5px 0 15px 0;
+              text-align: center;
+              overflow: hidden;
+              font-size: 30px;
+              color: #333;
+            }
+            .price{
+              display: block;
+              text-align: center;
+              font-size: 30px;
+              color: #b4282d;
+            }
+
+          }
+      }
+
+}
+
+
+.goods-details{
+  background: white;
+  .details-tab{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 83px;
+    .tab-item{
+      span{
+        color:#666;
+      }
+      &:not(:first-child){
+        margin-left:88px;
+      }
+      &-active{
+        span{
+          font-weight: 700;
+          color:#aa8a59;
+        }
+      }
+    }
+  }
+  .details-content{
+    .content-item{
+      img{
+        display: block;
+        width: 100%;
+      }
+    }
+    p{
+      img{
+        display: block;
+        width: 100%;
+      }
+    }
+  }
+}
+
+  
+.common-problem{
+    height: auto;
+    overflow: hidden;
+    .h{
+        position: relative;
+        height: 30px;
+        width: auto;
+        padding: 56.25px 0;
+        background: #fff;
+        text-align: center;
+        .line{
+            display: inline-block;
+            position: absolute;
+            top: 72px;
+            left: 0;
+            z-index: 2;
+            height: 1px;
+            margin-left: 225px;
+            width: auto;
+            background: #ccc;
+        }
+        .title{
+            display: inline-block;
+            position: absolute;
+            top: 56.125px;
+            left: 0;
+            z-index: 3;
+            height: 33px;
+            margin-left: 285px;
+            width: auto;
+            background: #fff;
+        }
+    }
+    .b{
+        width: auto;
+        height: auto;
+        overflow: hidden;
+        padding: 0px 30px;
+        background: #fff;
+
+      }
+    .item{
+      height: auto;
+      overflow: hidden;
+      padding-bottom: 25px;
+    }
+
+    .question-box
+    {
+      .spot{
+        float: left;
+        display: block;
+        height: 8px;
+        width: 8px;
+        background: #b4282d;
+        border-radius: 50%;
+        margin-top: 11px;
+      }
+      .question{
+        float: left;
+        line-height: 30px;
+        padding-left: 8px;
+        display: block;
+        font-size: 26px;
+        padding-bottom: 15px;
+        color: #303030;
+      }
+      .spot{
+        float: left;
+        display: block;
+        height: 8px;
+        width: 8px;
+        background: #b4282d;
+        border-radius: 50%;
+        margin-top: 11px;
+      }
+
+    }
+    .answer{
+      clear: both;
+      line-height: 36px;
+      padding-left: 16px;
+      font-size: 26px;
+      color: #787878;
+    }
+  }
+
+
+</style>

@@ -1,0 +1,13 @@
+import * as types from './mutation-types'
+
+export const mutations = {
+  //售后-出售
+  [types.INIT_AFTER_SALES] (state, o) {
+     state.afterSales = o.data;
+  },
+
+  //售后-购买
+  [types.INIT_AFTER_BUY] (state, o) {
+    state.afterBuy = o.data;
+ },
+}

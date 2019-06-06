@@ -1,0 +1,368 @@
+package com.platform.entity;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ * 实体
+ * 表名 coupon_wallet_info
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-23 15:21:11
+ */
+public class CouponWalletVo implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    //
+    private Integer id;
+    //客户Id
+    private Integer uid;
+    //变动金额
+    private BigDecimal money;
+    //原始金额
+    private BigDecimal preMoney;
+    //当前金额
+    private BigDecimal endMoney;
+    //类型:1.支出 2.收入 
+    private Integer wtype1;
+    //类型:3.微信 4.支付宝 5:佣金 6:提成:
+    private Integer wtype2;
+    //订单号
+    private String orderSn;
+    //微信订单号
+    private String transactionId;
+    //商户订单号
+    private String outTradeNo;
+    //冻结金额
+    private BigDecimal fMoney;
+    //冻结状态0:正常 1:冻结中
+    private Integer fStatus;
+    //备注
+    private String remark;
+    //创建时间
+    private Date ctime;
+    //用户昵称
+    private String nickname;
+    //用户编号
+    private String uCode;
+    //用户类型
+    private Integer platType;
+    //下级用户昵称
+    private String fnickname;
+    //下级用户编号
+    private String fuCose;
+    //订单总价
+    private BigDecimal orderPrice;
+    //支付时间
+    private Date payTime;
+    //支出汇总
+    private BigDecimal spendingTotal;
+    //收入汇总
+    private BigDecimal incomeTotal;
+    
+    
+    //一级分类名称加上二级分类名称
+    private String name;
+    
+    
+	
+	
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public BigDecimal getfMoney() {
+		return fMoney;
+	}
+
+	public void setfMoney(BigDecimal fMoney) {
+		this.fMoney = fMoney;
+	}
+
+	public Integer getfStatus() {
+		return fStatus;
+	}
+
+	public void setfStatus(Integer fStatus) {
+		this.fStatus = fStatus;
+	}
+
+	public BigDecimal getSpendingTotal() {
+		return spendingTotal;
+	}
+
+	public void setSpendingTotal(BigDecimal spendingTotal) {
+		this.spendingTotal = spendingTotal;
+	}
+
+	public BigDecimal getIncomeTotal() {
+		return incomeTotal;
+	}
+
+	public void setIncomeTotal(BigDecimal incomeTotal) {
+		this.incomeTotal = incomeTotal;
+	}
+
+	public BigDecimal getOrderPrice() {
+		return orderPrice;
+	}
+
+	public void setOrderPrice(BigDecimal orderPrice) {
+		this.orderPrice = orderPrice;
+	}
+
+	public Date getPayTime() {
+		return payTime;
+	}
+
+	public void setPayTime(Date payTime) {
+		this.payTime = payTime;
+	}
+
+	public String getuCode() {
+		return uCode;
+	}
+
+	public void setuCode(String uCode) {
+		this.uCode = uCode;
+	}
+
+	public Integer getPlatType() {
+		return platType;
+	}
+
+	public void setPlatType(Integer platType) {
+		this.platType = platType;
+	}
+
+	public String getFuCose() {
+		return fuCose;
+	}
+
+	public void setFuCose(String fuCose) {
+		this.fuCose = fuCose;
+	}
+
+	public String getFnickname() {
+		return fnickname;
+	}
+
+	public void setFnickname(String fnickname) {
+		this.fnickname = fnickname;
+	}
+
+	
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	
+
+	/**
+     * 设置：
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * 获取：
+     */
+    public Integer getId() {
+        return id;
+    }
+    /**
+     * 设置：客户Id
+     */
+    public void setUid(Integer uid) {
+        this.uid = uid;
+    }
+
+    /**
+     * 获取：客户Id
+     */
+    public Integer getUid() {
+        return uid;
+    }
+    /**
+     * 设置：变动金额
+     */
+    public void setMoney(BigDecimal money) {
+        this.money = money;
+    }
+
+    /**
+     * 获取：变动金额
+     */
+    public BigDecimal getMoney() {
+        return money;
+    }
+    /**
+     * 设置：原始金额
+     */
+    public void setPreMoney(BigDecimal preMoney) {
+        this.preMoney = preMoney;
+    }
+
+    /**
+     * 获取：原始金额
+     */
+    public BigDecimal getPreMoney() {
+        return preMoney;
+    }
+    /**
+     * 设置：当前金额
+     */
+    public void setEndMoney(BigDecimal endMoney) {
+        this.endMoney = endMoney;
+    }
+
+    /**
+     * 获取：当前金额
+     */
+    public BigDecimal getEndMoney() {
+        return endMoney;
+    }
+    /**
+     * 设置：类型:1.支出 2.收入 
+     */
+    public void setWtype1(Integer wtype1) {
+        this.wtype1 = wtype1;
+    }
+
+    /**
+     * 获取：类型:1.支出 2.收入 
+     */
+    public Integer getWtype1() {
+        return wtype1;
+    }
+    /**
+     * 设置：类型:3.微信 4.支付宝 5:佣金 6:提成:
+     */
+    public void setWtype2(Integer wtype2) {
+        this.wtype2 = wtype2;
+    }
+
+    /**
+     * 获取：类型:3.微信 4.支付宝 5:佣金 6:提成:
+     */
+    public Integer getWtype2() {
+        return wtype2;
+    }
+    /**
+     * 设置：订单号
+     */
+    public void setOrderSn(String orderSn) {
+        this.orderSn = orderSn;
+    }
+
+    /**
+     * 获取：订单号
+     */
+    public String getOrderSn() {
+        return orderSn;
+    }
+    /**
+     * 设置：微信订单号
+     */
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    /**
+     * 获取：微信订单号
+     */
+    public String getTransactionId() {
+        return transactionId;
+    }
+    /**
+     * 设置：商户订单号
+     */
+    public void setOutTradeNo(String outTradeNo) {
+        this.outTradeNo = outTradeNo;
+    }
+
+    /**
+     * 获取：商户订单号
+     */
+    public String getOutTradeNo() {
+        return outTradeNo;
+    }
+    /**
+     * 设置：冻结金额
+     */
+    public void setFMoney(BigDecimal fMoney) {
+        this.fMoney = fMoney;
+    }
+
+    /**
+     * 获取：冻结金额
+     */
+    public BigDecimal getFMoney() {
+        return fMoney;
+    }
+    /**
+     * 设置：冻结状态0:正常 1:冻结中
+     */
+    public void setFStatus(Integer fStatus) {
+        this.fStatus = fStatus;
+    }
+
+    /**
+     * 获取：冻结状态0:正常 1:冻结中
+     */
+    public Integer getFStatus() {
+        return fStatus;
+    }
+    /**
+     * 设置：备注
+     */
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    /**
+     * 获取：备注
+     */
+    public String getRemark() {
+        return remark;
+    }
+    /**
+     * 设置：创建时间
+     */
+    public void setCtime(Date ctime) {
+        this.ctime = ctime;
+    }
+
+    /**
+     * 获取：创建时间
+     */
+    public Date getCtime() {
+        return ctime;
+    }
+
+	@Override
+	public String toString() {
+		return "CouponWalletVo [id=" + id + ", uid=" + uid + ", money=" + money + ", preMoney=" + preMoney
+				+ ", endMoney=" + endMoney + ", wtype1=" + wtype1 + ", wtype2=" + wtype2 + ", orderSn=" + orderSn
+				+ ", transactionId=" + transactionId + ", outTradeNo=" + outTradeNo + ", fMoney=" + fMoney
+				+ ", fStatus=" + fStatus + ", remark=" + remark + ", ctime=" + ctime + ", nickname=" + nickname
+				+ ", uCode=" + uCode + ", platType=" + platType + ", fnickname=" + fnickname + ", fuCose=" + fuCose
+				+ ", orderPrice=" + orderPrice + ", payTime=" + payTime + ", spendingTotal=" + spendingTotal
+				+ ", incomeTotal=" + incomeTotal + "]";
+	}
+    
+    
+}

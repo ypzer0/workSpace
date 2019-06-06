@@ -1,0 +1,169 @@
+<template>
+  <div :better-scroll="true" class="box">
+    <div class="page-header border-1px-bottom" slot="top">
+      <div class="header-left" @click="$back">
+        <i class="iconfont">&#xe601;</i>
+      </div>
+      <h3>卡券说明</h3>
+      <div class="header-right">
+        <!-- <span @click="SaveAddr">保存</span> -->
+      </div>
+    </div>
+    
+  <div class="coupon-instructions-box">
+    <div class="coupon-instructions">
+      <p class="coupon-instructions-title">使用说明：</p>
+      <p class="coupon-instructions-content">{{useExplain.useAsk}}</p>
+    </div>
+  </div>
+  <div class="coupon-instructions-box">
+    <div class="coupon-instructions">
+      <p class="coupon-instructions-title">适用门店：</p>
+      <p class="coupon-instructions-content">获得快乐经历的发生纠纷两拉德芳斯空间来看打发时间东方闪电杀戮空间电风扇</p>
+    </div>
+  </div>
+
+  <div class="coupon-instructions-box">
+    <div class="coupon-instructions">
+      <p class="coupon-instructions-title coupon-state">订单编号：<span>{{useExplain.orderSn}}</span></p>
+      <p class="coupon-instructions-title coupon-state1">下单时间：<span>{{useExplain.addTime}}</span></p>
+    </div>
+  </div>
+
+    <div class="coupon-notice">
+      <p class="coupon-notice-title">使用须知：</p>
+      <p class="coupon-notice-text">查看卡券二维码就代表此卡券已经使用。</br>有任何问题请联系客服。</p>
+    </div>
+
+    <button class="coupon-btn" @click="useDetails">立即查看</button>
+
+  </div>
+    
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default {
+  computed: {
+    ...mapState('y_use_explain', ['useExplain'])
+  },
+  components: {
+
+  },
+  methods:{
+    ...mapActions('y_use_explain', ['getUseExplain']),
+    useDetails(){
+      console.log(this.useExplain.oid);
+      let useGid = this.$route.params.gid;
+      let oid = this.useExplain.oid;
+      console.log("oid:", oid);
+      this.$router.push({path:`/y-use-details?gid=${useGid}`})
+    }
+  },
+  created(){
+    console.log(this.$route.query.oid);
+    this.getUseExplain(this.$route.query.oid);
+
+  },
+}
+</script>
+
+<style lang="less" scoped>
+  .box{
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    
+  }
+  .page-header{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 88px;
+    // background: #2eacef;
+    background: -webkit-linear-gradient(left, #ff6839 , #ff4439); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(right, #ff6839, #ff4439); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(right, #ff6839, #ff4439); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to right, #ff6839 , #ff4439); /* 标准的语法 */
+    .header-left{
+      position: absolute;
+      top:50%;
+      left:30px;
+      color: #fff;
+      transform: translateY(-50%);
+    }
+    h3{
+      font-size: 30px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .header-right{
+      position: absolute;
+      top:50%;
+      right:30px;
+      transform: translateY(-50%);
+      span{
+        color:#666;
+      }
+    }
+  }
+
+  .coupon-instructions-box{
+    width: 100%;
+    margin: 0 auto;
+    border-bottom: 20px solid #eeeded;
+  .coupon-instructions{
+    width: 92%;
+    margin: 0 auto;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    .coupon-instructions-title{
+        font-size: 32px;
+        color: #333333;
+        span{
+          color: #838383;
+        }
+    }
+    .coupon-state1{
+      margin-top: 20px;
+    }
+    .coupon-instructions-content{
+        font-size: 28px;
+        color: #838383;
+        margin-top: 25px;
+        line-height: 40px;
+    }
+  }
+  }
+
+  .coupon-notice{
+    width: 92%;
+    margin: 0 auto;
+    margin-top: 30px;
+  }
+  .coupon-notice-title{
+    font-size: 32px;
+    color: #333333;
+  }
+  .coupon-notice-text{
+    font-size: 28px;
+    color: #ff4439;
+    margin-top: 20px;
+    line-height: 35px;
+  }
+
+  .coupon-btn{
+    width: 260px;
+    height: 74px;
+    border-radius: 6px;
+    border:1px solid #ff4439;
+    color: #ff4439;
+    background: none;
+    display: block;
+    margin: 0 auto;
+    margin-top: 96px;
+  }
+
+ 
+</style>

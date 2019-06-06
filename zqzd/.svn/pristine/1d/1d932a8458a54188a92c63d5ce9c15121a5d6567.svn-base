@@ -1,0 +1,31 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api'
+export const goods = {
+  getGoodsInfo: (params) => {
+    return axios.request({
+      url: api.GoodsDetail,//'goods/getGoodsInfo',
+      data: params,
+      method: 'post'
+    })
+  },
+
+  BuyAdd: (params) => {
+    return axios.request({
+      url: api.BuyAdd,
+      data: params,
+      method: 'post'
+    }, {
+      cp : 'application/json'
+    })
+  },
+
+  GoodsCount: () => {
+    return axios.request({
+      url: api.GoodsCount,
+      data: null,
+      method: 'post'
+    })
+  }
+
+  
+}

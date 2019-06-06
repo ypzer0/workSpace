@@ -1,0 +1,15 @@
+export default {
+  //商品信息
+  afterSales:{
+    // "id": "a1",
+    // "goodsName": "[xxx]店铺满一千减少32元..",
+    // "expireTime": "2019-09-22 11:50:00"
+  },
+
+  afterBuy:{
+    // "id": "a1",
+    // "goodsName": "[xxx]店铺满一千减少32元..",
+    // "expireTime": "2019-09-22 11:50:00"
+  }
+
+}

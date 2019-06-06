@@ -1,0 +1,71 @@
+<template>
+    <div>
+        <div class="details-prompt">
+            <p class="details-prompt-title">来源提示：</p>
+            <p class="details-prompt-content">{{goodsDetail.msg}}</p>
+        </div>
+        <div class="details-details">
+            <p class="details-details-title">商品详情：</p>
+            <p class="details-details-content">{{goodsDetail.detail}}</p>
+        </div>
+    </div>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default{
+  
+  data () {
+    return {
+        
+    }
+  },
+
+  computed: {
+    ...mapState('y_goods_detail', ['goodsDetail']),
+  },
+  methods: {
+    ...mapActions('y_goods_detail', ['getGoodsDetail']),
+  },
+  created(){
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .details-prompt{
+      width: 92%;
+      margin: 0 auto;
+      margin-top: 20px;
+      font-size: 32px;
+      padding-bottom: 30px;
+      border-bottom: 20px solid #f7f7f7;
+      .details-prompt-title{
+        font-size: 28px;
+        color: #ff4539;
+      }
+      .details-prompt-content{
+          font-size: 26px;
+          color: #333333;
+          margin-top: 20px;
+      }
+  }
+  .details-details{
+      width: 92%;
+      margin: 0 auto;
+      margin-top: 20px;
+      font-size: 32px;
+      padding-bottom: 140px;
+      //border-bottom: 20px solid #f7f7f7;
+      .details-details-title{
+        font-size: 36px;
+        color: #333333;
+      }
+      .details-details-content{
+          font-size: 32px;
+          color: #333333;
+          margin-top: 20px;
+      }
+  }
+    
+</style>

@@ -1,0 +1,155 @@
+package com.platform.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.platform.entity.CouponCategoryEntity;
+import com.platform.entity.SysMenuEntity;
+import com.platform.service.CouponCategoryService;
+import com.platform.utils.PageUtils;
+import com.platform.utils.Query;
+import com.platform.utils.R;
+
+/**
+ * Controller
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-22 11:35:38
+ */
+@RestController
+@RequestMapping("couponcategory")
+public class CouponCategoryController extends AbstractController {
+    @Autowired
+    private CouponCategoryService CouponcategoryService;
+
+    /**
+     * 查看列表
+     */
+    @RequestMapping("/list")
+    @RequiresPermissions("couponcategory:list")
+    public R list(@RequestParam Map<String, Object> params) {
+        //查询列表数据
+        Query query = new Query(params);
+        query.put("noParentId", 0);
+        query.put("nostatus", 2);
+        List<CouponCategoryEntity> CouponcategoryList = CouponcategoryService.queryList(query);
+        int total = CouponcategoryService.queryTotal(query);
+
+        PageUtils pageUtil = new PageUtils(CouponcategoryList, total, query.getLimit(), query.getPage());
+
+        HashMap<String, Object> sumTotal = CouponcategoryService.querySum(query);
+        
+        return R.ok().put("page", pageUtil).put("total", sumTotal);
+    }
+
+    /**
+     * 查看信息
+     */
+    @RequestMapping("/info/{id}")
+    @RequiresPermissions("couponcategory:info")
+    public R info(@PathVariable("id") Integer id) {
+        CouponCategoryEntity Couponcategory = CouponcategoryService.queryObject(id);
+
+        return R.ok().put("Couponcategory", Couponcategory);
+    }
+
+    /**
+     * 保存
+     */
+    @RequestMapping("/save")
+    @RequiresPermissions("couponcategory:save")
+    public R save(@RequestBody CouponCategoryEntity Couponcategory) {
+
+        R rt = CouponcategoryService.saveCategory(Couponcategory, getUserId().intValue());
+        return rt;
+    }
+
+    /**
+     * 修改
+     */
+    @RequestMapping("/update")
+    @RequiresPermissions("couponcategory:update")
+    public R update(@RequestBody CouponCategoryEntity Couponcategory) {
+
+        R rt = CouponcategoryService.updateCategory(Couponcategory, getUserId().intValue());
+        return rt;
+    }
+
+    /**
+     * 删除
+     */
+    @RequestMapping("/delete")
+    @RequiresPermissions("couponcategory:delete")
+    public R delete(@RequestBody Integer[] ids) {
+
+        R rt = CouponcategoryService.changeStatus(2, ids, getUserId().intValue());
+        return rt;
+    }
+
+    /**
+     * 查看所有列表
+     */
+    @RequestMapping("/queryAll")
+    public R queryAll(@RequestParam Map<String, Object> params) {
+
+        List<CouponCategoryEntity> list = CouponcategoryService.queryList(params);
+
+        return R.ok().put("list", list);
+    }
+
+    /**
+     * 修改状态
+     */
+    @RequestMapping("/changeenable/{tpid}")
+    @RequiresPermissions("couponcategory:changeenable")
+    public R changeenable(@PathVariable("tpid") Integer tpid, @RequestBody Integer[] ids) {
+    	
+        R rt = CouponcategoryService.changeenable(tpid, ids, getUserId().intValue());
+        return rt;
+    }
+    
+    /**
+     * 选择上级分类 by zy
+     */
+    @RequestMapping("/select")
+    @RequiresPermissions("couponcategory:select")
+    public R select() {
+
+        R rt = CouponcategoryService.selectParentMenu();
+        return rt;
+    }
+    
+    
+
+    /**
+     * 获取上级分类key  val 值
+     */
+    @RequestMapping("/selectParent")
+    public R selectParent() {
+
+        R rt = CouponcategoryService.selectParent();
+        return rt;
+    }
+    
+
+    /**
+     * 获取下级分类key  val 值
+     */
+    @RequestMapping("/selectChild/{pid}")
+    public R selectChild(@PathVariable("pid") Integer pid) {
+    	
+        R rt = CouponcategoryService.selectChild(pid);
+        return rt;
+    }
+    
+}

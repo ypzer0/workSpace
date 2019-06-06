@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.CouponEptUserEdayDao">
+
+    <resultMap type="com.platform.entity.CouponEptUserEdayEntity" id="CouponeptUserEdayMap">
+        <result property="id" column="id"/>
+        <result property="reg" column="reg"/>
+        <result property="online" column="online"/>
+        <result property="ctime" column="ctime"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.platform.entity.CouponEptUserEdayEntity">
+		select
+			`id`,
+			`reg`,
+			`online`,
+			`ctime`
+		from coupon_ept_user_eday
+		where id = #{id}
+	</select>
+
+	<select id="queryList" resultType="com.platform.entity.CouponEptUserEdayEntity">
+		select
+    		`id`,
+    		`reg`,
+    		`online`,
+    		`ctime`
+		from coupon_ept_user_eday
+		WHERE 1=1
+		<if test="name != null and name.trim() != ''">
+			AND name LIKE concat('%',#{name},'%')
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from coupon_ept_user_eday
+		WHERE 1=1
+        <if test="name != null and name.trim() != ''">
+            AND name LIKE concat('%',#{name},'%')
+        </if>
+	</select>
+	 
+ 	<select id="updateRptCustomer" resultType="int">
+		{CALL rpt_cp_customer(#{btime,jdbcType=VARCHAR,mode=IN})}
+	</select>
+	
+	<insert id="save" parameterType="com.platform.entity.CouponEptUserEdayEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into coupon_ept_user_eday(
+			`reg`,
+			`online`,
+			`ctime`)
+		values(
+			#{reg},
+			#{online},
+			#{ctime})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.CouponEptUserEdayEntity">
+		update coupon_ept_user_eday 
+		<set>
+			<if test="reg != null">`reg` = #{reg}, </if>
+			<if test="online != null">`online` = #{online}, </if>
+			<if test="ctime != null">`ctime` = #{ctime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from coupon_ept_user_eday where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from coupon_ept_user_eday where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

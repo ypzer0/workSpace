@@ -1,0 +1,97 @@
+package com.platform.service;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.platform.dao.ApiWalletMapper;
+import com.platform.entity.CouponWalletVo;
+import com.platform.dao.ApiUserSubMapper;
+import com.platform.entity.SubUserInfoVo;
+import com.platform.entity.UserVo;
+import com.platform.util.ApiPageUtils;
+import com.platform.utils.Rp;
+
+
+@Service
+public class ApiExtService {
+	
+	@Autowired
+	private ApiUserService apiUserService;
+	@Autowired
+	private ApiUserSubMapper apiUserSubMapper;
+	
+	@Autowired
+	private ApiWalletMapper wMapper;
+	
+	public Rp findExt(UserVo loginUser) {
+		UserVo user = apiUserService.queryObject(loginUser.getId().longValue());
+		return Rp.ok().putDt("succt", 0)
+				.putDt("winmoney", 0.00).putDt("grade", 0).putDt("mul",user.getMultiple());
+	}
+	//isyes为true查询昨天，false查询全部
+	public Rp extExtdetail(UserVo loginUser,Boolean isyes,Integer page,Integer size) {
+		if(isyes==null) {
+			return Rp.error("请传入有效的数据");
+		}
+		
+		Map<String,Object> params=new HashMap<String,Object>();
+		params.put("uid", loginUser.getId());
+		params.put("isyes", isyes);
+		params.put("offset", page - 1);
+		params.put("limit", size);
+
+		List<CouponWalletVo> List = wMapper.queryComMoney(params);
+		Integer total=wMapper.queryComMoneyTotal(params);
+		
+		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+		for (CouponWalletVo commission : List) {
+			Map<String, Object> cMap = new HashMap<String, Object>();
+			cMap.put("gname", commission.getName());
+			cMap.put("orderPrice", commission.getOrderPrice());
+			cMap.put("comMoney", commission.getMoney());
+			cMap.put("date", new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(commission.getCtime()));
+			dataList.add(cMap);
+		}
+		
+		ApiPageUtils apiPageUtils=new ApiPageUtils(dataList, total, size, page);
+		Map<String,Object> sMap=new HashMap<String, Object>();
+		Float sum = wMapper.queryComMoneySum(params);
+		sMap.put("summon", sum);
+		apiPageUtils.setFilterCategory(sMap);
+		Rp rt = Rp.ok();
+		rt.put("data",apiPageUtils);
+		return rt;
+	}
+
+	
+	public Rp findSub(UserVo loginUser,Integer page,Integer size) {
+		Map<String,Object> params=new HashMap<>();
+		params.put("uid", loginUser.getId());
+		params.put("offset", page-1);
+		params.put("limit", size);
+		List<SubUserInfoVo> subUserInfoVoList =apiUserSubMapper.findSubUserInfo(params);
+		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+		Integer total=subUserInfoVoList.size();
+		if(total!=0) {
+			for(SubUserInfoVo subUserInfoVo:subUserInfoVoList) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("nickname", subUserInfoVo.getNickname());
+				map.put("paym",subUserInfoVo.getPaym());
+				map.put("getm",subUserInfoVo.getGetm());
+				map.put("date",subUserInfoVo.getDate());
+				dataList.add(map);
+			}
+		}
+		ApiPageUtils apiPageUtils=new ApiPageUtils(dataList, total, size, page);
+		Rp rt = Rp.ok();
+		apiPageUtils.setFilterCategory(null);
+		rt.put("data",apiPageUtils);
+		return rt;
+	}
+}

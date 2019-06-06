@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ZdUserDao">
+
+    <resultMap type="com.platform.entity.ZdUserEntity" id="ZduserMap">
+        <result property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="nickname" column="nickname"/>
+        <result property="password" column="password"/>
+        <result property="gender" column="gender"/>
+        <result property="registerTime" column="register_time"/>
+        <result property="lastLoginTime" column="last_login_time"/>
+        <result property="lastLoginIp" column="last_login_ip"/>
+        <result property="userLevelId" column="user_level_id"/>
+        <result property="mobile" column="mobile"/>
+        <result property="registerIp" column="register_ip"/>
+        <result property="age" column="age"/>
+        <result property="status" column="status"/>
+        <result property="remarks" column="remarks"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.platform.entity.ZdUserEntity">
+		select
+			`id`,
+			`username`,
+			`nickname`,
+			`password`,
+			`gender`,
+			`register_time`,
+			`last_login_time`,
+			`last_login_ip`,
+			`user_level_id`,
+			`mobile`,
+			`register_ip`,
+			`age`,
+			`status`,
+			`remarks`
+		from zd_user
+		where id = #{id}
+	</select>
+
+	<select id="queryList" resultType="com.platform.entity.ZdUserEntity">
+		select
+    		`id`,
+    		`username`,
+    		`nickname`,
+    		`password`,
+    		`gender`,
+    		`register_time`,
+    		`last_login_time`,
+    		`last_login_ip`,
+    		`user_level_id`,
+    		`mobile`,
+    		`register_ip`,
+    		`age`,
+    		`status`,
+    		`remarks`
+		from zd_user
+		WHERE 1=1
+		<if test="nickname != null and nickname.trim() != ''">
+			AND nickname LIKE concat('%',#{nickname},'%')
+		</if>
+		<if test="status != null and status.trim() != ''">
+			AND status=#{status}
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from zd_user
+		WHERE 1=1
+        <if test="nickname != null and nickname.trim() != ''">
+			AND nickname LIKE concat('%',#{nickname},'%')
+		</if>
+		<if test="status != null and status.trim() != ''">
+			AND status=#{status}
+		</if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.ZdUserEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into zd_user(
+			`username`,
+			`nickname`,
+			`password`,
+			`gender`,
+			`register_time`,
+			`last_login_time`,
+			`last_login_ip`,
+			`user_level_id`,
+			`mobile`,
+			`register_ip`,
+			`age`,
+			`status`,
+			`remarks`)
+		values(
+			#{username},
+			#{nickname},
+			#{password},
+			#{gender},
+			#{registerTime},
+			#{lastLoginTime},
+			#{lastLoginIp},
+			#{userLevelId},
+			#{mobile},
+			#{registerIp},
+			#{age},
+			#{status},
+			#{remarks})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.ZdUserEntity">
+		update zd_user 
+		<set>
+			<if test="username != null">`username` = #{username}, </if>
+			<if test="nickname != null">`nickname` = #{nickname}, </if>
+			<if test="password != null">`password` = #{password}, </if>
+			<if test="gender != null">`gender` = #{gender}, </if>
+			<if test="registerTime != null">`register_time` = #{registerTime}, </if>
+			<if test="lastLoginTime != null">`last_login_time` = #{lastLoginTime}, </if>
+			<if test="lastLoginIp != null">`last_login_ip` = #{lastLoginIp}, </if>
+			<if test="userLevelId != null">`user_level_id` = #{userLevelId}, </if>
+			<if test="mobile != null">`mobile` = #{mobile}, </if>
+			<if test="registerIp != null">`register_ip` = #{registerIp}, </if>
+			<if test="age != null">`age` = #{age}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from zd_user where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from zd_user where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

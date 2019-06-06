@@ -1,0 +1,25 @@
+package com.platform.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.platform.entity.CouponCollectVo;
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-05-05 15:55:48
+ */
+public interface ApiCollectMapper extends BaseDao<CouponCollectVo> {
+	int remove(Map<String, Object> map);
+	
+	List<CouponCollectVo> queryByUid(Map<String, Object> map);
+	
+	int queryTotalByUid(Integer uid);
+	
+	CouponCollectVo queryByCid(Map<String, Object> map);
+}

@@ -1,0 +1,22 @@
+package com.platform.dao;
+
+import java.util.Map;
+
+import com.platform.entity.CouponGoodsInfoEntity;
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-22 16:02:53
+ */
+public interface CouponGoodsInfoDao extends BaseDao<CouponGoodsInfoEntity> {
+
+	/**
+	 * 批量修改删除状态
+	 * @param map
+	 * @return
+	 */
+	int updateIsDelBatch(Map<String, Object> map);
+}

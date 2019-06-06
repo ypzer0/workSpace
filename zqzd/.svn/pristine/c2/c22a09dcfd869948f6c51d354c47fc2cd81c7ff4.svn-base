@@ -1,0 +1,40 @@
+export default {
+  //商品信息
+  haveSell:{
+    // "id": "a1",
+    // "goodsName": "[xxx]店铺满一千减少32元..",
+    // "expireTime": "2019-09-22 11:50:00"
+  },
+
+  //寄卖-出售中
+  consignSell:{
+    
+  },
+
+  //寄卖-已下架
+  soldOutSell:{
+    
+  },
+
+  //寄卖-已完成
+  completeSell:{
+    
+  },
+
+  //寄卖-纠纷中
+  disputesSell:{
+    
+  },
+
+  //寄卖-出售中-下架
+  shelves:{
+    
+  },
+
+
+  //寄卖-出售中-上架
+  goodsSoldOut:{
+    
+  },
+
+}

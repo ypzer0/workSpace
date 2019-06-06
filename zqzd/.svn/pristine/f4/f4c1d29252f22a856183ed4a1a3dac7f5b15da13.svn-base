@@ -1,0 +1,289 @@
+package com.platform.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+
+import com.platform.entity.CouponUserEntity;
+import com.platform.service.CouponUserService;
+import com.platform.utils.Constant.OperLogFlag;
+import com.platform.utils.PageUtils;
+import com.platform.utils.Query;
+import com.platform.utils.R;
+
+/**
+ * Controller
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-22 11:44:13
+ */
+@RestController
+@RequestMapping("couponuser")
+public class CouponUserController extends AbstractController {
+    @Autowired
+    private CouponUserService CouponuserService;
+
+//平台推广员
+    /**
+     * 平台推广员列表
+     */
+    @RequestMapping("/listtg")
+    @RequiresPermissions("couponuser:listtg")
+    public R listtg(@RequestParam Map<String, Object> params) {
+        //查询列表数据
+        Query query = new Query(params);
+        query.put("is_extend" , 1);
+        query.put("nostatus", 2);
+        List<CouponUserEntity> CouponuserList = CouponuserService.queryList(query);
+        int total = CouponuserService.queryTotal(query);
+
+        PageUtils pageUtil = new PageUtils(CouponuserList, total, query.getLimit(), query.getPage());
+
+        return R.ok().put("page", pageUtil);
+    }
+    
+    
+    /**
+     * 查看信息
+     */
+    @RequestMapping("/infotg/{id}")
+    @RequiresPermissions("couponuser:infotg")
+    public R infotg(@PathVariable("id") Integer id) {
+        CouponUserEntity Couponuser = CouponuserService.queryObject(id);
+
+        return R.ok().put("Couponuser", Couponuser);
+    }
+
+    /**
+     * 保存
+     */
+    @RequestMapping("/savetg")
+    @RequiresPermissions("couponuser:savetg")
+    public R savetg(@RequestBody CouponUserEntity Couponuser) {
+        CouponuserService.save(Couponuser);
+
+        return R.ok();
+    }
+    
+    /**
+     * 修改
+     */
+    @RequestMapping("/updatetg")
+    @RequiresPermissions("couponuser:updatetg")
+    public R updatetg(@RequestBody CouponUserEntity Couponuser) {
+        
+    	CouponuserService.update(Couponuser);
+        return R.ok();
+    }
+    
+    /**
+     * 删除
+     */
+    @RequestMapping("/deletetg")
+    @RequiresPermissions("couponuser:deletetg")
+    public R deletetg(@RequestBody Integer[] ids) {
+        CouponuserService.deleteBatch(ids);
+
+        return R.ok();
+    }
+    
+    /**
+     * 取消推广员
+     */
+    @RequestMapping("/updateExtend")
+    @RequiresPermissions("couponuser:updateExtend")
+    public R upperShelf(@RequestBody Integer[] ids) {
+    	
+    	if(ids == null || ids.length == 0) {
+    		return R.error("非法数据！");
+    	}
+    	for (Integer id : ids) {
+    		CouponUserEntity couponUser = CouponuserService.queryObject(id);
+    		couponUser.setIsExtend(0);
+    		CouponuserService.update(couponUser);
+		}
+
+        return R.ok();
+    }
+    //惠友圈
+
+    /**
+     * 查看会有圈列表
+     */
+    @RequestMapping("/listhy")
+    @RequiresPermissions("couponuser:listhy")
+    public R listhy(@RequestParam Map<String, Object> params) {
+        //查询列表数据
+        Query query = new Query(params);
+        query.put("plat_type" , 2);
+        query.put("nostatus", 2);
+        List<CouponUserEntity> CouponuserList = CouponuserService.queryList(query);
+        int total = CouponuserService.queryTotal(query);
+
+        PageUtils pageUtil = new PageUtils(CouponuserList, total, query.getLimit(), query.getPage());
+
+        return R.ok().put("page", pageUtil);
+    }
+    
+
+    /**
+     * 查看信息
+     */
+    @RequestMapping("/infohy/{id}")
+    @RequiresPermissions("couponuser:infohy")
+    public R infohy(@PathVariable("id") Integer id) {
+        CouponUserEntity Couponuser = CouponuserService.queryObject(id);
+
+        return R.ok().put("Couponuser", Couponuser);
+    }
+
+    /**
+     * 保存
+     */
+    @RequestMapping("/savehy")
+    @RequiresPermissions("couponuser:savehy")
+    public R savehy(@RequestBody CouponUserEntity Couponuser) {
+        CouponuserService.save(Couponuser);
+
+        return R.ok();
+    }
+
+    /**
+     * 修改惠友圈用户
+     */
+    @RequestMapping("/updatehy")
+    @RequiresPermissions("couponuser:updatehy")
+    public R updatehy(@RequestBody CouponUserEntity Couponuser) {
+    	
+    	R rt = CouponuserService.huiYouUpdateUser(Couponuser,getUserId().intValue());
+
+        return rt;
+    }
+
+    /**
+     * 删除
+     */
+    @RequestMapping("/deletehy")
+    @RequiresPermissions("couponuser:deletehy")
+    public R deletehy(@RequestBody Integer[] ids) {
+        CouponuserService.huiYouDeleteUser(ids, getUserId().intValue());
+        
+        return R.ok();
+    }
+
+    /**
+     * 设为平台推广员
+     */
+    @RequestMapping("/updatehytg")
+    @RequiresPermissions("couponuser:updatehy-tomanager")
+    public R updatehytg(@RequestBody Integer[] ids) {
+    	CouponuserService.updateTomanager(ids,getUserId().intValue());
+    	return R.ok();
+    }
+    
+    
+    
+    
+    //鼎新
+    
+    /**
+     * 查看列表
+     */
+    @RequestMapping("/list")
+    @RequiresPermissions("couponuser:list")
+    public R list(@RequestParam Map<String, Object> params) {
+    	
+    	R rt = CouponuserService.queryDingXinPage(params);
+        return rt;
+    }
+
+    /**
+     * 查看信息
+     */
+    @RequestMapping("/info/{id}")
+    @RequiresPermissions("couponuser:info")
+    public R info(@PathVariable("id") Integer id) {
+        CouponUserEntity Couponuser = CouponuserService.queryObject(id);
+
+        return R.ok().put("Couponuser", Couponuser);
+    }
+
+    /**
+     * 保存
+     */
+    @RequestMapping("/save")
+    @RequiresPermissions("couponuser:save")
+    public R save(@RequestBody CouponUserEntity Couponuser) {
+        CouponuserService.save(Couponuser);
+
+        return R.ok();
+    }
+
+    /**
+     * 修改鼎鑫用户
+     */
+    @RequestMapping("/update")
+    @RequiresPermissions("couponuser:update")
+    public R update(@RequestBody CouponUserEntity Couponuser) {
+ 
+    	R rt = CouponuserService.DingXinUpdateUser(Couponuser, getUserId().intValue());
+        return rt;
+    }
+
+    /**
+     * 删除鼎鑫用户
+     * 
+     */
+    @RequestMapping("/delete")
+    @RequiresPermissions("couponuser:delete")
+    //事务标识
+//    @Transactional
+    public R delete(@RequestBody Integer[] ids) {
+    	
+    	if(ids == null || ids.length == 0) {
+            return R.error("数据异常！");
+    	}
+    	R rt = CouponuserService.DingXinDeleteUser(ids, getUserId().intValue());
+        return rt;
+    }
+
+    /**
+     * 更多鼎鑫用户信息
+     * 
+     */
+    @RequestMapping("/moremsg/{id}")
+    @RequiresPermissions("couponuser:moremsg")
+    //事务标识
+//    @Transactional
+    public R moremsg(@PathVariable("id") Integer id) {
+    	
+    	if(id == null || id <= 0) {
+            return R.error("数据异常！");
+    	}
+    	R rt = CouponuserService.DingXinUserMsg(id, getUserId().intValue());
+        return rt;
+    }
+    
+
+    /**
+     * 查看所有列表
+     */
+    @RequestMapping("/queryAll")
+    public R queryAll(@RequestParam Map<String, Object> params) {
+
+        List<CouponUserEntity> list = CouponuserService.queryList(params);
+
+        return R.ok().put("list", list);
+    }
+}

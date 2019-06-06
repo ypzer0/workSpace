@@ -1,0 +1,405 @@
+package com.platform.entity;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ * 实体
+ * 表名 coupon_category
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-22 11:35:38
+ */
+public class CouponCategoryEntity extends Tree<CouponCategoryEntity> {
+    private static final long serialVersionUID = 1L;
+
+    //
+    private Integer id;
+    //种类名称
+    private String name;
+    //关键字
+    private String keywords;
+    //描述
+    private String frontDesc;
+    //上级id
+    private Integer parentId;
+    //排序号
+    private Integer sortOrder;
+    //是否展示
+    private Integer isShow;
+    //市场价
+    private BigDecimal marketPrice;
+    //销售价格
+    private BigDecimal salePrice;
+    //收购价格
+    private BigDecimal buyPrice;
+    //推广价格
+    private BigDecimal proPrice;
+    //来源描述
+    private String src;
+    //商品描述
+    private String goodsDesc;
+    //温馨提示
+    private String reminder;
+    //服务协议
+    private String service;
+    //使用需知
+    private String userMsg;
+    //最大库存
+    private Integer maxCount;
+    //周几进行销售 0,1,2,3
+    private String saleTimes;
+    //商品缩略图
+    private String picUrl;
+    //商品大图url
+    private String picBigUrl;
+    //操作人
+    private Integer handlerId;
+    //添加时间
+    private Date addTime;
+    //状态
+    private Integer status;
+    
+    
+    //上级类目名称
+    private String parentName;
+    
+    private String handlerName;
+    
+    public String toChangeStatusLogString() {
+
+		return "{id:" + id + ", name:" + name + ", isShow:" + isShow +", status:" + status + "}";
+    }
+
+	@Override
+	public String toString() {
+		return "{id:" + id + ", name:" + name + ", keywords:" + keywords + ", frontDesc:" + frontDesc + ", parentId:"
+				+ parentId + ", sortOrder:" + sortOrder + ", isShow:" + isShow + ", marketPrice:" + marketPrice
+				+ ", salePrice:" + salePrice + ", buyPrice:" + buyPrice + ", proPrice:" + proPrice + ", src:" + src
+				+ ", goodsDesc:" + goodsDesc + ", reminder:" + reminder + ", service:" + service + ", userMsg:"
+				+ userMsg + ", maxCount:" + maxCount + ", saleTimes:" + saleTimes + ", picUrl:" + picUrl
+				+ ", picBigUrl:" + picBigUrl + ", handlerId:" + handlerId + ", addTime:" + addTime + ", status:"
+				+ status + ", parentName:" + parentName + ", handlerName:" + handlerName + "}";
+	}
+
+
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public String getHandlerName() {
+		return handlerName;
+	}
+
+
+
+
+	public void setHandlerName(String handlerName) {
+		this.handlerName = handlerName;
+	}
+
+
+
+
+	public String getParentName() {
+		return parentName;
+	}
+
+	public void setParentName(String parentName) {
+		this.parentName = parentName;
+	}
+
+	/**
+     * 设置：
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * 获取：
+     */
+    public Integer getId() {
+        return id;
+    }
+    /**
+     * 设置：种类名称
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * 获取：种类名称
+     */
+    public String getName() {
+        return name;
+    }
+    /**
+     * 设置：关键字
+     */
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
+    /**
+     * 获取：关键字
+     */
+    public String getKeywords() {
+        return keywords;
+    }
+    /**
+     * 设置：描述
+     */
+    public void setFrontDesc(String frontDesc) {
+        this.frontDesc = frontDesc;
+    }
+
+    /**
+     * 获取：描述
+     */
+    public String getFrontDesc() {
+        return frontDesc;
+    }
+    /**
+     * 设置：上级id
+     */
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
+    }
+
+    /**
+     * 获取：上级id
+     */
+    public Integer getParentId() {
+        return parentId;
+    }
+    /**
+     * 设置：排序号
+     */
+    public void setSortOrder(Integer sortOrder) {
+        this.sortOrder = sortOrder;
+    }
+
+    /**
+     * 获取：排序号
+     */
+    public Integer getSortOrder() {
+        return sortOrder;
+    }
+    /**
+     * 设置：是否展示
+     */
+    public void setIsShow(Integer isShow) {
+        this.isShow = isShow;
+    }
+
+    /**
+     * 获取：是否展示
+     */
+    public Integer getIsShow() {
+        return isShow;
+    }
+    /**
+     * 设置：市场价
+     */
+    public void setMarketPrice(BigDecimal marketPrice) {
+        this.marketPrice = marketPrice;
+    }
+
+    /**
+     * 获取：市场价
+     */
+    public BigDecimal getMarketPrice() {
+        return marketPrice;
+    }
+    /**
+     * 设置：销售价格
+     */
+    public void setSalePrice(BigDecimal salePrice) {
+        this.salePrice = salePrice;
+    }
+
+    /**
+     * 获取：销售价格
+     */
+    public BigDecimal getSalePrice() {
+        return salePrice;
+    }
+    /**
+     * 设置：收购价格
+     */
+    public void setBuyPrice(BigDecimal buyPrice) {
+        this.buyPrice = buyPrice;
+    }
+
+    /**
+     * 获取：收购价格
+     */
+    public BigDecimal getBuyPrice() {
+        return buyPrice;
+    }
+    /**
+     * 设置：推广价格
+     */
+    public void setProPrice(BigDecimal proPrice) {
+        this.proPrice = proPrice;
+    }
+
+    /**
+     * 获取：推广价格
+     */
+    public BigDecimal getProPrice() {
+        return proPrice;
+    }
+    /**
+     * 设置：来源描述
+     */
+    public void setSrc(String src) {
+        this.src = src;
+    }
+
+    /**
+     * 获取：来源描述
+     */
+    public String getSrc() {
+        return src;
+    }
+    /**
+     * 设置：商品描述
+     */
+    public void setGoodsDesc(String goodsDesc) {
+        this.goodsDesc = goodsDesc;
+    }
+
+    /**
+     * 获取：商品描述
+     */
+    public String getGoodsDesc() {
+        return goodsDesc;
+    }
+    /**
+     * 设置：温馨提示
+     */
+    public void setReminder(String reminder) {
+        this.reminder = reminder;
+    }
+
+    /**
+     * 获取：温馨提示
+     */
+    public String getReminder() {
+        return reminder;
+    }
+    /**
+     * 设置：服务协议
+     */
+    public void setService(String service) {
+        this.service = service;
+    }
+
+    /**
+     * 获取：服务协议
+     */
+    public String getService() {
+        return service;
+    }
+    /**
+     * 设置：使用需知
+     */
+    public void setUserMsg(String userMsg) {
+        this.userMsg = userMsg;
+    }
+
+    /**
+     * 获取：使用需知
+     */
+    public String getUserMsg() {
+        return userMsg;
+    }
+    /**
+     * 设置：最大库存
+     */
+    public void setMaxCount(Integer maxCount) {
+        this.maxCount = maxCount;
+    }
+
+    /**
+     * 获取：最大库存
+     */
+    public Integer getMaxCount() {
+        return maxCount;
+    }
+    /**
+     * 设置：周几进行销售 0,1,2,3
+     */
+    public void setSaleTimes(String saleTimes) {
+        this.saleTimes = saleTimes;
+    }
+
+    /**
+     * 获取：周几进行销售 0,1,2,3
+     */
+    public String getSaleTimes() {
+        return saleTimes;
+    }
+    /**
+     * 设置：商品缩略图
+     */
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
+    }
+
+    /**
+     * 获取：商品缩略图
+     */
+    public String getPicUrl() {
+        return picUrl;
+    }
+    /**
+     * 设置：商品大图url
+     */
+    public void setPicBigUrl(String picBigUrl) {
+        this.picBigUrl = picBigUrl;
+    }
+
+    /**
+     * 获取：商品大图url
+     */
+    public String getPicBigUrl() {
+        return picBigUrl;
+    }
+    /**
+     * 设置：操作人
+     */
+    public void setHandlerId(Integer handlerId) {
+        this.handlerId = handlerId;
+    }
+
+    /**
+     * 获取：操作人
+     */
+    public Integer getHandlerId() {
+        return handlerId;
+    }
+    /**
+     * 设置：添加时间
+     */
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+    /**
+     * 获取：添加时间
+     */
+    public Date getAddTime() {
+        return addTime;
+    }
+}

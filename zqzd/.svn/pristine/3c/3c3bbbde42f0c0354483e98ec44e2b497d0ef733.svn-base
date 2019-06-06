@@ -1,0 +1,23 @@
+<template>
+  <div class="order-status-refund">
+    <order-none v-if="list.old.count == 0" text="目前没有已退款订单哦~"></order-none>
+    <order-cell v-if="list.old.count != 0" :list="list.list" @btn-click="btnClick"></order-cell>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import orderNone from './common/order-none'
+import orderCell from './common/order-cell'
+export default {
+  props: ['list'],
+  components: {
+    orderNone,
+    orderCell
+  },
+  methods:{
+    btnClick(opt){
+      this.$emit('btn-click', opt);
+    }
+  }
+}
+</script>

@@ -1,0 +1,132 @@
+package com.platform.service;
+
+import com.platform.entity.CouponCategoryEntity;
+import com.platform.utils.R;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.web.bind.annotation.RequestBody;
+
+/**
+ * Service接口
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-22 11:35:38
+ */
+public interface CouponCategoryService {
+
+    /**
+     * 根据主键查询实体
+     *
+     * @param id 主键
+     * @return 实体
+     */
+    CouponCategoryEntity queryObject(Integer id);
+
+    /**
+     * 分页查询
+     *
+     * @param map 参数
+     * @return list
+     */
+    List<CouponCategoryEntity> queryList(Map<String, Object> map);
+
+    /**
+     * 分页统计总数
+     *
+     * @param map 参数
+     * @return 总数
+     */
+    int queryTotal(Map<String, Object> map);
+
+    /**
+     * 保存实体
+     *
+     * @param Couponcategory 实体
+     * @return 保存条数
+     */
+    int save(CouponCategoryEntity Couponcategory);
+
+    /**
+     * 根据主键更新实体
+     *
+     * @param Couponcategory 实体
+     * @return 更新条数
+     */
+    int update(CouponCategoryEntity Couponcategory);
+
+    /**
+     * 根据主键删除
+     *
+     * @param id
+     * @return 删除条数
+     */
+    int delete(Integer id);
+
+    /**
+     * 根据主键批量删除
+     *
+     * @param ids
+     * @return 删除条数
+     */
+    int deleteBatch(Integer[] ids);
+    
+    /**
+     * 修改状态
+     * @param tpid
+     * @param ids
+     * @param operuid
+     * @return
+     */
+    R changeenable(Integer tpid, Integer[] ids, int operuid);
+    /**
+     * 修改状态
+     * @param ids
+     * @param operuid
+     * @return
+     */
+    R changeStatus(Integer sid, Integer[] ids, int operuid);
+    
+    HashMap<String, Object> querySum(Map<String, Object> map);
+    
+    /**
+     * 保存数据
+     * @param para
+     * @return
+     */
+    R saveCategory(CouponCategoryEntity para, Integer operuid);
+
+    /**
+     * 更新数据
+     * @param para
+     * @return
+     */
+    R updateCategory(CouponCategoryEntity para, Integer operuid);
+    
+
+    /**
+     * 获取上级菜单
+     * @param para
+     * @return
+     */
+    R selectParentMenu();
+
+    /**
+     * 获取上级菜单 key val
+     * @param para
+     * @return
+     */
+    R selectParent();
+
+    /**
+     * 获取上级菜单 key val
+     * @param para
+     * @return
+     */
+    R selectChild(Integer pid);
+    
+    
+}

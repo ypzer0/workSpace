@@ -1,0 +1,65 @@
+import * as types from './mutation-types'
+
+export const mutations = {
+  //全部订单
+  [types.APPEND_PAGE_ORDER_LIST] (state, o) {
+    // debugger;
+    state.allOrderList = o;
+  },
+
+  //等待付款
+  [types.APPEND_PAGE_WAIT_ORDER_LIST] (state, o) {
+    // debugger;
+    state.orderWaitPay = o;
+  },
+
+  //付款完成
+  [types.APPEND_PAGE_FINISH_ORDER_LIST] (state, o) {
+    // debugger;
+    state.orderFinish = o;
+  },
+
+
+
+
+
+
+
+
+  // //全部订单
+  // [types.APPEND_PAGE_ORDER_LIST] (state, o) {
+  //   // debugger;
+  //   if(o.currentPage >= state.pageOrderList.page){
+  //      o.data.forEach((ele, dt) => {
+  //         state.pageOrderList.list.push(ele);
+  //       });
+  //     state.pageOrderList.page = o.currentPage;
+  //   }
+
+  // },
+  
+  // //待支付订单
+  // [types.APPEND_PAGE_WAIT_ORDER_LIST] (state, o) {
+    
+  //   if(o.currentPage >= state.pageWaitPayOrderList.page){
+  //     o.data.forEach((ele, dt) => {
+  //        state.pageWaitPayOrderList.list.push(ele);
+  //      });
+  //    state.pageWaitPayOrderList.page = o.currentPage;
+  //  }
+  // },
+  
+  // //已完成订单
+  // [types.APPEND_PAGE_FINISH_ORDER_LIST] (state, o) {
+  //    //debugger;
+  //    if(o.currentPage >= state.pageFinishOrderList.page){
+  //     o.data.forEach((ele, dt) => {
+  //        state.pageFinishOrderList.list.push(ele);
+  //      });
+  //    state.pageFinishOrderList.page = o.currentPage;
+  //  }
+  //   state.pageFinishOrderList.list = o;
+  // },
+
+
+}

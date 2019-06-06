@@ -1,0 +1,125 @@
+import * as types from './mutation-types'
+import {api} from '@/service/api'
+import {toast} from '@/libs/cube-ui'
+//import session from '@/libs/session'
+
+export const actions = {
+
+  // async getHaveSell ({dispatch, commit}, o) {
+
+  //     let res = await api.y_have_sell.haveSell(o)
+  //     if (res.success) {
+  //       commit(types.INIT_HAVE_SELL, res.data)
+  //     } else {
+  //       toast(res.msg, 'warn')
+  //     }
+  // },
+
+  //寄卖-出售中
+  async getHaveSell ({dispatch, commit}, o) {
+    o = {
+      status: 1
+    }
+    let res = await api.y_have_sell.consignSell(o)
+    //debugger;
+    if (res.success) {
+      commit(types.INIT_HAVE_SELL, res.data)
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+  //寄卖-已下架
+  async getSoldOutSellSell ({dispatch, commit}, o) {
+    o = {
+      status: 0
+    }
+    let res = await api.y_have_sell.soldOutSell(o)
+    //debugger;
+    if (res.success) {
+      commit(types.INIT_SOLD_OUT, res.data)
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+  //寄卖-已售出
+  async getCompleteSellSell ({dispatch, commit}, o) {
+    o = {
+      status: 2
+    }
+    let res = await api.y_have_sell.completeSell(o)
+    //debugger;
+    if (res.success) {
+      commit(types.INIT_COMPLETE, res.data)
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+  //寄卖-已结算
+  async getDisputesSellSell ({dispatch, commit}, o) {
+    o = {
+      status: 3
+    }
+    let res = await api.y_have_sell.disputesSell(o)
+    //debugger;
+    if (res.success) {
+      commit(types.INIT_DISPUTES, res.data)
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+  //寄卖-出售中-下架
+  async geTshelves ({dispatch, commit, state}, o) {
+    let pare = [];
+    // state.consignSell.forEach(ele =>{
+    //   console.log("ele:", ele);
+    //   pare.push({
+    //     id: ele.sellid,
+    //   })
+    //   //console.log("id:", id);
+    // });
+    let item = o.item;
+    console.log("item:", item);
+    pare.push({
+      id: item.sellid,
+    })
+    // let sheBtn = state.consignSell;
+    // console.log("sheBtn:", sheBtn);
+    // for(var i = 0; i<sheBtn.length; i++){
+    //   pare.push({
+    //     id: sheBtn[i].sellid,
+    //   })
+    // }
+    let res = await api.y_have_sell.shelves(pare)
+    //debugger;
+    if (res.success) {
+      commit(types.INIT_SHELVES, res.data)
+      dispatch("getHaveSell");
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+
+  //寄卖-出售中-上架
+  async getSoldOut ({dispatch, commit, state}, o) {
+    let pare = [];
+    let item = o.item;
+    console.log("item:", item);
+    pare.push({
+      id: item.sellid,
+    })
+    let res = await api.y_have_sell.goodsSoldOut(pare)
+    //debugger;
+    if (res.success) {
+      dispatch("getSoldOutSellSell");
+      commit(types.INIT_GOODS_SOLD_OUT, res.data)
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+}

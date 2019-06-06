@@ -1,0 +1,41 @@
+<template>
+    
+  <div class="checkout-action">
+    <m-button @click.native="addShipAddr" class="action-item">
+        <span>新增收货地址</span>
+    </m-button>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+
+export default {
+  props:[],
+  methods:{
+    addShipAddr(){
+      this.$emit('addShipAddr');
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .checkout-action{
+    display: flex;
+    height: 115px;
+    padding:0 28px;
+    background: white;
+    text-align: center;
+    .action-item{
+        float: left;
+        position: relative;
+        left:250px;
+        width:222px;
+        text-align: center;
+        font-size: 100%;
+    }
+  }
+</style>
+
+

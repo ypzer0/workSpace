@@ -1,0 +1,22 @@
+export default {
+  //商品信息
+  changePhone:{
+   
+  },
+
+  mobileValidatep:{
+   
+  },
+
+  mobileSendchange:{
+   
+  },
+
+  mobile:{
+    rawMobile: "",
+    newMobile: "",
+    newCode: "",
+    rawMobileSuccess: "",
+  }
+
+}

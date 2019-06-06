@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ApiCashDrawalLogMapper">
+
+    <resultMap type="com.platform.entity.CouponCashDrawalLogVo" id="CouponcashDrawalLogMap">
+        <result property="id" column="id"/>
+        <result property="cid" column="cid"/>
+        <result property="uid" column="uid"/>
+        <result property="uname" column="uname"/>
+        <result property="cash" column="cash"/>
+        <result property="cType" column="c_type"/>
+        <result property="status" column="status"/>
+        <result property="msg" column="msg"/>
+        <result property="addTime" column="add_time"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="handlerId" column="handler_id"/>
+        <result property="handlerName" column="handler_name"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.platform.entity.CouponCashDrawalLogVo">
+		select
+			`id`,
+			`cid`,
+			`uid`,
+			`uname`,
+			`cash`,
+			`c_type`,
+			`status`,
+			`msg`,
+			`add_time`,
+			`title`,
+			`content`,
+			`handler_id`,
+			`handler_name`
+		from coupon_cash_drawal_log
+		where id = #{id}
+	</select>
+
+	<select id="queryList" resultType="com.platform.entity.CouponCashDrawalLogVo">
+		select
+    		`id`,
+    		`cid`,
+    		`uid`,
+    		`uname`,
+    		`cash`,
+    		`c_type`,
+    		`status`,
+    		`msg`,
+    		`add_time`,
+    		`title`,
+    		`content`,
+    		`handler_id`,
+    		`handler_name`
+		from coupon_cash_drawal_log
+		WHERE 1=1
+		<if test="name != null and name.trim() != ''">
+			AND name LIKE concat('%',#{name},'%')
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from coupon_cash_drawal_log
+		WHERE 1=1
+        <if test="name != null and name.trim() != ''">
+            AND name LIKE concat('%',#{name},'%')
+        </if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.CouponCashDrawalLogVo" useGeneratedKeys="true" keyProperty="id">
+		insert into coupon_cash_drawal_log(
+			`cid`,
+			`uid`,
+			`uname`,
+			`cash`,
+			`c_type`,
+			`status`,
+			`msg`,
+			`add_time`,
+			`title`,
+			`content`,
+			`handler_id`,
+			`handler_name`)
+		values(
+			#{cid},
+			#{uid},
+			#{uname},
+			#{cash},
+			#{cType},
+			#{status},
+			#{msg},
+			#{addTime},
+			#{title},
+			#{content},
+			#{handlerId},
+			#{handlerName})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.CouponCashDrawalLogVo">
+		update coupon_cash_drawal_log 
+		<set>
+			<if test="cid != null">`cid` = #{cid}, </if>
+			<if test="uid != null">`uid` = #{uid}, </if>
+			<if test="uname != null">`uname` = #{uname}, </if>
+			<if test="cash != null">`cash` = #{cash}, </if>
+			<if test="cType != null">`c_type` = #{cType}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="msg != null">`msg` = #{msg}, </if>
+			<if test="addTime != null">`add_time` = #{addTime}, </if>
+			<if test="title != null">`title` = #{title}, </if>
+			<if test="content != null">`content` = #{content}, </if>
+			<if test="handlerId != null">`handler_id` = #{handlerId}, </if>
+			<if test="handlerName != null">`handler_name` = #{handlerName}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from coupon_cash_drawal_log where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from coupon_cash_drawal_log where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

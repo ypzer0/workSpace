@@ -1,0 +1,137 @@
+<template>
+  <page>
+    <div class="page-header border-1px-bottom" slot="top">
+      <div class="header-left" @click="$back">
+        <i class="iconfont">&#xe68c;</i>
+      </div>
+      <h3>添加评论</h3>
+      <div class="header-right">
+        <span @click="SaveComment">保存</span>
+      </div>
+    </div>
+    <div class="comment-update">
+      <div class="update-item update-item-muilt">
+        <div class="item-title">
+          <span>评论</span>
+        </div>
+        <div class="item-text">
+          <textarea type="text" placeholder="说一说你的想法" v-model="form.content"></textarea>
+        </div>
+      </div>
+    </div>
+  </page>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapActions} from 'vuex'
+import {toast} from '@/libs/cube-ui'
+export default {
+  data () {
+    return {
+      gid : this.$route.params.gid,
+      form: {
+        typeId: 0,
+        valueId: 0,
+        content: '',
+        imagesList: [],
+      }
+    }
+  },
+  methods:{
+    ...mapActions('evaluate', ['add']),
+    SaveComment(){
+        if(this.form.content == null || this.form.content == '' || this.form.content.trim() == ''){
+            toast('评论内容不能为空', 'warn')
+            return;
+        }
+        this.form.valueId = this.gid;
+        this.add( this.form ).then(res=>{
+            if(res.success){
+                toast('评论成功，等待管理员审核', 'correct')
+                this.$back();
+            }
+        });
+
+    },
+  },
+  created(){
+
+  }
+}
+</script>
+<style lang="less" scoped>
+  @import '../../static/less/index';
+  .page-header{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 88px;
+    background: white;
+    .header-left{
+      position: absolute;
+      top:50%;
+      left:30px;
+      transform: translateY(-50%);
+    }
+    h3{
+      font-size: 30px;
+      font-weight: 600;
+      color:#333;
+    }
+    .header-right{
+      position: absolute;
+      top:50%;
+      right:30px;
+      transform: translateY(-50%);
+      span{
+        color:#666;
+      }
+    }
+  }
+  .comment-update{
+    padding:0 43px;
+    background: white;
+    .update-item{
+      position: relative;
+      display: flex;
+      height: 107px;
+      color:#333;
+      &-muilt{
+          height: 400px;
+      }
+      .item-title{
+        display: flex;
+        align-items: center;
+        flex-basis: 172px;
+      }
+      .item-text{
+        display: flex;
+        align-items: center;
+        flex:1;
+        input{
+          border:none;
+          outline: none;
+        }
+        textarea{
+            border-color:rgb(190, 189, 189);
+            height: 300px;
+            width: 500px;
+        }
+      }
+      &:not(:last-child) {
+        &::after {
+          position: absolute;
+          content: '';
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 0;
+          border-bottom: 1px solid @border-color;
+          transform: scaleY(0.5);
+        }
+      }
+    }
+    
+  }
+</style>

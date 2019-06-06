@@ -1,0 +1,53 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api'
+
+export const msg = {
+  msgSend: (params) => {
+    return axios.request({
+      url: api.MsgSend,
+      data: params,
+      method: 'post'
+    })
+  },
+  msgList: (params) => {
+    return axios.request({
+      url: api.MsgList,
+      data: params,
+      method: 'post'
+    })
+  },
+  msgDetail: (params) => {
+    return axios.request({
+      url: api.MsgDetail,
+      data: params,
+      method: 'post'
+    })
+  },
+  loadChartPic: (params) => {
+    return axios.request({
+      url: api.MsgChartPic,
+      data: params,
+      method: 'get'
+    })
+  },
+
+//   submitOrder: (params) => {
+      
+//     var para = {
+//       couponId: params.couponId,
+//       type: params.type,//cart or buy
+//       postscript: params.msg,
+//       addressId: params.aid
+//     }
+
+//     return axios.request({
+//       url: api.OrderSubmit,
+//       data: para,
+//       method: 'post'
+//     },
+//     {
+//       cp : 'application/json'
+//     })
+//   }, 
+
+}

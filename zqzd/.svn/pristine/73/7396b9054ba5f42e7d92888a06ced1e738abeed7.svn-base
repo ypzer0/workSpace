@@ -1,0 +1,33 @@
+import * as types from './mutation-types'
+
+export const mutations = {
+  [types.INIT_Use_Explain] (state, o) {
+     state.useExplain = o;
+  },
+
+
+//买家上传上品页面数据
+[types.INIT_UPLOAD_GOODS] (state, o) {
+   state.uploadGoods = o;
+},
+
+ //通通过手机号获取短信验证码
+[types.INIT_MOBILE_SEND] (state, o) {
+   state.mobileSend = o;
+},
+
+//验证短信验证码
+[types.INIT_MOBILE_VALIDATE] (state, o) {
+   state.mobileValidate = o;
+},
+
+//获取手机号是否已经绑定手机
+[types.INIT_MOBILE_GET] (state, o) {
+   state.getMobile = o;
+},
+
+//卖家上传商品页面提交资料
+[types.INIT_SALE_BATCH_ADD] (state, o) {
+   state.saleBatchAdd = o;
+},
+}

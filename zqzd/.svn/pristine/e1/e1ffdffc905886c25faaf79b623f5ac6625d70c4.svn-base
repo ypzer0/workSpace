@@ -1,0 +1,35 @@
+import * as types from './mutation-types'
+import {api} from '@/service/api'
+import {toast} from '@/libs/cube-ui'
+//import session from '@/libs/session'
+
+export const actions = {
+
+  async getGoodsMsg ({dispatch, commit}, o) {
+      let res = await api.y_pay.goodsMsg(o)
+      if (res.success) {
+        commit(types.INIT_PAY, res.data)
+      } else {
+        toast(res.msg, 'warn')
+      }
+  },
+
+  //支付
+  async payMethod ({dispatch, commit, state}, o) {
+
+
+    console.log("route:",o.route)
+    let para = {
+      pt: state.payDt.payt,
+      oid: o.route,
+    };
+    let res = await api.y_pay.payMethod(para)
+    //debugger;
+    if (res.success) {
+      var dt = res.data;
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+}

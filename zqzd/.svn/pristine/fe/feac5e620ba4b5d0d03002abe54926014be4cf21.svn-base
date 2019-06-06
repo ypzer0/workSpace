@@ -1,0 +1,184 @@
+$(function () {
+    $("#jqGrid").Grid({
+        url: '../Zdgoodsinfo/list',
+        colModel: [
+			{label: 'id', name: 'id', index: 'id', key: true,  align: 'center',hidden: true },
+			{label: '商品类目', name: 'categoryName', index: 'category_name', width: 80, align: 'center', sortable: false },
+			{label: '状态', name: 'status', index: 'status', width: 80, sortable: false,
+				align: 'center',
+				formatter: function (value) {
+                	var rt = "";
+                	var cls = "";
+                	cls = 'info';
+                	if (value == '0') {
+                    	cls = 'warning';
+                    	rt =  '下架';
+                    } else if (value == '1') {
+                    	rt =  '上架';
+                    } else if (value == '2') {
+                    	rt =  '已出售';
+                    } 
+                    else{
+                        rt =  '-';
+                    }
+                	return '<span class="label label-'+ cls +'">' + rt + '</span>';
+                }	
+			},
+			{label: '商品名称', name: 'goodsName', index: 'goods_name', width: 80, align: 'center', sortable: false },
+			{label: '商品编号', name: 'goodsSn', index: 'goods_sn', width: 80, align: 'center', sortable: false },
+			{label: '价格(元)', name: 'price', index: 'price', width: 80, align: 'center', sortable: false },
+			{label: '库存(件)', name: 'goodsNumber', index: 'goods_number', width: 80, align: 'center', sortable: false },
+			{label: '商品图片', name: 'smallImgPath', index: 'small_img_path', width:80,sortable: false, align: 'center',
+				formatter: function (value) {
+		            return "<img class='cc-img' src='" + value + "' />";
+                }
+			}
+		]
+    });
+});
+
+let vm = new Vue({
+	el: '#rrapp',
+	data: {
+        showList: true,
+        title: null,
+		ZdgoodsInfo: {},
+		ruleValidate: {
+			name: [
+				{required: true, message: '名称不能为空', trigger: 'blur'}
+			]
+		},
+		category: [],
+		q: {
+		    name: ''
+		}
+	},
+	methods: {
+		loadCategory: function(){
+			Ajax.request({
+			    url: "../Zdcategory/selectCategory",
+                params: '',
+                type: "POST",
+			    contentType: "application/json",
+                successCallback: function (r) {
+                	this.category = [
+                		{ key: '', val: '请选择-种类'}
+                	];
+                	vm.category.addRange(r.list);
+				}
+			});
+		},
+		handleMaxSize: function (file) {
+            this.$Notice.warning({
+                title: '超出文件大小限制',
+                desc: '文件 ' + file.name + ' 太大，不能超过 4M。'
+            });
+        },
+        successTip(){
+        	this.$Notice.warning({
+                title: '文件上传成功',
+                desc: '请勿忘提交'
+            });
+        },
+		handleSmallSuccess: function (res, file) {
+            vm.ZdgoodsInfo.smallImgPath=file.response.url;
+            this.successTip();
+        },
+        handleBigSuccess: function (res, file) {
+            vm.ZdgoodsInfo.bigImgPath=file.response.url;
+            this.successTip();
+        },
+        handleFormatError: function (file) {
+            this.$Notice.warning({
+                title: '文件上传失败',
+                desc: '文件 ' + file.name + '格式不正确'
+            });
+        },
+        //以下为生成代码
+		query: function () {
+			vm.reload();
+		},
+		add: function () {
+			vm.showList = false;
+			vm.title = "新增";
+			vm.ZdgoodsInfo = {};
+			vm.loadCategory();
+		},
+		update: function (event) {
+            let id = getSelectedRow("#jqGrid");
+			if (id == null) {
+				return;
+			}
+			vm.showList = false;
+            vm.title = "修改";
+            vm.loadCategory();
+            vm.getInfo(id)
+		},
+		saveOrUpdate: function (event) {
+            let url = vm.ZdgoodsInfo.id == null ? "../Zdgoodsinfo/save" : "../Zdgoodsinfo/update";
+            Ajax.request({
+			    url: url,
+                params: JSON.stringify(vm.ZdgoodsInfo),
+                type: "POST",
+			    contentType: "application/json",
+                successCallback: function (r) {
+                    alert('操作成功', function (index) {
+                        vm.reload();
+                    });
+                }
+			});
+		},
+		del: function (event) {
+            let ids = getSelectedRows("#jqGrid");
+			if (ids == null){
+				return;
+			}
+
+			confirm('确定要删除选中的记录？', function () {
+                Ajax.request({
+				    url: "../Zdgoodsinfo/delete",
+                    params: JSON.stringify(ids),
+                    type: "POST",
+				    contentType: "application/json",
+                    successCallback: function () {
+                        alert('操作成功', function (index) {
+                            vm.reload();
+                        });
+					}
+				});
+			});
+		},
+		getInfo: function(id){
+            Ajax.request({
+                url: "../Zdgoodsinfo/info/"+id,
+                async: true,
+                successCallback: function (r) {
+                    vm.ZdgoodsInfo = r.ZdgoodsInfo;
+                }
+            });
+		},
+		reload: function (event) {
+			vm.showList = true;
+            let page = $("#jqGrid").jqGrid('getGridParam', 'page');
+			$("#jqGrid").jqGrid('setGridParam', {
+                postData: {'name': vm.q.name},
+                page: page
+            }).trigger("reloadGrid");
+            vm.handleReset('formValidate');
+		},
+        reloadSearch: function() {
+            vm.q = {
+                name: ''
+            }
+            vm.reload();
+        },
+        handleSubmit: function (name) {
+            handleSubmitValidate(this, name, function () {
+                vm.saveOrUpdate()
+            });
+        },
+        handleReset: function (name) {
+            handleResetForm(this, name);
+        }
+	}
+});

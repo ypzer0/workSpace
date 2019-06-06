@@ -1,0 +1,106 @@
+package com.platform.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import com.platform.dao.CouponCashDrawalDao;
+import com.platform.entity.CouponCashDrawalEntity;
+import com.platform.entity.CouponCashDrawalLogEntity;
+import com.platform.entity.CouponIssueHandleEntity;
+import com.platform.entity.SysUserEntity;
+import com.platform.service.CouponCashDrawalLogService;
+import com.platform.service.CouponCashDrawalService;
+import com.platform.service.SysOperLogService;
+import com.platform.utils.R;
+import com.platform.utils.ShiroUtils;
+import com.platform.utils.Constant.OperLogFlag;
+
+/**
+ * Service实现类
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-24 15:49:54
+ */
+@Service("CouponcashDrawalService")
+public class CouponCashDrawalServiceImpl implements CouponCashDrawalService {
+    @Autowired
+    private CouponCashDrawalDao CouponcashDrawalDao;
+    @Autowired
+    private CouponCashDrawalLogService CouponcashDrawalLogService;
+    @Autowired
+    protected SysOperLogService sysOperLogService;
+
+    @Override
+    public CouponCashDrawalEntity queryObject(Integer id) {
+        return CouponcashDrawalDao.queryObject(id);
+    }
+
+    @Override
+    public List<CouponCashDrawalEntity> queryList(Map<String, Object> map) {
+        return CouponcashDrawalDao.queryList(map);
+    }
+
+    @Override
+    public int queryTotal(Map<String, Object> map) {
+        return CouponcashDrawalDao.queryTotal(map);
+    }
+
+    @Override
+    public int save(CouponCashDrawalEntity CouponcashDrawal) {
+    	getLogEntity(CouponcashDrawal);
+        return CouponcashDrawalDao.save(CouponcashDrawal);
+    }
+
+    @Override
+    public int update(CouponCashDrawalEntity CouponcashDrawal) {
+    	CouponcashDrawal.setUpdateTime(new Date());
+    	getLogEntity(CouponcashDrawal);
+        return CouponcashDrawalDao.update(CouponcashDrawal);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return CouponcashDrawalDao.delete(id);
+    }
+
+    @Override
+    public int deleteBatch(Integer[] ids) {
+        return CouponcashDrawalDao.deleteBatch(ids);
+    }
+    
+    private void getLogEntity(CouponCashDrawalEntity CouponcashDrawal) {
+    	CouponCashDrawalLogEntity couponCashDrawalLog = new CouponCashDrawalLogEntity();
+    	SysUserEntity sysUserEntity = ShiroUtils.getUserEntity();
+    	couponCashDrawalLog.setAddTime(CouponcashDrawal.getAddTime());
+    	couponCashDrawalLog.setCash(CouponcashDrawal.getCash());
+    	couponCashDrawalLog.setCid(CouponcashDrawal.getId());
+    	couponCashDrawalLog.setContent(""+CouponcashDrawal.getUname()+"用户申请提现");
+    	couponCashDrawalLog.setCType(CouponcashDrawal.getCType());
+    	couponCashDrawalLog.setHandlerId(sysUserEntity.getDeptId().intValue());
+    	couponCashDrawalLog.setHandlerName(sysUserEntity.getDeptName());
+    	couponCashDrawalLog.setMsg(CouponcashDrawal.getMsg());
+    	couponCashDrawalLog.setStatus(CouponcashDrawal.getStatus());
+    	couponCashDrawalLog.setTitle("提现申请");
+    	couponCashDrawalLog.setUid(CouponcashDrawal.getUid());
+    	couponCashDrawalLog.setUname(CouponcashDrawal.getUname());
+    	CouponcashDrawalLogService.save(couponCashDrawalLog);
+	}
+
+	@Override
+	public R CashDrawal(CouponCashDrawalEntity oldCashDrawal, int operuid) {
+		CouponCashDrawalEntity CouponcashDrawal = CouponcashDrawalDao.queryObject(oldCashDrawal.getId());
+		if (CouponcashDrawal == null) {
+			return R.error("数据异常");
+		}
+		CouponcashDrawal.setStatus(oldCashDrawal.getStatus());
+		CouponcashDrawal.setMsg(oldCashDrawal.getMsg());
+		CouponcashDrawalDao.update(CouponcashDrawal);
+		sysOperLogService.AddOperLog("纠纷订单处理", "Old:" + CouponcashDrawal.toString() + " New:" + oldCashDrawal.toString(), OperLogFlag.User, operuid);
+		return R.ok();
+	}
+}

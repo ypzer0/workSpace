@@ -1,0 +1,32 @@
+package com.platform.service;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.platform.entity.SysSmsLogEntity;
+import com.platform.utils.CharUtil;
+import com.platform.utils.Rp;
+
+/**
+ * 
+ * @author peter
+ *
+ */
+@Service
+public class MsgService {
+	protected Logger logger = Logger.getLogger(getClass());
+
+	public Rp send(String telephone) {
+		SysSmsLogEntity smsLogEntity=new SysSmsLogEntity();
+		smsLogEntity.setMobile(telephone);
+		Map<String, Object> code = new HashMap<>(2);
+		code.put("code", CharUtil.getRandomNum(4));
+		return Rp.ok();
+	}
+	
+
+}

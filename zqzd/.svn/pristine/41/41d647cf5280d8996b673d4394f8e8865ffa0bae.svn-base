@@ -1,0 +1,129 @@
+<template>
+  <div class="goods-action border-1px-top">
+    <div class="action-left">
+      <div class="left-item">
+        <i class="iconfont">&#xe654;</i>
+        <span>客服</span>
+      </div>
+      <div class="left-item">
+        <i class="iconfont">&#xe611;</i>
+        <span>收藏</span>
+      </div>
+      <div class="left-item" @click="GoCart">
+        <i class="iconfont">&#xe602;</i>
+        <span>购物车</span>
+      </div>
+    </div>
+    <div class="action-right">
+      <m-button @click.native="NowBuy" class="right-item right-item-buy">
+        <span>立即购买</span>
+      </m-button>
+      
+      <m-button @click.native="CartAdd" class="right-item right-item-cart">
+        <span>加入购物车</span>
+      </m-button>
+    </div>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+import {toast} from '@/libs/cube-ui'
+
+export default {
+  props:['info', 'productList', 'specifies', 'count'],
+  methods:{
+    ...mapActions('goods', ['BuyAdd']),
+    ...mapGetters('goods', ['getProId']),
+    ...mapActions('cart', ['cartAdd']),
+    GoCart(){
+      this.$go('/cart');
+    },
+    NowBuy(){
+
+      var pid = this.getProId();
+      if(pid == 0){
+        toast("该产品没有上架！");
+        return;
+      }
+      var params = {
+        goodsId: this.info.id,
+        productId: pid,
+        number:this.count
+      }
+      this.BuyAdd(params).then(res => {
+        if(res.success){
+          this.$go('/checkout/buy');
+        }
+      });
+    },
+    CartAdd(){
+      var pid = this.getProId();
+      if(pid == 0){
+        toast("该产品没有上架！");
+        return;
+      }
+
+      var params = {
+        goodsId: this.info.id,
+        productId: pid,
+        number:this.count
+      }
+      this.cartAdd(params).then(res => {
+        if(res.success){
+          toast("加入购物车成功！");
+        }
+      });
+      
+    }
+  }
+}
+
+
+</script>
+
+<style lang="less" scoped>
+  .goods-action{
+    display: flex;
+    height: 115px;
+    padding:0 28px;
+    background: white;
+    .action-left{
+      display: flex;
+      justify-content: space-around;
+      flex:1;
+      .left-item{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color:#666;
+      }
+    }
+    .action-right{
+      display: flex;
+      align-items: center;
+      flex-grow: 0;
+      .right-item{
+        display: inline-block;
+        width:222px;
+        height: 68px;
+        text-align: center;
+        line-height: 68px;
+        border-radius: 34px;
+        color:white!important;
+        font-size: 100%;
+        border:none;
+        &-buy{
+          background: #b60a0a;
+        }
+        &-cart{
+          background: #aa8a59;
+        }
+        &:nth-child(2){
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+</style>

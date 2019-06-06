@@ -1,0 +1,206 @@
+<template>
+  <div>
+    <div class="order-cell" :key="index" v-for="(item, index) in list">
+      <div class="cell-time-status">
+        <div class="cell-time">
+          <span>{{item.add_time}}</span>
+        </div>
+        <div class="cell-status">
+          <span>{{item.order_status_text}}</span>
+        </div>
+      </div>
+      <div class="cell-goods border-1px-top">
+        <div class="goods-item" :key="gi" v-for="(gg, gi) in item.goods">
+          <div class="item-pic">
+            <img class="ignore" :src="gg.list_pic_url" alt="">
+          </div>
+          <div class="item-info">
+            <div class="info-name">
+              <h3>{{gg.goods_name}}</h3>
+            </div>
+          </div>
+          <div class="item-price-num">
+            <span class="single-price">￥{{gg.retail_price}}</span>
+            <span class="num">x{{gg.number}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="cell-price">
+        <div class="price-total">
+          <p>共{{item.goods.length}}件商品，总金额<span>￥{{item.order_price}}</span></p>
+        </div>
+        <div class="price-transfer">
+          <span>（含运费￥{{item.shipping_fee}}）</span>
+        </div>
+      </div>
+      <div class="cell-action border-1px-top">
+        <div class="expire-time">
+          <span v-if="item.order_status == 0">24小时候订单将关闭</span>
+        </div>
+        <div class="action-btns">
+          <span :key="bi" v-for="(btn, bi) in getBtns(item)" @click="btnClick(item, btn)">{{btn.text}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+export default {
+  data(){
+    return {
+    }
+  },
+  props: ['list'],
+  computed:{
+
+  },
+  components: {
+  },
+  methods:{
+    btnClick(d, btn){
+      this.$emit('btn-click', {data: d, btn: btn});
+    },
+    getBtns(item){
+      
+      var btns = [];
+      switch (item.order_status) {
+        case 0:
+          btns.push({ text:'取消', type: 'waitPayCancel' });
+          btns.push({ text:'去支付', type: 'waitPayPay' });
+        break;
+        case 201:
+          btns.push({ text:'退款', type: 'orderRefund' });
+        break;
+        case 300:
+          btns.push({ text:'退货', type: 'returnGoods' });
+          btns.push({ text:'确认收货', type: 'sureShip' });
+        break;
+        case 301:
+          btns.push({ text:'退货', type: 'returnGoods' });
+          btns.push({ text:'我有话说', type: 'commentList' });
+        break;
+        case 401:
+          break;
+
+        default:
+          break;
+      }
+
+      return btns;
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .order-cell{
+    padding:0 28px;
+    background: white;
+    .cell-time-status{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 90px;
+      .cell-time{
+        span{
+          color:#666;
+        }
+      }
+      .cell-status{
+        span{
+          color:#845f3f;
+        }
+      }
+    }
+    .cell-goods{
+      .goods-item{
+        display: flex;
+        padding-top: 20px;
+        .item-pic{
+          flex-basis: 166px;
+          height: 166px;
+          .ignore{
+            width:100%;
+            height:100%;
+          }
+        }
+        .item-info{
+          flex:1;
+          .info-name{
+            padding-top:20px;
+            h3{
+              font-weight: 600;
+              color:#333;
+            }
+          }
+        }
+        .item-price-num{
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          flex-basis: 70px;
+          .single-price{
+            padding-top:20px;
+            color:#666;
+          }
+          .num{
+            padding-top:20px;
+            color:#666;
+          }
+        }
+        &:last-child{
+          padding-bottom: 20px;
+        }
+      }
+    }
+    .cell-price{
+      .price-total{
+        padding-top:35px;
+        p{
+          text-align: right;
+          color:#333;
+          span{
+            font-size: 28px;
+            font-weight: 600;
+            color:rgb(182, 9, 9);
+          }
+        }
+      }
+      .price-transfer{
+        padding:20px 0;
+        text-align: right;
+        color:#333;
+      }
+    }
+    .cell-action{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 113px;
+      .expire-time{
+        color:#666;
+      }
+      .action-btns{
+        display: flex;
+        align-items: center;
+        span{
+          display: inline-block;
+          width:170px;
+          height: 60px;
+          box-sizing: border-box;
+          line-height: 60px;
+          text-align: center;
+          border-radius: 5px;
+          border:1px solid rgb(204, 204, 204);
+          color:#666;
+          &:not(:first-child){
+            margin-left:20px;
+            color:rgb(159, 128, 82);
+            border-color: rgb(159, 128, 82);
+          }
+        }
+      }
+    }
+  }
+</style>

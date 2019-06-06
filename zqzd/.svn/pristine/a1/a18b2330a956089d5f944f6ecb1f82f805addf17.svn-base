@@ -1,0 +1,75 @@
+package com.platform.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.dao.CouponFxUserDao;
+import com.platform.entity.CouponCategoryEntity;
+import com.platform.entity.CouponFxUserEntity;
+import com.platform.entity.CouponFxUserLogEntity;
+import com.platform.service.CouponFxUserLogService;
+import com.platform.service.CouponFxUserService;
+
+/**
+ * Service实现类
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-24 10:23:35
+ */
+@Service("CouponfxUserService")
+public class CouponFxUserServiceImpl implements CouponFxUserService {
+    @Autowired
+    private CouponFxUserDao CouponfxUserDao;
+    @Autowired
+    private CouponFxUserLogService CouponfxUserLogService;
+
+    @Override
+    public CouponFxUserEntity queryObject(Integer id) {
+        return CouponfxUserDao.queryObject(id);
+    }
+
+    @Override
+    public List<CouponFxUserEntity> queryList(Map<String, Object> map) {
+        return CouponfxUserDao.queryList(map);
+    }
+
+    @Override
+    public int queryTotal(Map<String, Object> map) {
+        return CouponfxUserDao.queryTotal(map);
+    }
+
+    @Override
+    public int save(CouponFxUserEntity CouponfxUser) {
+    	getLogEntity(CouponfxUser);
+        return CouponfxUserDao.save(CouponfxUser);
+    }
+
+    @Override
+    public int update(CouponFxUserEntity CouponfxUser) {
+    	getLogEntity(CouponfxUser);
+        return CouponfxUserDao.update(CouponfxUser);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return CouponfxUserDao.delete(id);
+    }
+
+    @Override
+    public int deleteBatch(Integer[] ids) {
+        return CouponfxUserDao.deleteBatch(ids);
+    }
+    
+    private void getLogEntity(CouponFxUserEntity CouponfxUser) {
+    	CouponFxUserLogEntity couponFxUserLog = new CouponFxUserLogEntity();
+    	couponFxUserLog.setAddTime(CouponfxUser.getAddTime());
+    	couponFxUserLog.setPuid(CouponfxUser.getPuid());
+    	couponFxUserLog.setUId(CouponfxUser.getUId());
+    	couponFxUserLog.setFId(CouponfxUser.getId());
+    	CouponfxUserLogService.save(couponFxUserLog);
+    }
+}

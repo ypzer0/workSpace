@@ -1,0 +1,50 @@
+package com.platform.entity;
+
+import java.io.Serializable;
+import java.util.Date;
+
+public class SubUserInfoVo implements Serializable{
+	private static final long serialVersionUID = 3264881012111898331L;
+	
+	private String nickname;
+	
+	private Float paym;
+	
+	private Float getm;
+	
+	private Date date;
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public Float getPaym() {
+		return paym;
+	}
+
+	public void setPaym(Float paym) {
+		this.paym = paym;
+	}
+
+	public Float getGetm() {
+		return getm;
+	}
+
+	public void setGetm(Float getm) {
+		this.getm = getm;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+	
+	
+}

@@ -1,0 +1,116 @@
+<template>
+  <div>
+    <div class="evaluate-cell" :key="index" v-for="(item, index) in list">
+      <div class="cell-user">
+        <div class="user-left">
+          <img class="ignore" :src="item.user_info.avatar" alt="">
+          <span>{{item.user_info.nickname}}</span>
+        </div>
+      </div>
+      <div class="cell-text">
+        <p>{{item.content}}</p>
+      </div>
+      <div class="cell-pic">
+        <div class="pic-item" :key="imgi" v-for="(img, imgi) in item.pic_list">
+          <div class="item-wrap" data-ratio="1:1">
+            <div class="wrap-image"><img :src="img.pic_url"/></div>
+          </div>
+        </div>
+      </div>
+      <div class="cell-action">
+        <div class="action-time">
+          <span>{{item.add_time}}</span>
+        </div>
+        <div class="action-type">
+          <div class="type-praise">
+            <i class="iconfont">&#xe641;</i>
+            <span>{{ list.length }}</span>
+          </div>
+          <div class="type-message">
+            <i class="iconfont">&#xe661;</i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+
+export default {
+  props:['list']
+}
+</script>
+
+<style lang="less" scoped>
+  .evaluate-cell {
+    padding: 0 34px 34px 34px;
+    background: white;
+    .cell-user {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 137px;
+      .user-left {
+        display: flex;
+        align-items: center;
+        .ignore {
+          display: inline-block;
+          width: 1.094rem;
+          height: 1.094rem;
+          border-radius: 0.547rem;
+        }
+        span {
+          padding-left: 34px;
+          font-size: 28px;
+          color: #333;
+        }
+      }
+    }
+    .cell-pic {
+      display: flex;
+      flex-wrap: wrap;
+      padding-top: 30px;
+      .pic-item {
+        position: relative;
+        flex-basis: calc(25% - 30px / 3);
+        .item-wrap {
+          &[data-ratio="1:1"] {
+            padding-top: calc(100% * 1 / 1);
+          }
+          * {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            // background-image: url(http://i1.mifile.cn/a2/1534312684_9824811_s1008_567wh.jpg);
+            // background-position: center center;
+            // background-repeat: no-repeat;
+            // background-size: cover;
+          }
+        }
+        &:not(:nth-child(4n + 1)) {
+          margin-left: 10px;
+        }
+      }
+    }
+    .cell-action {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 30px;
+      color: #999;
+      .action-type {
+        display: flex;
+        .type-praise {
+          display: flex;
+          align-items: center;
+          padding-right: 20px;
+          i {
+            padding-right: 10px;
+          }
+        }
+      }
+    }
+  }
+</style>

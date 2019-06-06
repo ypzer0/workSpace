@@ -1,0 +1,15 @@
+package com.platform.api;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.platform.entity.ZdUserVo;
+
+import io.swagger.annotations.Api;
+
+@Api("用户模块")
+@RestController
+@RequestMapping("/user")
+public class ApiUserController {
+	
+}

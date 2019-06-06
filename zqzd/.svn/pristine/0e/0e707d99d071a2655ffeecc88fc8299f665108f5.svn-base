@@ -1,0 +1,53 @@
+<template>
+  <div class="goods-spec">
+    <goods-cell title="规格：" @click.native="updateGoodsSpec">
+      <span>{{ getSpeciStr }}</span>
+    </goods-cell>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+import goodsCell from './common/goods-cell'
+import goodsSpecPanel from './goods-spec-panel'
+export default {
+  props:['specifies', 'info', 'pros', 'spro'],
+  computed: {
+    ...mapGetters('goods', ['getSpeciStr'])
+  },
+  components: {
+    goodsCell,
+    goodsSpecPanel
+  },
+  methods: {
+    propCli(d){
+      this.$emit('prop-cli', d);
+    },
+    updateGoodsSpec () {
+      
+      this.$mPopup({
+        mask: true
+      }, (h) => {
+        return h(goodsSpecPanel, {
+          props:{
+            specifies: this.specifies,
+            info: this.info,
+            pros: this.pros,
+            spro: this.spro
+          },
+          on:{
+            handle: this.propCli
+          }
+        })
+      })
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .goods-spec{
+    margin-bottom:10px;
+    background: white;
+  }
+</style>

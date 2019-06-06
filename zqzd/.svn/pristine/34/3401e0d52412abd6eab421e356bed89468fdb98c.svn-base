@@ -1,0 +1,14 @@
+package com.platform.dao;
+
+import com.platform.entity.CouponUserFrozenVo;
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-23 14:18:51
+ */
+public interface ApiUserFrozenMapper extends BaseDao<CouponUserFrozenVo> {
+
+}

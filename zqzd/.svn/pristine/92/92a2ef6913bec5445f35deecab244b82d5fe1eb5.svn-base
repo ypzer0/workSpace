@@ -1,0 +1,131 @@
+<template>
+  <div :better-scroll="true" class="box">
+    <div class="page-header border-1px-bottom" slot="top">
+      <div class="header-left" @click="$back">
+        <i class="iconfont">&#xe601;</i>
+      </div>
+      <h3>支付</h3>
+      <div class="header-right">
+        <!-- <span @click="SaveAddr">保存</span> -->
+      </div>
+    </div>
+
+    <pay-caution slot="top" :goodsMsg="goodsMsg"></pay-caution>
+    <pay-goods-message :goodsMsg="goodsMsg"></pay-goods-message>
+    <pay-way></pay-way>
+
+    <div class="pay-btn" @click="prePay">确认支付</div>
+
+  </div>
+    
+</template>
+
+<script type="text/ecmascript-6">
+import payCaution from './pay-caution'
+import payGoodsMessage from './pay-goods-message'
+import payWay from './pay-way'
+import {mapState, mapGetters, mapActions} from 'vuex'
+import {toast} from '@/libs/cube-ui'
+import {api} from '@/service/api'
+export default {
+  computed: {
+    ...mapState('y_pay', ['goodsMsg','payDt'])
+  },
+  components: {
+    payCaution,
+    payGoodsMessage,
+    payWay,
+  },
+  methods:{
+    ...mapActions('y_pay', ['getGoodsMsg', 'payMethod']),
+    ...mapActions('y_my', ['pay']),
+
+    //支付之前调用
+    prePay(){
+
+      let para = {
+        pt: this.payDt.payt,
+        oid: this.$route.query.oid,
+      };
+      let res = api.y_pay.payMethod(para)
+      console.log(res);
+      //debugger;
+      res.then(res1=>{
+
+        if (res1.success) {
+
+          var dt = res1.data;
+          console.log(dt);
+          this.pay({oid: this.$route.query.oid, pd: dt.pay} );
+        } else {
+          toast(res1.msg, 'warn')
+        }
+        
+      })
+
+    }
+
+  },
+  
+  created(){
+
+    this.getGoodsMsg({oid: this.$route.query.oid});
+
+    // let aa = this.$route;
+    // console.log("aa:",aa)
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .box{
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    .pay-btn{
+      width: 100%;
+      height: 98px;
+      margin: 0 auto;
+      text-align: center;
+      line-height: 98px;
+      font-size: 36px;
+      color: #ffffff;
+      position: fixed;
+      bottom: 0;
+      background: #ff4539;
+    }
+  }
+  .page-header{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 88px;
+    // background: #ff4539;
+    background: -webkit-linear-gradient(left, #ff6839 , #ff4439); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(right, #ff6839, #ff4439); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(right, #ff6839, #ff4439); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to right, #ff6839 , #ff4439); /* 标准的语法 */
+    .header-left{
+      position: absolute;
+      top:50%;
+      left:30px;
+      color: #fff;
+      transform: translateY(-50%);
+    }
+    h3{
+      font-size: 30px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .header-right{
+      position: absolute;
+      top:50%;
+      right:30px;
+      transform: translateY(-50%);
+      span{
+        color:#666;
+      }
+    }
+  }
+</style>

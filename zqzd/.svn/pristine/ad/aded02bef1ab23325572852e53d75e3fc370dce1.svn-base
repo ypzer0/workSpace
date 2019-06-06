@@ -1,0 +1,18 @@
+import * as types from './mutation-types'
+import {api} from '@/service/api'
+import {toast} from '@/libs/cube-ui'
+//import session from '@/libs/session'
+
+export const actions = {
+  //加载用户信息
+  async getService ({dispatch, commit, state}, o) {
+  
+    let res = await api.y_service.service(o)
+    if (res.success) {
+      commit(types.INIT_SERVICE, res.data)
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+}

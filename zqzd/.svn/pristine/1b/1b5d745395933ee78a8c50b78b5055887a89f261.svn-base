@@ -1,0 +1,92 @@
+<template>
+  <page>
+      <div class="page-header border-1px-bottom" slot="top">
+      <!-- <div class="header-left" @click="$back">
+        <i class="iconfont">&#xe601;</i>
+      </div> -->
+      <h3>鼎鑫权益</h3>
+      <div class="header-right">
+        <!-- <span @click="SaveAddr">保存</span> -->
+      </div>
+    </div>
+
+    <div class="home-box">
+      <home-stair-classify @click-tab="clickTab"></home-stair-classify>
+      <home-reclassify></home-reclassify>
+    </div>
+  </page>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapActions} from 'vuex'
+//import navFooter from '../common/nav-footer'
+import homeStairClassify from './home-stair-classify'
+import homeReclassify from './home-reclassify'
+export default{
+  computed: {
+
+  },
+  components: {
+    //navFooter,
+    homeStairClassify,
+    homeReclassify,
+  },
+  methods: {
+    ...mapActions('y_home', ['getParentClassfy', 'getChildClassfy']),
+   clickTab(dt){
+     console.log("dt:",dt)
+      let pid = dt.item.id;
+      this.getChildClassfy(
+        {pid : pid} 
+      );
+   }
+  },
+  created () {
+    let that = this;
+    that.getParentClassfy().then(res => {
+      if(res.success){
+        let pid = res.data.epmi[0].id;
+        that.getChildClassfy(
+          {pid : pid} );
+      }
+    });
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.home-box{
+  display: flex;
+  height: 100%;
+  background: #fff;
+}
+  .page-header{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 88px;
+    background: #2eacef;
+    .header-left{
+      position: absolute;
+      top:50%;
+      left:30px;
+      color: #fff;
+      transform: translateY(-50%);
+    }
+    h3{
+      font-size: 30px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .header-right{
+      position: absolute;
+      top:50%;
+      right:30px;
+      transform: translateY(-50%);
+      span{
+        color:#666;
+      }
+    }
+  }
+</style>

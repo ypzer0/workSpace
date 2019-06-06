@@ -1,0 +1,43 @@
+import * as types from './mutation-types'
+
+export const mutations = {
+  // [types.INIT_HAVE_SELL] (state, o) {
+  //    state.haveSell = o.couponSell;
+  // },
+
+  //寄卖-出售中
+  [types.INIT_HAVE_SELL] (state, o) {
+    //debugger;
+    state.consignSell = o.couponSell;
+  },
+
+  //寄卖-已下架
+  [types.INIT_SOLD_OUT] (state, o) {
+    //debugger;
+    state.soldOutSell = o.couponSell;
+  },
+
+  //寄卖-已完成
+  [types.INIT_COMPLETE] (state, o) {
+    //debugger;
+    state.completeSell = o.couponSell;
+  },
+
+  //寄卖-纠纷中
+  [types.INIT_DISPUTES] (state, o) {
+    //debugger;
+    state.disputesSell = o.couponSell;
+  },
+
+  //寄卖-出售中-下架
+  [types.INIT_SHELVES] (state, o) {
+    //debugger;
+    state.shelves = o;
+  },
+
+  //寄卖-出售中-上架
+  [types.INIT_GOODS_SOLD_OUT] (state, o) {
+    //debugger;
+    state.goodsSoldOut = o;
+  },
+}

@@ -1,0 +1,26 @@
+package com.platform.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.entity.CouponUserEntity;
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-22 11:44:13
+ */
+public interface CouponUserDao extends BaseDao<CouponUserEntity> {
+	//批量修改用户状态
+	int changeUserStatus(Map<String, Object> map);
+	
+	//查询鼎鑫用户List数据
+    List<CouponUserEntity> queryDingXinList(Map<String, Object> map);
+    int queryDingXinTotal(Map<String, Object> map);
+    
+    //批量修改推广员状态
+    int changeUserIsExtend(Map<String, Object> map);
+    
+}

@@ -1,0 +1,59 @@
+package com.platform.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.dao.CouponCollectDao;
+import com.platform.entity.CouponCollectEntity;
+import com.platform.service.CouponCollectService;
+
+/**
+ * Service实现类
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-05-05 15:55:48
+ */
+@Service("CouponcollectService")
+public class CouponCollectServiceImpl implements CouponCollectService {
+    @Autowired
+    private CouponCollectDao CouponcollectDao;
+
+    @Override
+    public CouponCollectEntity queryObject(Integer id) {
+        return CouponcollectDao.queryObject(id);
+    }
+
+    @Override
+    public List<CouponCollectEntity> queryList(Map<String, Object> map) {
+        return CouponcollectDao.queryList(map);
+    }
+
+    @Override
+    public int queryTotal(Map<String, Object> map) {
+        return CouponcollectDao.queryTotal(map);
+    }
+
+    @Override
+    public int save(CouponCollectEntity Couponcollect) {
+        return CouponcollectDao.save(Couponcollect);
+    }
+
+    @Override
+    public int update(CouponCollectEntity Couponcollect) {
+        return CouponcollectDao.update(Couponcollect);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return CouponcollectDao.delete(id);
+    }
+
+    @Override
+    public int deleteBatch(Integer[] ids) {
+        return CouponcollectDao.deleteBatch(ids);
+    }
+}

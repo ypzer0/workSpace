@@ -1,0 +1,61 @@
+<template>
+  <div>
+    <div class="msg-cell" :key="index" v-for="(item, index) in list" @click="btnClick(item)">
+      <div class="cell-time-status">
+        <div class="cell-time">
+          <span>{{item.orderSn}}【{{item.typeNameStr}}】</span>
+        </div>
+        <div class="cell-time">
+          <span>{{item.statusNameStr}}</span>
+        </div>
+        <div class="cell-status">
+          <span>{{item.newMsg}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+export default {
+  data(){
+    return {
+    }
+  },
+  props: ['list'],
+  computed:{
+
+  },
+  components: {
+  },
+  methods:{
+    btnClick(d){
+      this.$emit('btn-click', d);
+    },
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .msg-cell{
+    margin-top:4px;
+    padding:0 28px;
+    background: white;
+    .cell-time-status{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 90px;
+      .cell-time{
+        span{
+          color:#666;
+        }
+      }
+      .cell-status{
+        span{
+          color:#845f3f;
+        }
+      }
+    }
+  }
+</style>

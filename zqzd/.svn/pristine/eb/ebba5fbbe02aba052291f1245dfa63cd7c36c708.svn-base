@@ -1,0 +1,16 @@
+import * as types from './mutation-types'
+import {api} from '@/service/api'
+import {toast} from '@/libs/cube-ui'
+//import session from '@/libs/session'
+
+export const actions = {
+  async getMoneyDetail ({dispatch, commit}, o) {
+      let res = await api.y_money_detail.moneyDetail(o)
+      if (res.success) {
+        commit(types.INIT_Money_Detail, res.data)
+      } else {
+        toast(res.msg, 'warn')
+      }
+  },
+
+}

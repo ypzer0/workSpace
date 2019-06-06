@@ -1,0 +1,75 @@
+import * as types from './mutation-types'
+import {api} from '@/service/api'
+
+export const actions = {
+  async getHomeInfo ({commit}) {
+
+    let res = await api.home.getHomeInfo()
+    if (res.success) {
+      commit(types.INIT_HOME, res.data)
+    }
+
+  },
+
+  async getIndexUrlCategory ({commit}) {
+
+    let res = await api.home.getIndexUrlCategory()
+    if (res.success) {
+      commit(types.INIT_HOME, { section : res.data.categoryList })
+    }
+
+  },
+  
+
+  //zy 2018-12-27 获取banner
+  async getBanner ({commit}) {
+    let res = await api.home.getBanner()
+    if (res.success) {
+      commit(types.INIT_HOME_BANNER, res.data)
+    }
+
+  },
+
+  //zy 2018-12-28 获取品牌商
+  async getBrand ({commit}) {
+    let res = await api.home.getBrand()
+    if (res.success) {
+      commit(types.INIT_HOME_BANND, res.data)
+    }
+
+  },
+
+  //zy 2018-12-28 获取新商品
+  async getNewGoods ({commit}) {
+    let res = await api.home.getNewGoods()
+    if (res.success) {
+      commit(types.INIT_HOME_NEWGOODS, res.data)
+    }
+
+  },
+
+  //zy 2018-12-28 获取好物商品
+  async getGoodsHot ({commit}) {
+    let res = await api.home.getGoodsHot()
+    if (res.success) {
+      commit(types.INIT_HOME_GOODSHOT, res.data)
+    }
+  },
+
+  async getHotGoodsList ({commit}) {
+    let res = await api.home.getHotGoodsList()
+    if (res.success) {
+      commit(types.LOAD_HOT_GOODS, res.data)
+    }
+  },
+
+  async getTopPic ({commit}) {
+    let res = await api.home.getTopPic()
+    if (res.success) {
+      commit(types.LOAD_TOP_PIC, res.data)
+    }
+  },
+
+
+  
+}

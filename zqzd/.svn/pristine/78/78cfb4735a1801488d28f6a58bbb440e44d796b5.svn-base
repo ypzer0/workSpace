@@ -1,0 +1,1 @@
+export const INIT_APPLY_DISPUTES = 'INIT_AFTER_SALES'

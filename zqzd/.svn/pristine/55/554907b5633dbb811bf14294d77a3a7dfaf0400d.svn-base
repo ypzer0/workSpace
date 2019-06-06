@@ -1,0 +1,18 @@
+export default {
+
+  feedForm: {
+    mobile:'',
+    index: 0,
+    content: ''
+  },
+  typeList:[
+    { id: 0, name: '请选择类型' },
+    { id: 1, name: '商品相关' },
+    { id: 2, name: '物流状况' },
+    { id: 3, name: '客户服务' },
+    { id: 4, name: '优惠活动' },
+    { id: 5, name: '功能异常' },
+    { id: 6, name: '产品建议' },
+    { id: 7, name: '其他' },
+  ]
+}

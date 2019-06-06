@@ -1,0 +1,218 @@
+<template>
+  <div page-background="white" :better-scroll="true" class="box">
+    <div class="page-header border-1px-bottom header-nav" slot="top">
+      <div class="header-left" @click="back">
+        <i class="iconfont">&#xe601;</i>
+      </div>
+      <h3>商品详情</h3>
+      <div class="header-right">
+        <!-- <span @click="SaveAddr">保存</span> -->
+      </div>
+    </div>
+    <details-banner></details-banner>
+    <details-title ></details-title>
+    <details-prompt></details-prompt>
+    <details-buy-alert v-show="goodsDetailDt.buyAlert" ></details-buy-alert>
+
+    <div class="prompt" style="display: none;"><p class="prompt-span">{{this.errorMessages}}</p></div>
+
+
+    <div class="details-bottom">
+      <div class="action-left">
+        <div class="left-item">
+          <i class="iconfont left-item-icon">&#xe650;</i>
+          <p class="left-item-text">分享</p>
+        </div>
+        <div class="left-item" @click="$go('/y-favorites')">
+          <i class="iconfont left-item-icon1">&#xe677;</i>
+          <p class="left-item-text">收藏夹</p>
+        </div>
+        <!-- 收藏成功 -->
+        <div class="left-item" v-show="goodsDetail.isCollect == false" @click="collectChange">
+          <i class="iconfont left-item-icon">&#xe647;</i>
+          <p class="left-item-text">收藏</p>
+        </div>
+        <!-- 取消收藏 -->
+        <div class="left-item" v-show="goodsDetail.isCollect == true" @click="collectCancel">
+          <!-- <i v-show="!goodsDetailDt.collectStatus" class="iconfont left-item-icon">&#xe647;</i> -->
+          <i class="iconfont left-selected-icon">&#xe690;</i>
+          <p class="left-selected-text">收藏</p>
+        </div>
+      </div>
+      <div class="action-right" @click="NowBuy">
+        <m-button class="right-item right-item-buy">
+          <span>立即购买</span>
+        </m-button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+import detailsBanner from './details-banner'
+import detailsTitle from './details-title'
+import detailsPrompt from './details-prompt'
+import detailsBuyAlert from './details-buy-alert'
+export default{
+  data () {
+    return {
+      goods:{
+        gid: parseInt(this.$route.params.gid),
+        count: 0
+      },
+      buyAlert: false,
+      errorMessages: '',
+      selected: false,
+    }
+  },
+  computed:{
+   ...mapState('y_goods_detail', ['goodsDetail', 'goodsDetailDt','goodsDetail']),
+    
+  },
+  components: {
+    detailsBanner,
+    detailsTitle,
+    detailsPrompt,
+    detailsBuyAlert,
+  },
+  methods: {
+    ...mapActions('y_goods_detail', ['getGoodsDetail', 'NowBuy', 'collectChange', 'collectCancel']),
+
+    back(){
+        this.$router.go(-1);//返回上一层
+    }
+  },
+  created(){
+    this.goodsDetailDt.gid = parseInt(this.$route.params.gid);
+    this.goodsDetailDt.cid = parseInt(this.$route.query.cid);
+    this.getGoodsDetail();
+  }
+}
+</script>
+
+
+<style lang="less" scoped>
+
+
+  .box .header-nav{
+    position: fixed;
+    width: 100%;
+    margin: 0 auto;
+    top: 0;
+  }
+  .page-header{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 88px;
+    // background: #2eacef;
+    background: -webkit-linear-gradient(left, #ff6839 , #ff4439); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(right, #ff6839, #ff4439); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(right, #ff6839, #ff4439); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to right, #ff6839 , #ff4439); /* 标准的语法 */
+    .header-left{
+      position: absolute;
+      top:50%;
+      left:30px;
+      color: #fff;
+      transform: translateY(-50%);
+    }
+    h3{
+      font-size: 30px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .header-right{
+      position: absolute;
+      top:50%;
+      right:30px;
+      transform: translateY(-50%);
+      span{
+        color:#666;
+      }
+    }
+  }
+
+  .details-bottom{
+    display: flex;
+    justify-content: space-between;
+    background: #f7f7f7;
+    border-top: 1px solid #e5e5e5;
+    height: 98px;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    ;
+    .action-left{
+      width: 450px;
+      display: flex;
+      justify-content: space-around;
+      .left-item{
+        margin: 15px 0;
+        .left-item-text{
+          margin-top: 15px;
+          font-size: 24px;
+          color: #838383;
+        }
+        .left-selected-text{
+          margin-top: 15px;
+          font-size: 24px;
+          color: #ff4539;
+        }
+        .left-item-icon{
+          margin: 0 10px;
+          color: #838383;
+        }
+        .left-selected-icon{
+          // margin-top: 15px;
+          // font-size: 24px;
+          margin: 0 10px;
+          color: #ff4539;
+        }
+        .left-item-icon1{
+          margin: 0 15px;
+          color: #838383;
+        }
+      }
+    }
+    .action-right{
+      width: 300px;
+      background: #ff4539;
+      border: none;
+      .right-item{
+        border: none;
+        color: #ffffff;
+        font-size: 36px;
+        span{
+        color: #ffffff;
+        font-size: 36px;
+      }
+      }
+    }
+  }
+
+  .prompt{
+      width: 350px;
+      height: 120px;
+      background: #333333;
+      border-radius: 10px;
+      opacity: 0.8;
+      font-size: 28px;
+      color: #fff;
+      text-align: center;
+      line-height: 30px;
+    //   display: table-cell;
+    //   vertical-align:middle;
+      display: flex;
+      align-items: center;
+      position: fixed;
+      top: 50%;
+      left: 25%;
+      .prompt-span{
+          width: 300px;
+          margin: 0 auto;
+      }
+  }
+</style>

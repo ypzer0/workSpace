@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ZdReportDao">
+
+    <resultMap type="com.platform.entity.ZdReportEntity" id="ZdreportMap">
+        <result property="id" column="id"/>
+        <result property="uId" column="u_id"/>
+        <result property="reportName" column="report_name"/>
+        <result property="checkStatus" column="check_status"/>
+        <result property="uploadStatus" column="upload_status"/>
+        <result property="reportPath" column="report_path"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.platform.entity.ZdReportEntity">
+		select
+			`id`,
+			`u_id`,
+			`report_name`,
+			`check_status`,
+			`upload_status`,
+			`report_path`
+		from zd_report
+		where id = #{id}
+	</select>
+
+	<select id="queryList" resultType="com.platform.entity.ZdReportEntity">
+		select
+    		`id`,
+    		`u_id`,
+    		`report_name`,
+    		`check_status`,
+    		`upload_status`,
+    		`report_path`
+		from zd_report
+		WHERE 1=1
+		<if test="name != null and name.trim() != ''">
+			AND name LIKE concat('%',#{name},'%')
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from zd_report
+		WHERE 1=1
+        <if test="name != null and name.trim() != ''">
+            AND name LIKE concat('%',#{name},'%')
+        </if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.ZdReportEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into zd_report(
+			`u_id`,
+			`report_name`,
+			`check_status`,
+			`upload_status`,
+			`report_path`)
+		values(
+			#{uId},
+			#{reportName},
+			#{checkStatus},
+			#{uploadStatus},
+			#{reportPath})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.ZdReportEntity">
+		update zd_report 
+		<set>
+			<if test="uId != null">`u_id` = #{uId}, </if>
+			<if test="reportName != null">`report_name` = #{reportName}, </if>
+			<if test="checkStatus != null">`check_status` = #{checkStatus}, </if>
+			<if test="uploadStatus != null">`upload_status` = #{uploadStatus}, </if>
+			<if test="reportPath != null">`report_path` = #{reportPath}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from zd_report where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from zd_report where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

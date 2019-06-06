@@ -1,0 +1,31 @@
+package com.platform.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.platform.dao.ApiZdDoctorMapper;
+import com.platform.entity.ZdDoctorVo;
+import com.platform.utils.Rp;
+
+@Service
+public class ApiZdDoctorService {
+
+	@Autowired
+	private ApiZdDoctorMapper apiZdDoctorMapper;
+	
+	public Rp getDoctor(Integer departmentId) {
+		if(departmentId==null) {
+			return Rp.error("数据异常");
+		}
+		
+		List<ZdDoctorVo> doctorList=apiZdDoctorMapper.queryBydepartmentId(departmentId, 0);
+		if(doctorList.size()==0) {
+			return Rp.error("数据异常");
+		}
+		
+		return Rp.ok().putDt("doctorList", doctorList);
+		
+	}
+}

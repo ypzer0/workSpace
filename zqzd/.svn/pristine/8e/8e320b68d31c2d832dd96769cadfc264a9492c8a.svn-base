@@ -1,0 +1,18 @@
+import * as types from './mutation-types'
+
+export const mutations = {
+  //更换手机-修改绑定手机号
+  [types.INIT_CHANGE_PHONE] (state, o) {
+    state.changePhone = o;
+  },
+
+  //更换手机-验证是否有手机号
+  [types.INIT_MOBILE_VALIDTEP] (state, o) {
+    state.mobileValidatep = o;
+  },
+
+  //更换手机-发送验证码
+  [types.INIT_MOBILE_SENDCHANGE] (state, o) {
+    state.mobileSendchange = o;
+  },
+}

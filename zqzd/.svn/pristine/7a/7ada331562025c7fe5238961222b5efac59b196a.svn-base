@@ -1,0 +1,95 @@
+<template>
+    <div>
+        <ul class="buy-list-ul">
+            <li class="buy-list-ul-li" v-for="(item , index) in afterBuy" :key="index">
+                <div class="buy-list-ul-li-left">
+                    <p class="buy-list-ul-li-left-title">{{item.name}}</p>
+                    <p class="buy-list-ul-li-left-time">交易价格：<span>￥{{item.price}}</span></p>
+                    <p class="buy-list-ul-li-left-btn"><span>{{item.time}}</span><span class="state">{{item.statusName}}</span></p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default {
+    //props: ['afterBuy'],
+  data(){
+    return{
+      
+    }
+  },
+
+  computed: {
+    ...mapState('y_afterSales', ['afterBuy']),
+  },
+
+  components:{
+
+  },
+
+  methods: {
+      ...mapActions('y_afterSales', ['getAfterBuy']),
+    
+  },
+  created(){
+    this.getAfterBuy();
+  }
+}
+</script>
+
+<style lang="less" scoped>
+    .buy-list-ul{
+        width: 100%;
+        margin: 0 auto;
+        .buy-list-ul-li{
+            width: 92%;
+            height: 178px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 6px;
+            margin-top: 30px;
+            // display: flex;
+            // justify-content: space-between;
+            .buy-list-ul-li-left{
+                margin-left: 20px;
+                .buy-list-ul-li-left-title{
+                    font-size: 30px;
+                    color: #333333;
+                    padding-top: 20px;
+                }
+                .buy-list-ul-li-left-time{
+                    font-size: 30px;
+                    color: #838383;
+                    margin-top: 20px;
+                    span{
+                        color: #ff4539;
+                    }
+                }
+                .buy-list-ul-li-left-btn{
+                    font-size: 28px;
+                    color: #838383;
+                    margin-top: 30px;
+                    display: flex;
+                    justify-content: space-between;
+                    .state{
+                        margin-right: 20px;
+                    }
+                }
+            }
+            .buy-list-ul-li-right{
+                width: 178px;
+                height: 178px;
+                background: #ff4539;
+                font-size: 32px;
+                color: #fff;
+                text-align: center;
+                line-height: 178px;
+                border-radius: 0 6px 6px 0;
+                margin-left: 20px;
+            }
+        }
+    }
+</style>

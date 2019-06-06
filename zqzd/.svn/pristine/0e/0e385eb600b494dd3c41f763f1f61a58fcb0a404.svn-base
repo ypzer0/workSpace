@@ -1,0 +1,25 @@
+package com.platform.dao;
+
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.entity.CouponIssueHandleVo;
+
+/**
+ * Dao
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-24 13:46:57
+ */
+public interface ApiIssueHandleMapper extends BaseDao<CouponIssueHandleVo> {
+	
+	List<CouponIssueHandleVo> querySaleList(Map<String, Object> map);
+	
+	Integer querySaleTotal(Map<String, Object> map);
+	
+	List<CouponIssueHandleVo> queryBuyList(Map<String, Object> map);
+	
+	Integer queryBuyTotal(Map<String, Object> map);
+	
+}

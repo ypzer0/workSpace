@@ -1,0 +1,21 @@
+import Vue from 'vue'
+import Vuex from 'vuex'
+import z_registerModule from './z_register/index'
+import z_homeModule from './z_home/index'
+import zd_consultModule from './zd_consult/index'
+import zd_orderModule from './zd_order/index'
+import zd_orderMsgModule from './z-order-msg/index'
+
+
+
+Vue.use(Vuex)
+
+export default new Vuex.Store({
+  modules: {
+    z_register: z_registerModule,
+    z_home: z_homeModule,
+    zd_consult: zd_consultModule,
+    zd_order: zd_orderModule,
+    zd_order_msg: zd_orderMsgModule
+  }
+})

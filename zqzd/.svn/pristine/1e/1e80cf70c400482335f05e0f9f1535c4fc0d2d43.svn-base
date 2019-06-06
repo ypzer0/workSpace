@@ -1,0 +1,192 @@
+package com.platform.entity;
+
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * 实体
+ * 表名 coupon_user_credit_info
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-23 10:55:21
+ */
+public class CouponUserCreditVo implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    //
+    private Integer id;
+    //信用明细类型, 1:增加  2:减少
+    private Integer cType;
+    //用户ID
+    private Integer uId;
+    //变动积分
+    private Integer credit;
+    //变动前
+    private Integer preCredit;
+    //变动后
+    private Integer endCredit;
+    //变动原因
+    private String reson;
+    //操作人
+    private Integer handlerId;
+    //操作时间
+    private Date addTime;  
+    //用户昵称
+    private String nickname;
+    //用户code
+    private String uCode;
+    //操作人
+    private String username;
+    
+    
+	@Override
+	public String toString() {
+		return "CouponUserCreditInfoEntity [id=" + id + ", cType=" + cType + ", uId=" + uId + ", credit=" + credit
+				+ ", preCredit=" + preCredit + ", endCredit=" + endCredit + ", reson=" + reson + ", handlerId="
+				+ handlerId + ", addTime=" + addTime + ", nickname=" + nickname + ", uCode=" + uCode + ", username="
+				+ username + "]";
+	}
+
+	public String getRoleName() {
+		return username;
+	}
+
+	public void setRoleName(String roleName) {
+		this.username = roleName;
+	}
+
+	public String getuCode() {
+		return uCode;
+	}
+
+	public void setuCode(String uCode) {
+		this.uCode = uCode;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	/**
+     * 设置：
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * 获取：
+     */
+    public Integer getId() {
+        return id;
+    }
+    /**
+     * 设置：信用明细类型, 1:增加  2:减少
+     */
+    public void setCType(Integer cType) {
+        this.cType = cType;
+    }
+
+    /**
+     * 获取：信用明细类型, 1:增加  2:减少
+     */
+    public Integer getCType() {
+        return cType;
+    }
+    /**
+     * 设置：用户ID
+     */
+    public void setUId(Integer uId) {
+        this.uId = uId;
+    }
+
+    /**
+     * 获取：用户ID
+     */
+    public Integer getUId() {
+        return uId;
+    }
+    /**
+     * 设置：变动积分
+     */
+    public void setCredit(Integer credit) {
+        this.credit = credit;
+    }
+
+    /**
+     * 获取：变动积分
+     */
+    public Integer getCredit() {
+        return credit;
+    }
+    /**
+     * 设置：变动前
+     */
+    public void setPreCredit(Integer preCredit) {
+        this.preCredit = preCredit;
+    }
+
+    /**
+     * 获取：变动前
+     */
+    public Integer getPreCredit() {
+        return preCredit;
+    }
+    /**
+     * 设置：变动后
+     */
+    public void setEndCredit(Integer endCredit) {
+        this.endCredit = endCredit;
+    }
+
+    /**
+     * 获取：变动后
+     */
+    public Integer getEndCredit() {
+        return endCredit;
+    }
+    /**
+     * 设置：变动原因
+     */
+    public void setReson(String reson) {
+        this.reson = reson;
+    }
+
+    /**
+     * 获取：变动原因
+     */
+    public String getReson() {
+        return reson;
+    }
+    /**
+     * 设置：操作人
+     */
+    public void setHandlerId(Integer handlerId) {
+        this.handlerId = handlerId;
+    }
+
+    /**
+     * 获取：操作人
+     */
+    public Integer getHandlerId() {
+        return handlerId;
+    }
+    /**
+     * 设置：操作时间
+     */
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+    /**
+     * 获取：操作时间
+     */
+    public Date getAddTime() {
+        return addTime;
+    }
+}

@@ -1,0 +1,26 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api.js'
+export const y_favorites = {
+
+    //收藏页面列表
+    favorites: (params) => {
+        return axios.request({
+            url: api.Y_favoritesList,
+            data: params,
+            method: 'post'
+        })
+    },
+
+    //收藏页面取消收藏
+    collectRemove: (params) => {
+        return axios.request({
+            url: api.Y_CollectRemove,
+            data: params,
+            method: 'post'
+        }, 
+        {
+            cp : 'application/json'
+        },
+        )
+    },
+}

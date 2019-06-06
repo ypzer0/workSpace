@@ -1,0 +1,14 @@
+package com.platform.dao;
+
+import com.platform.entity.CouponCashDrawalEntity;
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-24 15:49:54
+ */
+public interface CouponCashDrawalDao extends BaseDao<CouponCashDrawalEntity> {
+
+}

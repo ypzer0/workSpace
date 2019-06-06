@@ -1,0 +1,184 @@
+<template>
+  <div page-background="white" :better-scroll="true" class="box">
+    <div class="page-header" slot="top">
+      <div class="header-left" @click="$back">
+        <i class="iconfont">&#xe601;</i>
+      </div>
+      <h3>我的订单</h3>
+      <div class="header-right">
+        <!-- <span @click="SaveAddr">保存</span> -->
+      </div>
+    </div>
+    <div class="order-box">
+    <!-- <order-search></order-search> -->
+    <order-list-nav @click-tab="clickFatherTab"></order-list-nav>
+
+    
+
+    <order-all v-show="showTabOid == 1"></order-all>
+    <order-wait-pay v-show="showTabOid == 2"></order-wait-pay>
+    <order-finish v-show="showTabOid == 3"></order-finish>
+      
+    </div>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+//import orderSearch from './order-search'
+import orderListNav from './order-list-nav'
+import orderAll from './order-list-content/order-all'
+
+import orderWaitPay from './order-list-content/order-wait-pay'
+import orderFinish from './order-list-content/order-finish'
+
+import orderNoPaying from './order-list-content/order-no-paying'
+import orderHasPaying from './order-list-content/order-has-paying'
+import PullTo from 'vue-pull-to'
+import { Scroller } from 'vux'
+import VueScroller from 'vue-scroller'
+//import { fetchDataList } from 'api'
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default {
+  name: 'example',
+  data(){
+    return{
+      showTabOid: 1,
+      dataList: [],
+      
+    }
+  },
+  computed: {
+    ...mapState('y_order', ['allOrderList'])
+  },
+  components:{
+    //orderSearch,
+    orderListNav,
+    orderAll,
+    orderNoPaying,
+    orderHasPaying,
+    PullTo,
+    orderWaitPay,
+    orderFinish,
+    VueScroller,
+    Scroller,
+  },
+
+  methods: {
+    ...mapActions('y_order', ['getPageOrderList', 'getOrderWaitPay', 'getOrderFinish']),
+    clickFatherTab(dt){
+      this.showTabOid = dt.item.oid;
+      let oid = dt.item.oid
+      console.log("oid:",oid);
+      //this.allOrderList.splice(0)
+
+      if(dt.item.oid == 1){
+        this.getPageOrderList();
+      }
+      else if(dt.item.oid == 2){
+        this.getOrderWaitPay();
+      }
+      else if(dt.item.oid == 3){
+        this.getOrderFinish();
+      }
+
+    },
+
+    // refresh(loaded) {
+    //     setTimeout(() => {
+    //       this.dataList.reverse();
+    //       loaded('done');
+    //     }, 2000);
+    //   }
+
+    // refresh(loaded) {
+    //   let that = this;
+
+    //   if(this.showTabOid == 1){
+
+    //    this.getPageOrderList();
+
+    //   }
+    //   else if(this.showTabOid == 2){
+
+    //    this.getWaitPayOrderList();
+    //   }
+    //   else if(this.showTabOid == 3){
+
+    //   }
+    //   }
+
+    // 上拉
+    // infinite(done){//上拉加载
+    //   if(this.isBottom){//当没有更多数据的时候结束加载
+    //     this.loadingTips ="无更多数据"
+    //     setTimeout(()=>{
+    //       done&&done(true);
+    //     },1000);
+    //   }else{//有更多数据时进行数据分页显示
+    //     setTimeout(() => {
+    //       this.page++;
+    //       this.getDataList(this.page);
+    //       this.$nextTick(() => {
+    //         this.$refs.scrollerBottom.reset()
+    //       })
+    //     },1500)
+    //   }
+    // },
+
+
+  },
+  created(){
+    // this.getOrderList()
+    this.getPageOrderList();
+    //this.getFinishPayOrderList();
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.box{
+  background: #fff;
+}
+  .order-box{
+    background: #fff;
+  }
+
+  .page-header{
+    //position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 88px;
+    // background: #2eacef;
+    background: -webkit-linear-gradient(left, #ff6839 , #ff4439); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(right, #ff6839, #ff4439); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(right, #ff6839, #ff4439); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to right, #ff6839 , #ff4439); /* 标准的语法 */
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 9;
+    .header-left{
+      position: absolute;
+      top:50%;
+      left:30px;
+      color: #fff;
+      transform: translateY(-50%);
+    }
+    h3{
+      font-size: 30px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .header-right{
+      position: absolute;
+      top:50%;
+      right:30px;
+      transform: translateY(-50%);
+      span{
+        color:#666;
+      }
+    }
+  }
+  
+</style>

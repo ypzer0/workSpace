@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.OrderAskDao">
+
+    <resultMap type="com.platform.entity.OrderAskEntity" id="orderAskMap">
+        <result property="id" column="id"/>
+        <result property="orderid" column="orderId"/>
+        <result property="orderSn" column="order_sn"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="typeid" column="typeId"/>
+        <result property="status" column="status"/>
+        <result property="uid" column="uId"/>
+        <result property="uName" column="u_name"/>
+        <result property="handerId" column="hander_id"/>
+        <result property="handerName" column="hander_name"/>
+        <result property="utime" column="utime"/>
+        <result property="ctime" column="ctime"/>
+    </resultMap>
+    
+    <resultMap type="com.platform.entity.OrderAskEntity" id="orderAskQueryMap">
+        <result property="id" column="id"/>
+        <result property="orderid" column="orderId"/>
+        <result property="orderSn" column="order_sn"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="typeid" column="typeId"/>
+        <result property="status" column="status"/>
+        <result property="uid" column="uId"/>
+        <result property="uName" column="u_name"/>
+        <result property="handerId" column="hander_id"/>
+        <result property="handerName" column="hander_name"/>
+        <result property="utime" column="utime"/>
+        <result property="ctime" column="ctime"/>
+        <result property="newMsg" column="newMsg"/>
+        
+    </resultMap>
+
+	<select id="queryObject" resultType="com.platform.entity.OrderAskEntity">
+		select
+    		oa.`id`,
+    		oa.`orderId`,
+    		oa.`order_sn`,
+    		oa.`order_status`,
+    		oa.`typeId`,
+    		oa.`status`,
+    		oa.`uId`,
+    		u.nickname as u_name,
+    		oa.`hander_id`,
+    		su.username as hander_name,
+    		oa.`utime`,
+    		oa.`ctime`
+		from nideshop_order_ask oa
+		left join nideshop_user u on oa.uId = u.id
+		left join sys_user su on oa.hander_id = su.user_id
+		where oa.id = #{id}
+	</select>
+
+	<select id="queryList" resultType="com.platform.entity.OrderAskEntity" resultMap="orderAskQueryMap">
+		select
+    		oa.`id`,
+    		oa.`orderId`,
+    		oa.`order_sn`,
+    		oa.`order_status`,
+    		oa.`typeId`,
+    		oa.`status`,
+    		oa.`uId`,
+    		u.nickname as u_name,
+    		oa.`hander_id`,
+    		su.username as hander_name,
+    		oa.`utime`,
+    		oa.`ctime`,
+			(select count(*) from nideshop_order_ask_msg oam where oam.askId = oa.id 
+			and oam.hander_id = oa.hander_id
+			and oam.uId = oa.uId
+			
+		<if test="zMsgType != null and zMsgType != 0">
+			and oam.msgType = #{zMsgType}
+		</if>
+		<if test="zMsgWay != null and zMsgWay != 0">
+			and oam.msgWay = #{zMsgWay} 
+		</if>
+			
+			and oam.readStatus = 0) as newMsg
+		from nideshop_order_ask oa
+		left join nideshop_user u on oa.uId = u.id
+		left join sys_user su on oa.hander_id = su.user_id
+		WHERE 1=1
+		<if test="name != null and name.trim() != ''">
+			AND (u.nickname LIKE concat('%',#{name},'%') OR su.username LIKE concat('%',#{name},'%'))
+		</if>
+		<if test="status != null and status != 0">
+			AND oa.`status` = #{status}
+		</if>
+		<if test="uId != null and uId != 0">
+			AND oa.`uId` = #{uId}
+		</if>
+		<if test="sysuid != null and sysuid != 0">
+			AND oa.`hander_id` = #{sysuid}
+		</if>
+		
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by oa.ctime desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from nideshop_order_ask oa
+		left join nideshop_user u on oa.uId = u.id
+		left join sys_user su on oa.hander_id = su.user_id
+		WHERE 1=1
+		<if test="name != null and name.trim() != ''">
+			AND (u.nickname LIKE concat('%',#{name},'%') OR su.username LIKE concat('%',#{name},'%'))
+		</if>
+		<if test="status != null and status != 0">
+			AND oa.`status` = #{status}
+		</if>
+		<if test="uId != null and uId != 0">
+			AND oa.`uId` = #{uId}
+		</if>
+		<if test="sysuid != null and sysuid != 0">
+			AND oa.`hander_id` = #{sysuid}
+		</if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.OrderAskEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into nideshop_order_ask(
+			`orderId`,
+			`order_sn`,
+			`order_status`,
+			`typeId`,
+			`status`,
+			`uId`,
+			`u_name`,
+			`hander_id`,
+			`hander_name`,
+			`utime`,
+			`ctime`)
+		values(
+			#{orderid},
+			#{orderSn},
+			#{orderStatus},
+			#{typeid},
+			#{status},
+			#{uid},
+			#{uName},
+			#{handerId},
+			#{handerName},
+			#{utime},
+			#{ctime})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.OrderAskEntity">
+		update nideshop_order_ask 
+		<set>
+			<if test="orderid != null">`orderId` = #{orderid}, </if>
+			<if test="orderSn != null">`order_sn` = #{orderSn}, </if>
+			<if test="orderStatus != null">`order_status` = #{orderStatus}, </if>
+			<if test="typeid != null">`typeId` = #{typeid}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="uid != null">`uId` = #{uid}, </if>
+			<if test="uName != null">`u_name` = #{uName}, </if>
+			<if test="handerId != null">`hander_id` = #{handerId}, </if>
+			<if test="handerName != null">`hander_name` = #{handerName}, </if>
+			<if test="utime != null">`utime` = #{utime}, </if>
+			<if test="ctime != null">`ctime` = #{ctime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from nideshop_order_ask where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from nideshop_order_ask where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="getOrder" parameterType="String" resultType="java.util.Map">
+		select * from nideshop_order where order_sn = #{orderSn} limit 0, 1
+		
+	</select>
+
+	<update id="updateOrderStatus">
+		update nideshop_order
+		<set>
+			order_status=#{orderStatus}, pay_status=#{payStatus}
+		</set>
+		where order_sn = #{orderSn}
+		
+	</update>
+
+</mapper>

@@ -1,0 +1,101 @@
+<template>
+	<div>
+		<div class="withdrawal-icon" align="center">
+            <img src="../../static/images/money_wallet.png"/>
+        </div>
+		<div class="withdrawal-my-money">
+			<p class="withdrawal-my-money-tetx">我的余额</p>
+			<p class="withdrawal-money">￥{{myCenter.remainingSum}}</p>
+		</div>
+		<div class="withdrawal-money-detail">
+			<span class="withdrawal-usable-money">可提余额：￥{{myCenter.CanWithdrawal}}</span>
+			<span class="withdrawal-money">冻结余额：￥{{myCenter.amountFrozen}}</span>
+		</div>
+		<div class="withdrawal-deposit-money-box">
+			<span class="withdrawal-deposit-money">提现金额：<input type="number" :value="myCenter.CanWithdrawal"></span>
+		</div>
+	</div>
+</template>
+
+
+<script type="text/ecmascript-6">
+
+export default {
+  props: ['myCenter'],
+
+	data () {
+    return {
+     
+    }
+  },
+
+  computed: {
+
+  },
+  components: {
+    
+  },
+  methods:{
+
+
+  },
+  created(){
+
+  }
+}
+</script>
+
+
+<style lang="less" scoped>
+	.withdrawal-icon{
+		width: 100%;
+		margin: 0 auto;
+		img{
+			width: 210px;
+			height: 210px;
+			margin-top: 50px;
+		}
+	}
+	.withdrawal-my-money{
+		width: 100%;
+		margin: 0 auto;
+		.withdrawal-my-money-tetx{
+			font-size: 30px;
+			color: #333333;
+			text-align: center;
+			margin-top: 30px;
+		}
+		.withdrawal-money{
+			font-size: 48px;
+			color: #333333;
+			text-align: center;
+			margin-top: 20px;
+		}
+	}
+	.withdrawal-money-detail{
+		margin: 0 auto;
+		font-size: 28px;
+		color: #838383;
+		margin-top: 78px;
+		padding-left: 24px;
+		.withdrawal-money{
+			padding-left: 30px;
+		}
+	}
+	.withdrawal-deposit-money-box{
+		width: 100%;
+		height: 98px;
+		margin: 0 auto;
+		font-size: 30px;
+		color: #333333;
+		margin-top: 30px;
+		background: #fff;
+		.withdrawal-deposit-money{
+			padding-left: 24px;
+			line-height: 98px;
+			input{
+				height: 98px;
+			}
+		}
+	}
+</style>

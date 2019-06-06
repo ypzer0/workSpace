@@ -1,0 +1,176 @@
+export default [
+  { 
+    path: '*', 
+    component: (resolve) => require(['../pages/error/404.vue'], resolve)  
+  },
+  {
+    path: '/MP_verify_VFWs6ecdlScbAQEY.txt',
+    name: '/weixin1',
+    component: () => import('@/secret/weixin1'),
+    // @/secret/weixin.txt
+  },
+  {
+    path: '/',
+    name: '/',
+    redirect: '/z-home'
+  },
+  // {
+  //   path: '/test',
+  //   name: '/test',
+  //   component: () => import('@/pages/y_test/test')
+  // },
+  // {
+  //   path: '/search',
+  //   name: 'search',
+  //   component: () => import('@/pages/search/search')
+  // },
+  //卓琪项目路由
+  {
+    path: '/y-login',
+    name: 'y-login',
+     meta: {
+       title: '用户登录',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/y-login/login')
+  },
+  {
+    path: '/z-home',
+    name: 'z-home',
+     meta: {
+       title: '检测服务',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/z-home/home')
+  },
+  {
+    path: '/z-register',
+    name: 'z-register',
+     meta: {
+       title: '注册会员',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/z-register/register')
+  },
+  {
+    path: '/z-consult',
+    name: 'z-consult',
+     meta: {
+       title: '一病多问',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/z-consult/consult')
+  },
+
+  {
+    path: '/z-details',
+    name: 'z-details',
+     meta: {
+       title: '服务详情',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/z-details/details')
+  },
+
+  {
+    path: '/z-pay',
+    name: 'z-pay',
+     meta: {
+       title: '支付中',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/z-pay/pay')
+  },
+
+  {
+    path: '/z-pay-succeed',
+    name: 'z-pay-succeed',
+     meta: {
+       title: '支付成功',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/z-pay-succeed/pay-succeed')
+  },
+
+  {
+    path: '/z-urse',
+    name: 'z-urse',
+     meta: {
+       title: '个人中心',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/z-urse/urse')
+  },
+
+  {
+    path: '/z-my-msg',
+    name: 'z-my-msg',
+     meta: {
+       title: '个人信息',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/z-my-msg/my-msg')
+  },
+
+  {
+    path: '/z-order',
+    name: 'z-order',
+     meta: {
+       title: '我的订单',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/z-order/order')
+  },
+
+  {
+    path: '/z-order-msg',
+    name: 'z-order-msg',
+     meta: {
+       title: '订单信息',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/z-order-msg/order-msg')
+  },
+
+  {
+    path: '/z-report',
+    name: 'z-report',
+     meta: {
+       title: '检查报告',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/z-report/report')
+  },
+
+  {
+    path: '/z-view-report',
+    name: 'z-view-report',
+     meta: {
+       title: '查看报告',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/z-view-report/view-report')
+  },
+
+  {
+    path: '/z-my-consult',
+    name: 'z-my-consult',
+     meta: {
+       title: '我的问诊',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/z-my-consult/my-consult')
+  },
+
+  {
+    path: '/z-service',
+    name: 'z-service',
+     meta: {
+       title: '客服售后',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/z-service/service')
+  },
+  
+
+]

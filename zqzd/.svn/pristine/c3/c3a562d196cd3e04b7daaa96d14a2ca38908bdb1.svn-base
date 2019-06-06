@@ -1,0 +1,66 @@
+package com.platform.api;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.platform.annotation.LoginUser;
+import com.platform.dto.CidDto;
+import com.platform.dto.IdsDto;
+import com.platform.entity.UserVo;
+import com.platform.service.ApiGoodsService;
+import com.platform.util.ApiBaseAction;
+import com.platform.utils.Rp;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@Api(tags = "我的卡劵接口")
+@RestController
+@RequestMapping("/cpapi")
+public class ApiHaveController extends ApiBaseAction{
+	@Autowired
+	private ApiGoodsService service;
+	
+	
+	
+	 @ApiOperation(value = "商品上架接口", response = Map.class)
+	 @PostMapping("/mygoods/upper")
+	 public Object mygoodsUpper(@LoginUser UserVo loginUser,@RequestBody List<IdsDto> IdsDto) {
+		 return service.mygoodsUpper(loginUser, IdsDto);
+	 }
+	 
+	 @ApiOperation(value = "商品下架接口", response = Map.class)
+	 @PostMapping("/mygoods/down")
+	 public Object mygoodDown(@LoginUser UserVo loginUser,@RequestBody List<IdsDto> IdsDto) {
+		 return service.mygoodsDown(loginUser, IdsDto);
+	 }
+	 
+	 @ApiOperation(value = "商品删除接口", response = Map.class)
+	 @PostMapping("/mygoods/del")
+	 public Object mygoodDel(@LoginUser UserVo loginUser,@RequestBody List<IdsDto> IdsDto) {
+		 return service.mygoodsDel(loginUser, IdsDto);
+	 }
+	 
+	
+	
+	@ApiOperation(value = "寄卖接口", response = Map.class)
+	@PostMapping("/have/sell")
+	public Object haveSell(@LoginUser UserVo loginUser,@RequestParam(value = "status") Integer status) {
+		Rp cMap= service.haveSell(loginUser,status);
+		return cMap;
+	}
+	
+	@ApiOperation(value = "购买接口", response = Map.class)
+	@PostMapping("/have/buy")
+	public Object haveBuy(@LoginUser UserVo loginUser,@RequestParam(value = "status") Integer status) {
+		Rp cMap= service.haveBuy(loginUser,status);
+		return cMap;
+	}
+}

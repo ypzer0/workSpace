@@ -1,0 +1,14 @@
+package com.platform.dao;
+
+import com.platform.entity.CouponIssueHandleEntity;
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-24 13:46:57
+ */
+public interface CouponIssueHandleDao extends BaseDao<CouponIssueHandleEntity> {
+
+}

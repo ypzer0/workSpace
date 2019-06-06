@@ -1,0 +1,105 @@
+package com.platform.controller;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.platform.entity.ZdOpinionEntity;
+import com.platform.service.ZdOpinionService;
+import com.platform.utils.PageUtils;
+import com.platform.utils.Query;
+import com.platform.utils.R;
+
+/**
+ * Controller
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-05-30 13:13:21
+ */
+@RestController
+@RequestMapping("Zdopinion")
+public class ZdOpinionController {
+    @Autowired
+    private ZdOpinionService ZdopinionService;
+
+    /**
+     * 查看列表
+     */
+    @RequestMapping("/list")
+    @RequiresPermissions("Zdopinion:list")
+    public R list(@RequestParam Map<String, Object> params) {
+        //查询列表数据
+        Query query = new Query(params);
+
+        List<ZdOpinionEntity> ZdopinionList = ZdopinionService.queryList(query);
+        
+        int total = ZdopinionService.queryTotal(query);
+
+        PageUtils pageUtil = new PageUtils(ZdopinionList, total, query.getLimit(), query.getPage());
+
+        return R.ok().put("page", pageUtil);
+    }
+
+    /**
+     * 查看信息
+     */
+    @RequestMapping("/info/{id}")
+    @RequiresPermissions("Zdopinion:info")
+    public R info(@PathVariable("id") Integer id) {
+        ZdOpinionEntity Zdopinion = ZdopinionService.queryObject(id);
+
+        return R.ok().put("Zdopinion", Zdopinion);
+    }
+
+    /**
+     * 保存
+     */
+    @RequestMapping("/save")
+    @RequiresPermissions("Zdopinion:save")
+    public R save(@RequestBody ZdOpinionEntity Zdopinion) {
+        ZdopinionService.save(Zdopinion);
+
+        return R.ok();
+    }
+
+    /**
+     * 修改
+     */
+    @RequestMapping("/update")
+    @RequiresPermissions("Zdopinion:update")
+    public R update(@RequestBody ZdOpinionEntity Zdopinion) {
+        ZdopinionService.update(Zdopinion);
+
+        return R.ok();
+    }
+
+    /**
+     * 删除
+     */
+    @RequestMapping("/delete")
+    @RequiresPermissions("Zdopinion:delete")
+    public R delete(@RequestBody Integer[] ids) {
+        ZdopinionService.deleteBatch(ids);
+
+        return R.ok();
+    }
+
+    /**
+     * 查看所有列表
+     */
+    @RequestMapping("/queryAll")
+    public R queryAll(@RequestParam Map<String, Object> params) {
+
+        List<ZdOpinionEntity> list = ZdopinionService.queryList(params);
+
+        return R.ok().put("list", list);
+    }
+}

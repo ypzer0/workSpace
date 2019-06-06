@@ -1,0 +1,9 @@
+import * as types from './mutation-types'
+
+export const mutations = {
+  //申请纠纷
+  [types.INIT_APPLY_DISPUTES] (state, o) {
+     state.applyDisputes = o.afterSaleSell;
+  },
+
+}

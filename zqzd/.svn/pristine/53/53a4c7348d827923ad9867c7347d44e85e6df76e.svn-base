@@ -1,0 +1,59 @@
+package com.platform.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.dao.CouponUserIntegralInfoDao;
+import com.platform.entity.CouponUserIntegralInfoEntity;
+import com.platform.service.CouponUserIntegralInfoService;
+
+/**
+ * Service实现类
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-23 10:55:21
+ */
+@Service("CouponuserIntegralInfoService")
+public class CouponUserIntegralInfoServiceImpl implements CouponUserIntegralInfoService {
+    @Autowired
+    private CouponUserIntegralInfoDao CouponuserIntegralInfoDao;
+
+    @Override
+    public CouponUserIntegralInfoEntity queryObject(Integer id) {
+        return CouponuserIntegralInfoDao.queryObject(id);
+    }
+
+    @Override
+    public List<CouponUserIntegralInfoEntity> queryList(Map<String, Object> map) {
+        return CouponuserIntegralInfoDao.queryList(map);
+    }
+
+    @Override
+    public int queryTotal(Map<String, Object> map) {
+        return CouponuserIntegralInfoDao.queryTotal(map);
+    }
+
+    @Override
+    public int save(CouponUserIntegralInfoEntity CouponuserIntegralInfo) {
+        return CouponuserIntegralInfoDao.save(CouponuserIntegralInfo);
+    }
+
+    @Override
+    public int update(CouponUserIntegralInfoEntity CouponuserIntegralInfo) {
+        return CouponuserIntegralInfoDao.update(CouponuserIntegralInfo);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return CouponuserIntegralInfoDao.delete(id);
+    }
+
+    @Override
+    public int deleteBatch(Integer[] ids) {
+        return CouponuserIntegralInfoDao.deleteBatch(ids);
+    }
+}

@@ -1,0 +1,23 @@
+package com.platform.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.entity.ZdGoodsInfoVo;
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-05-30 12:54:18
+ */
+public interface ApiZdGoodsInfoMapper extends BaseDao<ZdGoodsInfoVo> {
+
+	List<ZdGoodsInfoVo> queryGoodsList(Map<String ,Object> map);
+	
+	Integer queryGoodsTotal(Integer status);
+	
+	Map<String , Object >  queryByGoodsId(Integer id);
+	
+}

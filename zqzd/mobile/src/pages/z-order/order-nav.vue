@@ -1,0 +1,79 @@
+<template>
+  <div>
+    <ul class="home-nav">
+      <li class="home-nav-li" :class="{active:index == num}" v-for='(item,index) in tabList' :key="index" @click="clickTab(index,item)">{{item.name}}</li>
+    </ul>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import Vue from 'vue'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
+export default {
+  data (){
+    return{
+      num: 0,
+      tabList:[
+        {
+          id: 0,
+          name: "已支付"
+        },
+        {
+          id: 1,
+          name: "待支付"
+        }
+      ],
+    }
+  },
+
+  computed: {
+    
+  },
+  components: {
+    
+  },
+  methods: {
+    clickTab:function(index,item){
+      console.log("num:", this.num);
+      console.log("item:", item);
+      this.num = index;
+      this.$emit('click-tab', { i : index, item : item });
+    }
+  },
+  created() {
+
+  },
+  activated(){
+
+  },
+  
+}
+</script>
+
+<style lang="less" scoped>
+  .home-banner{
+    width: 100%;
+    height: 310px;
+    margin: 0 auto;
+    .home-banner-img{
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .home-nav{
+    background: #ffffff;
+    display: flex;
+    justify-content: space-around;
+    .home-nav-li{
+      font-size: 30px;
+      padding: 36px 0;
+    }
+  }
+
+  .active{
+    color: #15a396;
+    border-bottom: 4px solid #15a396;
+  }
+</style>

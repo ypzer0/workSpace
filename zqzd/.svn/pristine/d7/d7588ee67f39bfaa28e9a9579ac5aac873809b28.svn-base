@@ -1,0 +1,180 @@
+import * as types from './mutation-types'
+import {api} from '@/service/api'
+import {toast} from '@/libs/cube-ui'
+import session from '@/libs/session'
+import * as wechat from '@/config/wechat'
+
+export const actions = {
+  async getMyCenter ({dispatch, commit}, o) {
+    let res = await api.y_my.myCenter()
+    if (res.success) {
+      commit(types.INIT_MY, res.data)
+    } else {
+      toast(res.msg, 'warn')
+    }
+    return res;
+  },
+  //微信登录
+  async wechatLogin ({dispatch}, s) {
+    const form = {
+      code: s.code,
+      state: s.state,
+      plat: wechat.PLAT
+    }
+    console.log('login');
+    console.log(form);
+    let res = await api.y_my.wechatLogin(form)
+    if (res.success) {
+      session.setToken(res.data.token)
+      let res1 = await dispatch('getMyCenter')
+      return res1
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+
+  //开发环境一键登录
+  async testLogin ({dispatch, state}, s) {
+    //debugger;
+    //let nickname = Number(Math.random().toString().substr(3,12) + Date.now()).toString(36);
+    let nickname = "小飞飞";
+    const form = {
+      //code: s.code,
+      //state: s.state,
+      // name: state.testLoginDt.name,
+      //id: state.testLoginDt.id
+      name: nickname,
+    }
+    console.log('login');
+    console.log(form);
+    let res = await api.y_my.testLogin(form)
+    if (res.success) {
+      session.setToken(res.data.token)
+      let res1 = await dispatch('getMyCenter')
+      if(res1.success){
+        s.go(`/y-my`)
+      }
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+  //加载wenxin配置
+  async loadConfig ({dispatch, state}, s) {
+
+    let form = {
+      pid : wechat.PLAT,
+      url : window.location.href
+    };
+    let res = await api.y_my.loadConfig(form)
+    if (res.success) {
+      let dt = res.data;
+      wx.config({
+        // debug: true, 
+        appId: wechat.APPID, // 必填，公众号的唯一标识
+        timestamp: parseInt(dt.timestamp), // 必填，生成签名的时间戳
+        nonceStr: dt.noncestr, // 必填，生成签名的随机串
+        signature: dt.signature,// 必填，签名
+        jsApiList: s.funs // 必填，需要使用的JS接口列表
+      })
+
+    } else {
+      toast(res.msg, 'warn')
+    }
+    return res;
+  },
+
+  //分享给朋友
+  async shareToFrends({dispatch, state}, s){
+
+    console.log(s);
+    wx.ready(function () {   //需在用户可能点击分享按钮前就先调用
+
+      // wx.updateAppMessageShareData({ 
+      //   title: document.title, // 分享标题
+      //   desc: s.desc, // 分享描述
+      //   link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+      //   imgUrl: s.imgUrl, // 分享图标
+      //   success: function () {
+      //     // 设置成功
+      //     toast('分享成功！', 'correct')
+      //   }
+      // })
+
+      wx.onMenuShareAppMessage({
+        title: document.title, // 分享标题
+        desc: s.desc, // 分享描述
+        link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        imgUrl: s.imgUrl, // 分享图标
+        type: 'link', // 分享类型,music、video或link，不填默认为link
+        dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+        success: function () {
+          // 用户点击了分享后执行的回调函数
+          toast('分享成功！', 'correct')
+        }
+        });
+
+    });
+    
+    dispatch('loadConfig', { funs: ['updateAppMessageShareData', 'onMenuShareAppMessage'] });
+    
+  },
+
+  //分享商品
+  async shareGoods({dispatch, state}, s){
+
+    dispatch('shareToFrends', { 
+      title: s.name,
+      desc: s.name,
+      link: wechat.SHARE_BACK + s.gid + "?cid=" + s.cid,
+      imgUrl: s.gimg
+    });
+
+  },
+ //微信支付
+ async pay({dispatch, state}, ddd){
+
+  let s = ddd.pd;
+  wx.ready(function () {   //需在用户可能点击分享按钮前就先调用
+
+    setTimeout(() => {
+      
+    wx.chooseWXPay({
+      timestamp: parseInt(s.timestamp), // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+      nonceStr: s.nonceStr, // 支付签名随机串，不长于 32 位
+      package: "prepay_id=" + s.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
+      signType: s.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+      paySign: s.paySign, // 支付签名
+      success: function (res) {
+      // 支付成功后的回调函数
+          o.go('/y-pay-success?oid=' + ddd.oid)
+        }
+      });
+      
+    }, 2000);
+
+  });
+  
+  dispatch('loadConfig', { funs: ['chooseWXPay'] });
+
+
+},
+
+
+  //信用分隐藏提示框
+  async alertCommitHide({dispatch, state}, s){
+    state.testLoginDt.alertCommit = false;
+  },
+
+  //信用分显示提示框
+  async alertCommitshow({dispatch, state}, s){
+    
+    state.testLoginDt.alertCommit = true;
+    //debugger;
+  }
+
+
+
+
+}

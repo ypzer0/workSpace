@@ -1,0 +1,2 @@
+export const INIT_AFTER_SALES = 'INIT_AFTER_SALES'
+export const INIT_AFTER_BUY = 'INIT_AFTER_BUY'

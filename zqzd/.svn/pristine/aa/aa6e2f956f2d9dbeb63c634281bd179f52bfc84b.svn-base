@@ -1,0 +1,55 @@
+<template>
+  <page :better-scroll="true">
+    <evaluate-header slot="top" @add-comment="addComment"></evaluate-header>
+    <evaluate-outline :total="total" :filter="filter" @fcheck="fcheck"></evaluate-outline>
+    <evaluate-content :list="list"></evaluate-content>
+  </page>
+</template>
+
+<script type="text/ecmascript-6">
+import evaluateOutline from './evaluate-outline'
+import evaluateContent from './evaluate-content'
+import evaluateHeader from './evaluate-header'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
+export default {
+  data(){
+    return{
+      goodsid: isNaN(parseInt(this.$route.params.gid)) ? 0 : parseInt(this.$route.params.gid)
+    }
+  },
+  computed:{
+    ...mapState('evaluate', ['list', 'total', 'filter'])
+  },
+  methods:{
+    ...mapActions('evaluate', ['loadList', 'getTotalCount', 'load', 'loadByFilter']),
+    ...mapMutations('evaluate', ['LOAD_DATAS']),
+    fcheck(d){
+      
+      var para = {
+        typeId: 0,
+        valueId: parseInt(this.$route.params.gid),
+      }
+      this.loadByFilter({para:para, d:d});
+
+    },
+    addComment(){
+      this.$go('/evaluateupdate/' + this.goodsid);
+    }
+  },
+  components: {
+    evaluateOutline,
+    evaluateContent,
+    evaluateHeader
+  },
+  created(){
+    this.LOAD_DATAS();
+
+    var para = {
+      typeId: 0,
+      valueId: parseInt(this.$route.params.gid),
+    }
+    this.load(para);
+  },
+}
+</script>

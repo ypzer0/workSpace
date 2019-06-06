@@ -1,0 +1,136 @@
+import * as types from './mutation-types'
+import {api} from '@/service/api'
+import {toast} from '@/libs/cube-ui'
+
+export const actions = {
+  async getGoodsDetail ({dispatch, commit,state}, o) {
+    
+    let para = { cid: state.goodsDetailDt.cid };
+    let res = await api.y_goods_detail.goodsDetailExt(para)
+    if (res.success) {
+      // toast('获取订单数据成功', 'correct')
+      commit(types.INIT_GoodsDetail, res.data);
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+  //获取商品通过分类id
+  // async getGoodsListByCid ({dispatch, commit}, o) {
+    
+  //   let res = await api.y_goods_home.getGoodsListByCid(o)
+  //   if (res.success) {
+  //     // toast('获取订单数据成功', 'correct')
+  //     commit(types.INIT_GoodsList, res.data);
+  //   } else {
+  //     toast(res.msg, 'warn')
+  //   }
+  // },
+
+
+  //商品数量变化
+  async GoodsNumChange ({dispatch, commit, state}, o) {
+    
+    //debugger;
+    if(o.type == "add"){
+      if(state.goodsDetailDt.count >= state.goodsDetail.count){
+        toast('不能超过库存' + state.goodsDetail.count, 'warn');
+      }
+      else{
+        state.goodsDetailDt.count += 1;
+      }
+    }else{
+      state.goodsDetailDt.count -= 1;
+    }
+
+  },
+  //立即购买
+  async NowBuy ({dispatch, commit, state}, o) {
+    
+      if(state.goodsDetailDt.count > state.goodsDetail.count){
+        toast('选择数量不能大于库存数量', 'warn');
+      }else if(state.goodsDetailDt.count <= 0){
+        toast('选择数量必须大于0', 'warn');
+      }else{
+        state.goodsDetailDt.buyAlert = true;
+      }
+  },
+
+  //alert确定取消
+  async alertCancel ({dispatch, commit, state}, o) {
+
+    state.goodsDetailDt.buyAlert = false;
+  },
+
+  //alert确定提交
+  async alertCommit ({dispatch, commit, state}, o) {
+    if(state.goodsDetailDt.check1 && state.goodsDetailDt.check2){
+   
+      let para={
+        cid: state.goodsDetailDt.cid,
+        count: state.goodsDetailDt.count,
+      }
+
+      let res = await api.y_goods_detail.nowBuy(para)
+      if (res.success) {
+        state.goodsDetailDt.buyAlert = false;
+        o.router.push({path:`/y-pay?oid=${res.data.oid}`})
+      } else {
+        toast(res.msg, 'warn')
+      }
+    }else{
+      toast('请选择同意选项', 'warn')
+    }
+
+  },
+  
+  //加入收藏
+  async collectChange ({dispatch, commit, state}, o) {
+    console.log("isCollect:",state.goodsDetail.isCollect)
+    if(state.goodsDetail.isCollect == false){
+      console.log("isCollect11:",state.goodsDetail.isCollect)
+      state.goodsDetail.isCollect = true;
+      toast('收藏成功', 'correct')
+    }
+
+    let para = { 
+      cid: state.goodsDetail.cid,
+      count: state.goodsDetail.count
+    };
+    let res = await api.y_goods_detail.joinCollect(para)
+    //debugger;
+    if (res.success) {
+      // toast('获取订单数据成功', 'correct')
+      // commit(types.INIT_JOIN_COLLECT, res.data);
+      dispatch('getGoodsDetail');
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+  //取消收藏
+  async collectCancel ({dispatch, commit, state}, o) {
+    //debugger;
+    if(state.goodsDetail.isCollect == true){
+      state.goodsDetail.isCollect = false;
+      toast('取消收藏', 'correct')
+    }
+
+    let para = [{ 
+      cid: state.goodsDetail.cid,
+      count: state.goodsDetail.count 
+    }];
+    let res = await api.y_goods_detail.collectCancel(para)
+    //debugger;
+    if (res.success) {
+      // toast('获取订单数据成功', 'correct')
+      // commit(types.INIT_COLLECT_CANCEL, res.data);
+      dispatch('getGoodsDetail');
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+  
+
+
+}

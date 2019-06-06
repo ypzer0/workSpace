@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ZdQuestionDao">
+
+    <resultMap type="com.platform.entity.ZdQuestionEntity" id="ZdquestionMap">
+        <result property="id" column="id"/>
+        <result property="uId" column="u_id"/>
+        <result property="answerStatus" column="answer_status"/>
+        <result property="consultation" column="consultation"/>
+        <result property="checkStatus" column="check_status"/>
+        <result property="checkInfo" column="check_info"/>
+        <result property="helpInfo" column="help_info"/>
+        <result property="answerInfo" column="answer_info"/>
+        <result property="addTime" column="add_time"/>
+        <result property="backTime" column="back_time"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.platform.entity.ZdQuestionEntity">
+		select
+			`id`,
+			`u_id`,
+			`answer_status`,
+			`consultation`,
+			`check_status`,
+			`check_info`,
+			`help_info`,
+			`answer_info`,
+    		`add_time`,
+			`back_time`
+		from zd_question
+		where id = #{id}
+	</select>
+
+	<select id="queryList" resultType="com.platform.entity.ZdQuestionEntity">
+		SELECT
+			t1.`id`,
+			t1.`answer_status`,
+			t1.`consultation`,
+			t1.`check_status`,
+			t1.`check_info`,
+			t1.`help_info`,
+			t1.`answer_info`,
+			t2.username,
+			t2.gender,
+			t2.nickname,
+			t2.age,
+			t2.mobile,
+    		t1.`add_time`,
+			t1.`back_time`	
+		FROM
+			zd_question t1
+			left join zd_user t2 on t1.u_id=t2.id 
+		WHERE 1=1
+		<if test="nickname != null and nickname.trim() != ''">
+			AND t2.nickname LIKE concat('%',#{nickname},'%')
+		</if>
+		<if test="answerStatus != null and answerStatus.trim() != ''">
+			AND t1.answer_status=#{answerStatus}
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by t1.`add_time` desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from zd_question t1
+			left join zd_user t2 on t1.u_id=t2.id 
+		WHERE 1=1
+        <if test="nickname != null and nickname.trim() != ''">
+            AND t2.nickname LIKE concat('%',#{nickname},'%')
+        </if>
+        <if test="answerStatus != null and answerStatus.trim() != ''">
+			AND t1.answer_status=#{answerStatus}
+		</if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.ZdQuestionEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into zd_question(
+			`u_id`,
+			`answer_status`,
+			`consultation`,
+			`check_status`,
+			`check_info`,
+			`help_info`,
+			`answer_info`,
+			`add_time`,
+			`back_time`)
+		values(
+			#{uId},
+			#{answerStatus},
+			#{consultation},
+			#{checkStatus},
+			#{checkInfo},
+			#{helpInfo},
+			#{answerInfo},
+			#{addTime},
+			#{backTime})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.ZdQuestionEntity">
+		update zd_question 
+		<set>
+			<if test="uId != null">`u_id` = #{uId}, </if>
+			<if test="answerStatus != null">`answer_status` = #{answerStatus}, </if>
+			<if test="consultation != null">`consultation` = #{consultation}, </if>
+			<if test="checkStatus != null">`check_status` = #{checkStatus}, </if>
+			<if test="checkInfo != null">`check_info` = #{checkInfo}, </if>
+			<if test="helpInfo != null">`help_info` = #{helpInfo}, </if>
+			<if test="answerInfo != null">`answer_info` = #{answerInfo},</if>
+			<if test="addTime != null">`add_time` = #{addTime}, </if>
+			<if test="backTime != null">`back_time` = #{backTime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from zd_question where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from zd_question where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

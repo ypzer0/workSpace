@@ -1,0 +1,127 @@
+<template>
+  <div :better-scroll="true" class="box">
+    <div class="page-header border-1px-bottom" slot="top">
+      <div class="header-left" @click="$back">
+        <i class="iconfont">&#xe601;</i>
+      </div>
+      <h3>客服</h3>
+      <div class="header-right">
+        <!-- <span @click="SaveAddr">保存</span> -->
+      </div>
+    </div>
+
+    <div class="service-box">
+      <div class="service-qq" align="center">
+        <img class="service-qq-img" src="../../static/images/qq.png"/>
+        <p class="service-qq-mark">客服QQ</p>
+        <p class="service-qq-mark">{{service.qq}}</p>
+      </div>
+      <div class="service-qq" align="center">
+        <img class="service-qq-img" src="../../static/images/wechat.png"/>
+        <p class="service-qq-mark">客服QQ</p>
+        <p class="service-qq-mark">{{service.wechart}}</p>
+      </div>
+      <div class="service-qq" align="center">
+        <img class="service-qq-img" src="../../static/images/phone.png"/>
+        <p class="service-qq-mark">客服QQ</p>
+        <p class="service-qq-mark">{{service.phone}}</p>
+      </div>
+    </div>
+    
+  </div>
+    
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default {
+  computed: {
+    ...mapState('y_service', ['service'])
+  },
+  components: {
+
+  },
+  methods:{
+    ...mapActions('y_service', ['getService']),
+
+  },
+  created(){
+
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .box{
+    width: 100%;
+    height: 100%;
+    background: #eeeded;
+    .pay-btn{
+      width: 100%;
+      height: 98px;
+      margin: 0 auto;
+      text-align: center;
+      line-height: 98px;
+      font-size: 36px;
+      color: #ffffff;
+      position: fixed;
+      bottom: 0;
+      // background: #2eacef;
+      background: -webkit-linear-gradient(left, #ff6839 , #ff4439); /* Safari 5.1 - 6.0 */
+      background: -o-linear-gradient(right, #ff6839, #ff4439); /* Opera 11.1 - 12.0 */
+      background: -moz-linear-gradient(right, #ff6839, #ff4439); /* Firefox 3.6 - 15 */
+      background: linear-gradient(to right, #ff6839 , #ff4439); /* 标准的语法 */
+    }
+  }
+  .page-header{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 88px;
+    background: #ff4439;
+    .header-left{
+      position: absolute;
+      top:50%;
+      left:30px;
+      color: #fff;
+      transform: translateY(-50%);
+    }
+    h3{
+      font-size: 30px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .header-right{
+      position: absolute;
+      top:50%;
+      right:30px;
+      transform: translateY(-50%);
+      span{
+        color:#666;
+      }
+    }
+  }
+
+.service-box{
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30px;
+  .service-qq{
+    width: 218px;
+    height: 218px;
+    background: #fff;
+    border-radius: 6px;
+    .service-qq-img{
+      height: 68px;
+      margin-top: 23px;
+    }
+    .service-qq-mark{
+        font-size: 28px;
+        margin-top: 20px;
+    }
+  }
+  }
+
+ 
+</style>

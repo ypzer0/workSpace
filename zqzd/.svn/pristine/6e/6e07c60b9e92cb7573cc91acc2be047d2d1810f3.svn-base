@@ -1,0 +1,47 @@
+export default {
+  //多个商品
+  goodsList:[],
+
+  //买家上传上品页面数据
+  uploadGoods:{
+
+  },
+
+  //获取手机号是否已经绑定手机
+  getMobile:{
+    
+  },
+
+  //通通过手机号获取短信验证码
+  mobileSend:{
+
+  },
+
+  //验证短信验证码
+  mobileValidate:{
+
+  },
+
+  //卖家上传商品页面提交资料
+  saleBatchAdd:{
+
+  },
+
+  cateDt:{
+    gid: 0,
+    mobile: "",
+    code: "",
+  },
+
+//是否展示验证手机
+//是否显示隐藏
+  isShowHide:{
+    isShowValiPhone: false
+  }
+
+  //验证手机数据
+  ,valiPhoneData: {
+    phone: '',
+    code: ''
+  }
+}

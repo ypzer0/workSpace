@@ -1,0 +1,141 @@
+package com.platform.dto;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import cn.afterturn.easypoi.excel.annotation.Excel;
+
+public class CouponCommissionInfoDto implements Serializable{
+
+
+	private static final long serialVersionUID = 1L;
+
+	private Integer id;
+	//客户Id
+	private Integer uid;
+	//用户编号
+	@Excel(name = "用户Id")
+	private String uCode;
+	//用户昵称
+	@Excel(name = "用户昵称")
+	private String nickname;
+	//下级用户编号
+	@Excel(name = "下级Id")
+	private String fuCose;
+	//下级用户昵称
+	@Excel(name = "下级昵称")
+	private String fnickname;
+	//订单总价
+	@Excel(name = "消费金额")
+	private BigDecimal orderPrice;
+	//变动金额
+	@Excel(name = "表动数量")
+	private BigDecimal money;
+	//备注
+	@Excel(name = "备注")
+	private String remark;
+	//支付时间
+	@Excel(name = "消费时间")
+	private Date payTime;
+	private String pdate;
+	//佣金汇总
+	@Excel(name = "佣金汇总")
+	private BigDecimal totalMoney;
+	//用户类型
+	@Excel(name = "用户类型")
+	private String platType;
+
+
+
+
+
+
+	public String getPdate() {
+		String Date = ""; 
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date = df.format(payTime);
+		return Date;
+	}
+	public BigDecimal getTotalMoney() {
+		return totalMoney;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public Integer getUid() {
+		return uid;
+	}
+	public void setUid(Integer uid) {
+		this.uid = uid;
+	}
+	public BigDecimal getMoney() {
+		return money;
+	}
+	public void setMoney(BigDecimal money) {
+		this.money = money;
+	}
+	
+	public String getRemark() {
+		return remark;
+	}
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	public String getNickname() {
+		return nickname;
+	}
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	public String getuCode() {
+		return uCode;
+	}
+	public void setuCode(String uCode) {
+		this.uCode = uCode;
+	}
+	public String getPlatType() {
+		return platType;
+	}
+	public void setPlatType(String platType) {
+		this.platType = platType;
+	}
+	public String getFnickname() {
+		return fnickname;
+	}
+	public void setFnickname(String fnickname) {
+		this.fnickname = fnickname;
+	}
+	public String getFuCose() {
+		return fuCose;
+	}
+	public void setFuCose(String fuCose) {
+		this.fuCose = fuCose;
+	}
+	public BigDecimal getOrderPrice() {
+		return orderPrice;
+	}
+	public void setOrderPrice(BigDecimal orderPrice) {
+		this.orderPrice = orderPrice;
+	}
+	public Date getPayTime() {
+		return payTime;
+	}
+	public void setPayTime(Date payTime) {
+		this.payTime = payTime;
+	}
+	@Override
+	public String toString() {
+		return "CouponCommissionInfoDto [id=" + id + ", uid=" + uid + ", uCode=" + uCode + ", nickname=" + nickname
+				+ ", fuCose=" + fuCose + ", fnickname=" + fnickname + ", orderPrice=" + orderPrice + ", money=" + money
+				+ ", remark=" + remark + ", payTime=" + payTime + ", pdate=" + pdate + ", totalMoney=" + totalMoney
+				+ ", platType=" + platType + "]";
+	}
+	
+	
+
+}

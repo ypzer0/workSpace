@@ -1,0 +1,35 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : yangpeng
+ Source Server Type    : MySQL
+ Source Server Version : 50535
+ Source Host           : localhost:3306
+ Source Schema         : zuoduan
+
+ Target Server Type    : MySQL
+ Target Server Version : 50535
+ File Encoding         : 65001
+
+ Date: 30/05/2019 11:30:05
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for zd_report
+-- ----------------------------
+DROP TABLE IF EXISTS `zd_report`;
+CREATE TABLE `zd_report`  (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '用户ID',
+  `report_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '报表名称',
+  `check_status` tinyint(1) UNSIGNED NULL DEFAULT 1 COMMENT '是否检查过  0 :没有,  1: 有',
+  `report_path` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '报告文件路径(加密)',
+  `add_time` datetime not null COMMENT '报告时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `report_name`(`report_name`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+SET FOREIGN_KEY_CHECKS = 1;

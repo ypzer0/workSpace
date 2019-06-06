@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>欢迎页</title>
+    #parse("sys/header.html")
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+	
+	<style>
+		.pro_name a{color: #4183c4;}
+		.osc_git_title{background-color: #fff;}
+		.osc_git_box{background-color: #fff;}
+		.osc_git_box{border-color: #E3E9ED;margin: 20px;}
+		.osc_git_info{color: #666;}
+		.signin-info .q-text{font-size: 24px;color: black;}
+		.osc_git_main a{color: #9B9B9B;}
+	</style>
+</head>
+<body>
+<div class="wrapper wrapper-content  animated fadeInRight" id="rrapp" v-cloak>
+
+    <div class="ibox ">
+        <div class="ibox-title">
+            <h1>优惠劵微商城</h1>
+        </div>
+        <div class="ibox-content">
+        
+			#if($shiro.hasPermission("couponeptordereday:list"))
+            <div class="signin-info">
+                <ul class="m-b">
+                    <li class="q-text">近期下单情况</li>
+                    <li>
+						<i-select :model.sync="model1" style="width:200px" v-model="seDay" @on-change="seChange">
+					        <i-option v-for="item in orderList" :value="item.value" >{{ item.label }}</i-option>
+					    </i-select>
+    				</li>
+                </ul>
+            </div>
+			<div id="main" style="width: 80%;height:400px;"></div>
+			
+            <div class="signin-info">
+                <ul>
+                    <li class="q-text">订单量增减情况</li>
+                </ul>
+            </div>
+			<div id="orderEveryDay" style="width: 80%;height:400px;"></div>
+            #end
+            
+			#if($shiro.hasPermission("couponeptusereday:list"))
+            <div class="signin-info">
+                <ul>
+                    <li class="q-text">近期用户活跃情况</li>
+                </ul>
+            </div>
+			<div id="userRpt" style="width: 80%;height:400px;"></div>
+			#end
+			
+        </div>
+        
+    </div>
+</div>
+<script>
+	window.nowPagePower = {};
+</script>
+
+#if($shiro.hasPermission("couponeptordereday:list"))
+<script>
+	window.nowPagePower.OrderPower = true;
+</script>
+#end
+
+#if($shiro.hasPermission("couponeptusereday:list"))
+<script>
+	window.nowPagePower.CustomerPower = true;
+</script>
+#end
+
+
+<script src="${rc.contextPath}/js/sys/main.js?_${date.systemTime}"></script>
+</body>
+</html>

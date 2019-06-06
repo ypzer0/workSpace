@@ -1,0 +1,118 @@
+package com.platform.entity;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ * 订单明细
+ * @author Administrator
+ *
+ */
+public class CouponOrderDetailVo implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    //
+    private Integer id;
+    //订单id
+    private Integer orderId;
+    //订单号
+    private String orderSn;
+    //商品id
+    private Integer goodsId;
+    //订单号
+    private String goodsSn;
+    //购买数量
+    private Integer buyCount;
+    //购买价格
+    private BigDecimal buyPrice;
+    //添加时间
+    private Date addTime;
+    
+	@Override
+	public String toString() {
+		return "{id:" + id + ", orderId:" + orderId + ", orderSn:" + orderSn + ", goodsId:" + goodsId + ", goodsSn:"
+				+ goodsSn + ", buyCount:" + buyCount + ", buyPrice:" + buyPrice + ", addTime:" + addTime + "}";
+	}
+
+
+	public Integer getId() {
+		return id;
+	}
+
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+
+	public Integer getOrderId() {
+		return orderId;
+	}
+
+
+	public void setOrderId(Integer orderId) {
+		this.orderId = orderId;
+	}
+
+
+	public String getOrderSn() {
+		return orderSn;
+	}
+
+
+	public void setOrderSn(String orderSn) {
+		this.orderSn = orderSn;
+	}
+
+
+	public Integer getGoodsId() {
+		return goodsId;
+	}
+
+
+	public void setGoodsId(Integer goodsId) {
+		this.goodsId = goodsId;
+	}
+
+
+	public String getGoodsSn() {
+		return goodsSn;
+	}
+
+
+	public void setGoodsSn(String goodsSn) {
+		this.goodsSn = goodsSn;
+	}
+
+
+	public Integer getBuyCount() {
+		return buyCount;
+	}
+
+
+	public void setBuyCount(Integer buyCount) {
+		this.buyCount = buyCount;
+	}
+
+
+	public BigDecimal getBuyPrice() {
+		return buyPrice;
+	}
+
+
+	public void setBuyPrice(BigDecimal buyPrice) {
+		this.buyPrice = buyPrice;
+	}
+
+
+	public Date getAddTime() {
+		return addTime;
+	}
+
+
+	public void setAddTime(Date addTime) {
+		this.addTime = addTime;
+	}
+    
+}

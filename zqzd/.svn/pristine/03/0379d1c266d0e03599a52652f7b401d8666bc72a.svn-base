@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ApiFxUserMapper">
+
+    <resultMap type="com.platform.entity.CouponFxUserVo" id="CouponfxUserMap">
+        <result property="id" column="id"/>
+        <result property="uId" column="u_id"/>
+        <result property="puid" column="puid"/>
+        <result property="addTime" column="add_time"/>
+        <result property="fromType" column="from_type"/>
+        <result property="nickname" column="nickname"/>
+        <result property="uCode" column="u_code"/>
+        <result property="platType" column="plat_type"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.platform.entity.CouponFxUserVo">
+		select
+			`id`,
+			`u_id`,
+			`puid`,
+			`add_time`,
+			`from_type`
+		from fx_user
+		where id = #{id}
+	</select>
+
+	<select id="queryList" resultType="com.platform.entity.CouponFxUserVo">
+		select
+    		f.`id`,
+    		f.`u_id`,
+    		f.`puid`,
+    		f.`add_time`,
+    		f.`from_type`,
+    		u.`nickname`,
+    		us.`nickname` as `pnickname`,
+    		ub.`u_code`,
+    		ubp.`u_code` as `pu_code`,
+    		u.`plat_type`
+		from fx_user f 
+		left join coupon_user u on f.u_id = u.id
+		left join coupon_user us on f.puid = us.id
+		left join coupon_user_code_bom ub on ub.u_id = u.id
+		left join coupon_user_code_bom ubp on ubp.u_id = us.id
+		WHERE 1=1
+		<if test="name != null and name.trim() != ''">
+			AND (u.nickname LIKE concat('%',#{name},'%') or ub.`u_code` = #{name})
+		</if>
+		<if test="puname != null and puname.trim() != ''">
+			AND (u.nickname LIKE concat('%',#{puname},'%') or ub.`u_code` = #{puname})
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from fx_user f 
+		left join coupon_user u on f.u_id = u.id
+		left join coupon_user us on f.puid = us.id
+		left join coupon_user_code_bom ub on ub.u_id = u.id
+		left join coupon_user_code_bom ubp on ubp.u_id = us.id
+		WHERE 1=1
+        <if test="name != null and name.trim() != ''">
+			AND (u.nickname LIKE concat('%',#{name},'%') or ub.`u_code` = #{name})
+		</if>
+		<if test="puname != null and puname.trim() != ''">
+			AND (u.nickname LIKE concat('%',#{name},'%') or ub.`u_code` = #{name})
+		</if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.CouponFxUserVo" useGeneratedKeys="true" keyProperty="id">
+		insert into fx_user(
+			`u_id`,
+			`puid`,
+			`add_time`,
+			`from_type`)
+		values(
+			#{uId},
+			#{puid},
+			#{addTime},
+			#{fromType})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.CouponFxUserVo">
+		update fx_user 
+		<set>
+			<if test="uId != null">`u_id` = #{uId}, </if>
+			<if test="puid != null">`puid` = #{puid}, </if>
+			<if test="addTime != null">`add_time` = #{addTime}, </if>
+			<if test="fromType != null">`from_type` = #{fromType}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from fx_user where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from fx_user where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -1,0 +1,80 @@
+package com.platform.service;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSONArray;
+import com.platform.dao.ApiCollectMapper;
+import com.platform.dto.CidDto;
+import com.platform.entity.CouponCollectVo;
+import com.platform.entity.UserVo;
+import com.platform.util.ApiPageUtils;
+import com.platform.utils.Rp;
+
+@Service
+public class ApiCollectService {
+	@Autowired 
+	private ApiCollectMapper Mapper;
+	
+	public Rp addBatch(UserVo loginUser,Integer[] cids ) {
+		
+		if (cids == null || cids.length == 0) {
+			return Rp.error("请选择收藏的商品！");
+		}
+		for (Integer cid : cids) {	
+			CouponCollectVo collectVo = new CouponCollectVo();
+			collectVo.setAddTime(new Date());
+			collectVo.setIsAttention(0);
+			collectVo.setTypeId(0);
+			collectVo.setUserId(loginUser.getId());
+			collectVo.setValueId(cid);
+			Mapper.save(collectVo);
+		}
+		return Rp.ok().putDt("isCollect", true);
+	}
+	
+	public Rp remove(UserVo loginUser,List<CidDto> CidDto ) {
+		if (CidDto == null || CidDto.size() == 0) {
+			return Rp.error("请选择取消收藏的商品！");
+		}
+		for (CidDto cid : CidDto) {	
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("cid", cid.getCid());
+			map.put("uid", loginUser.getId());
+			Mapper.remove(map);
+			
+		}
+		return Rp.ok("成功！").putDt("isCollect", false);
+	}
+	
+	public Rp list(UserVo loginUser,Integer page,Integer size) {
+		Map<String,Object> params=new HashMap<>();
+		params.put("uid", loginUser.getId());
+		params.put("offset", page - 1);
+		params.put("limit", size);
+		List<CouponCollectVo> list = Mapper.queryByUid(params);
+		Integer total = Mapper.queryTotalByUid(loginUser.getId());
+		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+		for (CouponCollectVo couponCollectVo : list) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("name", couponCollectVo.getParentname()+"|"+couponCollectVo.getName());
+			map.put("price", couponCollectVo.getSalePrice());
+			map.put("cid", couponCollectVo.getcId());
+			map.put("gid", couponCollectVo.getValueId());
+			map.put("checkboxItem", false);
+			map.put("img",couponCollectVo.getPicUrl());
+			dataList.add(map);
+		}
+		ApiPageUtils apiPageUtils=new ApiPageUtils(dataList, total, size, page);
+		Rp rt = Rp.ok();
+		rt.put("data",apiPageUtils);
+		return rt;
+	}
+	
+}

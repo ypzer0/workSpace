@@ -1,0 +1,58 @@
+<template>
+  <div class="transaction-result" v-if="trape.show">
+    <i class="iconfont" v-html="trape.suc ? '&#xe646;' : '&#58967;'"></i>
+    <h4>{{trape.msg}}</h4>
+    
+    <m-button @click.native="reloadMethod" v-if="!trape.suc" class="reflesh">
+      <span>刷新</span>
+    </m-button>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+export default {
+  props: ['trape'],
+  inject: ['reload'],
+  methods:{
+    reloadMethod(){
+      window.location.reload();
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .transaction-result{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 355px;
+    margin-bottom: 10px;
+    background: white;
+    i{
+      display: inline-block;
+      width:175px;
+      height: 175px;
+      line-height: 175px;
+      text-align: center;
+      font-size: 175px;
+      color:#00c800;
+    }
+    h4{
+      font-size: 34px;
+      color:#666;
+    }
+    .reflesh{
+      margin-top: 30px;
+      padding-left: 40px;
+      padding-right: 40px;
+      font-size: 12px;
+      border:none;
+      background-color: red;
+      span{
+        color:white;
+      }
+    }
+  }
+</style>

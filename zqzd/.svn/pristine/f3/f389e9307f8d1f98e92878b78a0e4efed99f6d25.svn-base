@@ -1,0 +1,110 @@
+<template>
+  <page slot="top">
+    <div class="page-header border-1px-bottom" slot="top">
+      <!-- <div class="header-left" @click="$back">
+        <i class="iconfont">&#xe601;</i>
+      </div> -->
+      <h3>惠友圈</h3>
+      <div class="header-right">
+        <!-- <span @click="SaveAddr">保存</span> -->
+      </div>
+    </div>
+    <goods-search slot="top"></goods-search>
+    <goods-content
+        @selectSubList="selectSubList" 
+        @selectList="selectList"
+        v-if="this.homeHide == true"
+        ></goods-content>
+        <goods-content-sub-list-all v-if="this.homeHide == false" :goodsList="goodsList"></goods-content-sub-list-all>
+        <goods-hide @click-tab="clickBtnHide" v-if="this.homeHide == true"></goods-hide>
+        <goods-show @click-hide="clickBtnShow" v-if="this.homeHide == false"></goods-show>
+  </page>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapActions} from 'vuex'
+import tabbar from '../common/tabbar'
+import goodsSearch from './goods-search'
+import goodsContent from './goods-content'
+import goodsHide from './goods-hide'
+import goodsShow from './goods-show'
+import goodsContentSubListAll from './goods-content-sub-list-all'
+export default{
+  data () {
+    return {
+      homeHide: true,
+    }
+  },
+  computed: {
+    ...mapState('y_goods_home', ['goodsList'])
+  },
+  components: {
+    goodsSearch,
+    goodsContent,
+    tabbar,
+    goodsHide,
+    goodsShow,
+    goodsContentSubListAll,
+  },
+  methods: {
+    ...mapActions('y_goods_home', ['getGoodsListByCid', 'getgoodsNavList']),
+    selectSubList (o) {
+      this.$go(`/goods-by-category?pid=${o.parent.id}&sid=${o.sub.id}`)
+    },
+    selectList(o){
+      this.category.currentCategory = o;
+    },
+
+    //接收伸缩显示隐藏事件
+    clickBtnHide:function(){
+      this.homeHide = false;
+    },
+
+    clickBtnShow:function(){
+      this.homeHide = true;
+    },
+
+  },
+  created () {
+    this.getGoodsListByCid();
+    this.getgoodsNavList();
+  }
+}
+</script>
+
+
+<style lang="less" scoped>
+.page-header{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 88px;
+    // background: #2eacef;
+    background: -webkit-linear-gradient(left, #ff6839 , #ff4439); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(right, #ff6839, #ff4439); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(right, #ff6839, #ff4439); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to right, #ff6839 , #ff4439); /* 标准的语法 */
+    .header-left{
+      position: absolute;
+      top:50%;
+      left:30px;
+      color: #fff;
+      transform: translateY(-50%);
+    }
+    h3{
+      font-size: 30px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .header-right{
+      position: absolute;
+      top:50%;
+      right:30px;
+      transform: translateY(-50%);
+      span{
+        color:#666;
+      }
+    }
+  }
+  </style>

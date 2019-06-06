@@ -1,0 +1,89 @@
+<template>
+  <div>
+    <ul class="home-nav">
+      <li class="home-nav-li" :class="{active:index == num}" v-for='(item,index) in goodsCategory' :key="index" @click="clickTab(index,item)">{{item.name}}</li>
+    </ul>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import Vue from 'vue'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
+export default {
+  data (){
+    return{
+      num: 0,
+      tabList:[
+        {
+          id: 0,
+          name: "全部"
+        },
+        {
+          id: 1,
+          name: "基因检测"
+        }
+      ],
+    }
+  },
+
+  computed: {
+    ...mapState('z_home', ['goodsCategory'])
+  },
+  components: {
+    
+  },
+  methods: {
+    ...mapActions('z_home', ['getGoodsCategory']),
+    clickTab:function(index,item){
+      console.log("num:", this.num);
+      console.log("item:", item);
+      this.getGoodsCategory({cId : item.id})
+
+      this.num = index;
+      this.$emit('click-tab', { i : index, item : item });
+    }
+  },
+  created() {
+    //this.getGoodsCategory();
+    /** let that = this;
+    that.getGoodsCategory().then(res => {
+      if(res.success){
+        let cid = res.data.categoryList[0].id;
+        that.getGoodsCategory(
+          {cId : cid} );
+      }
+    });*/
+  },
+  activated(){
+
+  },
+  
+}
+</script>
+
+<style lang="less" scoped>
+  .home-banner{
+    width: 100%;
+    height: 310px;
+    margin: 0 auto;
+    .home-banner-img{
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .home-nav{
+    display: flex;
+    justify-content: space-around;
+    .home-nav-li{
+      font-size: 30px;
+      padding: 36px 0;
+    }
+  }
+
+  .active{
+    color: #15a396;
+    border-bottom: 4px solid #15a396;
+  }
+</style>

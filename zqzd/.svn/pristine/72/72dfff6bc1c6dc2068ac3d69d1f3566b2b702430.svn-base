@@ -1,0 +1,136 @@
+package com.platform.controller;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.platform.dto.UpdateCreditDto;
+import com.platform.entity.CouponUserCreditInfoEntity;
+import com.platform.service.CouponUserCreditInfoService;
+import com.platform.utils.PageUtils;
+import com.platform.utils.Query;
+import com.platform.utils.R;
+
+/**
+ * Controller
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-23 10:55:21
+ */
+@RestController
+@RequestMapping("couponusercreditinfo")
+public class CouponUserCreditInfoController extends AbstractController{
+    @Autowired
+    private CouponUserCreditInfoService CouponuserCreditInfoService;
+
+    /**
+     * 查看列表
+     */
+    @RequestMapping("/list")
+    @RequiresPermissions("couponusercreditinfo:list")
+    public R list(@RequestParam Map<String, Object> params) {
+        //查询列表数据
+        Query query = new Query(params);
+        
+        List<CouponUserCreditInfoEntity> CouponuserCreditInfoList = CouponuserCreditInfoService.queryList(query);
+        int total = CouponuserCreditInfoService.queryTotal(query);
+
+        PageUtils pageUtil = new PageUtils(CouponuserCreditInfoList, total, query.getLimit(), query.getPage());
+        
+        R creditSum = CouponuserCreditInfoService.QueryCreditCountSum(query);
+       
+        return R.ok().put("page", pageUtil).put("total", creditSum);
+    }
+
+    /**
+     * 查看信息
+     */
+    @RequestMapping("/info/{id}")
+    @RequiresPermissions("couponusercreditinfo:info")
+    public R info(@PathVariable("id") Integer id) {
+        CouponUserCreditInfoEntity CouponuserCreditInfo = CouponuserCreditInfoService.queryObject(id);
+
+        return R.ok().put("CouponuserCreditInfo", CouponuserCreditInfo);
+    }
+
+    /**
+     * 保存
+     */
+    @RequestMapping("/save")
+    @RequiresPermissions("couponusercreditinfo:save")
+    public R save(@RequestBody CouponUserCreditInfoEntity CouponuserCreditInfo) {
+        CouponuserCreditInfoService.save(CouponuserCreditInfo);
+        return R.ok();
+    }
+
+    /**
+     * 修改
+     */
+    @RequestMapping("/update")
+    @RequiresPermissions("couponusercreditinfo:update")
+    public R update(@RequestBody CouponUserCreditInfoEntity CouponuserCreditInfo) {
+        CouponuserCreditInfoService.update(CouponuserCreditInfo);
+
+        return R.ok();
+    }
+
+    /**
+     * 删除
+     */
+    @RequestMapping("/delete")
+    @RequiresPermissions("couponusercreditinfo:delete")
+    public R delete(@RequestBody Integer[] ids) {
+        CouponuserCreditInfoService.deleteBatch(ids);
+
+        return R.ok();
+    }
+
+    /**
+     * 查看所有列表
+     */
+    @RequestMapping("/queryAll")
+    public R queryAll(@RequestParam Map<String, Object> params) {
+
+        List<CouponUserCreditInfoEntity> list = CouponuserCreditInfoService.queryList(params);
+
+        return R.ok().put("list", list);
+    }
+    
+
+    /**
+     * 修改信用分
+     */
+    @RequestMapping("/updateCredit")
+    @RequiresPermissions("couponusercreditinfo:updateCredit")
+    @Transactional
+    public R updateCredit(@RequestBody UpdateCreditDto updateCreditDto) {
+    	logger.info(updateCreditDto.toString());
+        R rtR = CouponuserCreditInfoService.updateCredit(updateCreditDto,getUserId().intValue());
+        return rtR;
+    }
+    
+    /**
+     * 信用分更多信息查询
+     *
+     */
+    @RequestMapping("/creditMsg")
+    @RequiresPermissions("couponuser:creditMsg")
+    public R creditMsg(@RequestParam Map<String, Object> params) {
+		R cuc= CouponuserCreditInfoService.creditChangeMsg(params, getUserId().intValue());
+		
+		return cuc; 
+	}
+    
+    
+    
+    
+}

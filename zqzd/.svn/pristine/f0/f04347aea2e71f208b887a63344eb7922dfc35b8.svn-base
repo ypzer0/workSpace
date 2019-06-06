@@ -1,0 +1,115 @@
+<template>
+  <div slot="top" class="box">
+    <div class="page-header" slot="top">
+      <div class="header-left" @click="$back">
+        <i class="iconfont">&#xe601;</i>
+      </div> 
+      <h3>{{goodsClassifyNavList.titleName}}</h3>
+      <div class="header-right">
+        <!-- <span @click="SaveAddr">保存</span> -->
+      </div>
+    </div>
+    <goods-search></goods-search>
+    <goods-list-nav :goodsClassifyNavList="goodsClassifyNavList" @click-tab="goodsTab"></goods-list-nav>
+    <goods-content-sub-list-all :goodsListContent="goodsListContent"></goods-content-sub-list-all>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapActions} from 'vuex'
+import goodsSearch from './goods-search'
+import goodsListNav from './goods-list-nav'
+import goodsContentSubListAll from './goods-content-sub-list-all'
+export default{
+  data () {
+    return {
+      categoryId: this.$route.query.cid
+    }
+  },
+  computed: {
+    ...mapState('y_goods_home_classky_list', ['goodsClassifyNavList', 'goodsListContent'])
+  },
+  components: {
+    goodsSearch,
+    goodsListNav,
+    goodsContentSubListAll,
+  },
+  methods: {
+    ...mapActions('y_goods_home_classky_list', ['getgoodsClassifyNavList', 'getGoodsListContent']),
+    goodsTab(dt){
+     console.log("dt:",dt)
+      let cid = dt.item.id;
+      console.log("2级cid:",cid)
+      //将id传给列表内容
+      this.getGoodsListContent(
+        {cid : cid} );
+   }
+
+
+  },
+  created () {
+
+    this.getgoodsClassifyNavList({
+      cid: this.categoryId
+    }).then(res => {
+      console.log("res:",res);
+      //首次加载默认显示第一个的列表内容
+      if(res.success){
+        if(res.data.goodsClassNav.length != 0){
+          
+          let cid = res.data.goodsClassNav[0].id;
+          //console.log("2级cid:",cid);
+          this.getGoodsListContent({
+            cid : cid,
+          });
+
+        }
+      }
+    });
+  }
+}
+</script>
+
+
+<style lang="less" scoped>
+.box{
+  background: #fff;
+}
+.page-header{
+    // position: relative;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 88px;
+    // background: #2eacef;
+    background: -webkit-linear-gradient(left, #ff6839 , #ff4439); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(right, #ff6839, #ff4439); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(right, #ff6839, #ff4439); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to right, #ff6839 , #ff4439); /* 标准的语法 */
+    .header-left{
+      position: absolute;
+      top:50%;
+      left:30px;
+      color: #fff;
+      transform: translateY(-50%);
+    }
+    h3{
+      font-size: 30px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .header-right{
+      position: absolute;
+      top:50%;
+      right:30px;
+      transform: translateY(-50%);
+      span{
+        color:#666;
+      }
+    }
+  }
+  </style>

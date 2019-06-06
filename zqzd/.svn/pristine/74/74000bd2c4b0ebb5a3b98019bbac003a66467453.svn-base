@@ -1,0 +1,33 @@
+import * as types from './mutation-types'
+import { api } from '@/service/api'
+import axios from 'axios'
+import {toast} from '@/libs/cube-ui'
+
+export const actions = {
+
+  async saveFeed ({commit, state}) {
+    if (state.feedForm.index == 0){
+        toast("请选择反馈类型", 'warn')
+        return ;
+    }
+    if (state.feedForm.content == '' || state.feedForm.content.trim() == '') {
+        toast("请输入反馈内容", 'warn')
+        return ;
+    }
+    if (state.feedForm.mobile == '') {
+        toast("请输入手机号码", 'warn')
+        return ;
+    }
+    let res = await api.feed.add(state.feedForm)
+    if (res.success) {
+      toast("谢谢！你的建议提交成功！", 'success')
+    }
+    else{
+      toast("提交失败！", 'error')
+    }
+    return res;
+  },
+  
+
+  
+}

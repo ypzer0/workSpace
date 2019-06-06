@@ -1,0 +1,62 @@
+<template>
+  <div class="stair-classify-box">
+    <ul class="stair-classify">
+      <li class="stair-classify-li" :class="{active:index == num}" v-for='(item,index) in parentClassfy' :key="index" @click="stairClassifyNav(item, index)">{{item.name}}</li>
+    </ul>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapActions} from 'vuex'
+export default{
+  data(){
+    return{
+      num: 0,
+      epmiId: "",
+      //stairClassify: ["全部订单","等待付款","付款完成"]
+    }
+  },
+  computed: {
+    ...mapState('y_home', ['parentClassfy']),
+  },
+  components: {
+
+  }, 
+  methods: {
+   stairClassifyNav:function(item, index){
+     console.log("item:",item);
+     this.num = index;
+     //this.epmiId = homeClassify.epmi.id;
+     //console.log("epmiId:",this.epmiId)
+     this.$emit('click-tab', { i : index, item: item });
+   },
+  },
+  created () {
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.stair-classify-box{
+  height: 100%;
+  .stair-classify{
+    width: 200px;
+    height: 100%;
+    background: #f7f7f7;
+    .stair-classify-li{
+      width: 100%;
+      height: 100px;
+      border-bottom: 1px solid #e5e5e5;
+      line-height: 100px;
+      text-align: center;
+      font-size: 32px;
+    }
+  }
+}
+
+
+.active{
+  color: #2eacef;
+  background: #fff;
+}
+</style>

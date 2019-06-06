@@ -1,0 +1,32 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api'
+
+export const region = {
+
+    //获取省份
+    getProvince: (params) => {
+        return axios.request({
+        url: api.ProvinceQuery,
+        data: params,
+        method: 'post'
+        })
+    },
+    //获取城市
+    getCity: (params) => {
+        return axios.request({
+        url: api.CityQuery,
+        data: params,
+        method: 'post'
+        })
+    },
+    //获取区
+    getDistinct: (params) => {
+        return axios.request({
+        url: api.DistinctQuery,
+        data: params,
+        method: 'post'
+        })
+    },
+
+
+}

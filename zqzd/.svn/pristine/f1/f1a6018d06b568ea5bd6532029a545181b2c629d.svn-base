@@ -1,0 +1,64 @@
+package com.platform.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.dao.CouponEptUserEdayDao;
+import com.platform.entity.CouponEptUserEdayEntity;
+import com.platform.service.CouponEptUserEdayService;
+
+/**
+ * Service实现类
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-05-05 11:00:49
+ */
+@Service("CouponeptUserEdayService")
+public class CouponEptUserEdayServiceImpl implements CouponEptUserEdayService {
+    @Autowired
+    private CouponEptUserEdayDao CouponeptUserEdayDao;
+
+    @Override
+    public CouponEptUserEdayEntity queryObject(Integer id) {
+        return CouponeptUserEdayDao.queryObject(id);
+    }
+
+    @Override
+    public List<CouponEptUserEdayEntity> queryList(Map<String, Object> map) {
+        return CouponeptUserEdayDao.queryList(map);
+    }
+
+    @Override
+    public int queryTotal(Map<String, Object> map) {
+        return CouponeptUserEdayDao.queryTotal(map);
+    }
+
+    @Override
+    public int save(CouponEptUserEdayEntity CouponeptUserEday) {
+        return CouponeptUserEdayDao.save(CouponeptUserEday);
+    }
+
+    @Override
+    public int update(CouponEptUserEdayEntity CouponeptUserEday) {
+        return CouponeptUserEdayDao.update(CouponeptUserEday);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return CouponeptUserEdayDao.delete(id);
+    }
+
+    @Override
+    public int deleteBatch(Integer[] ids) {
+        return CouponeptUserEdayDao.deleteBatch(ids);
+    }
+    
+    @Override
+    public int updateRptCustomer(String btime) {
+        return CouponeptUserEdayDao.updateRptCustomer(btime);
+    }
+}

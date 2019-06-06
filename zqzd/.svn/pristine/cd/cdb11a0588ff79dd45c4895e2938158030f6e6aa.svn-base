@@ -1,0 +1,104 @@
+<template>
+	<div class="bind-account" style="display: none;">
+		<div class="bind-account-bg" @click="hideBinding"></div>
+    <div class="bind-account-alert-box">
+      <div class="bind-account-alert-box-title">绑定提现账号</div>
+      <input class="bind-account-mark" type="text" placeholder="请输入微信号"/>
+      <input class="bind-account-mark" type="text" placeholder="请输入支付宝号"/>
+      <button class="bind-account-btn">验证</button>
+    </div>
+    
+	</div>
+</template>
+
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default {
+  props: [''],
+
+	data () {
+    return {
+     
+    }
+  },
+
+  computed: {
+    ...mapState('y_withdrawal', ['withdrawal'])
+  },
+  components: {
+    
+  },
+  methods:{
+    ...mapActions('y_withdrawal', ['hideBinding']),
+     //隐藏账号绑定弹窗
+    hideBinding () {
+      let withdrawalHide = this.withdrawal.withdrawalDisplay;
+      withdrawalHide = false;
+      this.$emit('click-tab', { dt : withdrawalHide});
+    },
+  },
+  created(){
+
+  }
+}
+</script>
+
+
+<style lang="less" scoped>
+.bind-account{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 99;
+  .bind-account-bg{
+    background: #333333;
+    width: 100%;
+    height: 100%;
+    background-size: 100%;
+    opacity: 0.4;
+    position: relative;
+  }
+  .bind-account-alert-box{
+    width: 550px;
+    height: 550px;
+    background: #ffffff;
+    position: absolute;
+    top: 30%;
+    left: 12%;
+    border-radius: 6px;
+    .bind-account-alert-box-title{
+      font-size: 36px;
+      text-align: center;
+      margin-top: 50px;
+      color: #ff4439;
+    }
+    .bind-account-mark{
+      width: 400px;
+      height: 78px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 50px;
+      background: #f7f7f7;
+      border: 1px solid #ff4439;
+      border-radius: 6px;
+      font-size: 30px;
+      color: #838383;
+      padding-left: 10px;
+    }
+    .bind-account-btn{
+      width: 400px;
+      height: 78px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 60px;
+      background: #ff4439;
+      border: 1px solid #ff4439;
+      border-radius: 6px;
+      font-size: 36px;
+      color: #fff;
+    }
+  }
+}
+</style>

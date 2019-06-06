@@ -1,0 +1,106 @@
+package com.platform.service;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.platform.dao.ApiIssueHandleMapper;
+import com.platform.dao.ApiOrderMapper;
+import com.platform.dao.ApiUserMapper;
+import com.platform.entity.CouponIssueHandleVo;
+import com.platform.entity.CouponOrderVo;
+import com.platform.entity.UserVo;
+import com.platform.util.ApiPageUtils;
+import com.platform.utils.Rp;
+
+@Service
+public class ApiIssueService {
+	@Autowired 
+	private ApiIssueHandleMapper imapper;
+	@Autowired 
+	private ApiOrderMapper omapper;
+	@Autowired
+	private ApiUserMapper umapper;
+	
+	
+	public Rp saleList(UserVo loginUser,Integer page,Integer size) {
+		Map<String,Object> params=new HashMap<>();
+		params.put("ccId", loginUser.getId());
+	
+		params.put("offset", page - 1);
+		params.put("limit", size);
+		
+		List<CouponIssueHandleVo> list=imapper.querySaleList(params);
+		
+		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+		
+		for (CouponIssueHandleVo sale : list) {
+			Map<String, Object> cMap = new HashMap<String, Object>();
+			cMap.put("name", sale.getName());
+			cMap.put("price", sale.getOrderPrice());
+			cMap.put("status", sale.getStatus());
+			cMap.put("statusName", sale.getStatus()==0?"待处理":"已处理");
+			cMap.put("time", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(sale.getAddTime()));
+			dataList.add(cMap);
+		}
+		ApiPageUtils apiPageUtils=new ApiPageUtils(dataList, imapper.querySaleTotal(params), size, page);
+		Rp rt = Rp.ok();
+		rt.put("data",apiPageUtils);
+		return rt;
+	}
+	
+	public Rp buylist(UserVo loginUser,Integer page,Integer size) {
+		Map<String,Object> params=new HashMap<>();
+		params.put("uid", loginUser.getId());
+	
+		params.put("offset", page - 1);
+		params.put("limit", size);
+		
+		List<CouponIssueHandleVo> list=imapper.queryBuyList(params);
+		
+		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+		
+		for (CouponIssueHandleVo buy : list) {
+			Map<String, Object> cMap = new HashMap<String, Object>();
+			cMap.put("name", buy.getName());
+			cMap.put("price", buy.getOrderPrice());
+			cMap.put("status", buy.getStatus());
+			cMap.put("statusName", buy.getStatus()==0?"待处理":"已处理");
+			cMap.put("time", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(buy.getAddTime()));
+			dataList.add(cMap);
+		}
+		ApiPageUtils apiPageUtils=new ApiPageUtils(dataList,imapper.queryBuyTotal(params), size, page);
+		Rp rt = Rp.ok();
+		rt.put("data",apiPageUtils);
+		return rt;
+	}
+	
+	public Rp add(UserVo loginUser,Integer oid,String msg) {
+		if (oid == null) {
+			return Rp.error("数据异常！");
+		}
+		if (msg == null || msg.trim() == "") {
+			return Rp.error("请填写申请原因！");
+		}
+		CouponOrderVo couponOrderVo=omapper.queryObject(oid);
+		UserVo userVo = umapper.queryObject(loginUser.getId());
+		CouponIssueHandleVo issueHandleVo = new CouponIssueHandleVo();
+		issueHandleVo.setAddTime(new Date());
+		issueHandleVo.setOrderSn(couponOrderVo.getOrderSn());
+		issueHandleVo.setReason(msg);
+		issueHandleVo.setStatus(0);
+		issueHandleVo.setUid(loginUser.getId());
+		issueHandleVo.setUname(userVo.getNickname());
+		imapper.save(issueHandleVo);
+		couponOrderVo.setOrderStatus(3);
+		couponOrderVo.setOrderType(1);
+		omapper.update(couponOrderVo);
+		return Rp.ok("成功");
+	}
+}

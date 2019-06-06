@@ -1,0 +1,6 @@
+export const REPORT_LIST = 'REPORT_LIST'
+export const REPORT_DOWNLOAD = 'REPORT_DOWNLOAD'
+export const REPORT_VIEW = 'REPORT_VIEW'
+
+
+

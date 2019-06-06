@@ -1,0 +1,75 @@
+<template>
+  <page page-background="white">
+    <checkout-header slot="top" :model="model"></checkout-header>
+    <address-item @update="update" :addrs="addrs" :model="model"></address-item>
+    <checkout-action @addShipAddr="addShipAddr" slot="bottom"></checkout-action>
+  </page>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+import addressItem from './common/address-item'
+import checkoutAction from './checkout-action'
+import checkoutHeader from './checkout-header'
+import {toast} from '@/libs/cube-ui'
+export default {
+  data(){
+    return{
+      addrs : [],
+      model : isNaN(parseInt(this.$route.params.mid)) ? 0 : parseInt(this.$route.params.mid)
+    };
+  },
+  computed :{
+
+  },
+  components: {
+    addressItem,
+    checkoutAction,
+    checkoutHeader
+  },
+  methods: {
+    ...mapActions('cart', ['getAddressList']),
+    update (p) {
+      this.$go('/address/update/' + p.id)
+    },
+    addShipAddr(){
+      this.$go('/address/update/0')
+    }
+  },
+  created(){
+    
+    var nowObj = this.$getGlobal();
+    var checkedAId = nowObj.SedAddrId;
+    this.getAddressList().then(res => {
+      for (let i = 0; i < res.length; i++) {
+        const ele = res[i];
+        if(ele.id == checkedAId){
+          ele.isCheck = true;
+          break;
+        }
+      }
+      this.addrs = res;
+    });
+
+  },
+  beforeRouteLeave (to, from, next) {
+    if (to.path.indexOf('/checkout') != -1) {
+      var checkedAId = 0;
+      for (let i = 0; i < this.addrs.length; i++) {
+        const ele = this.addrs[i];
+        if(ele.isCheck){
+          checkedAId = ele.id;
+          break;
+        }
+      }
+      if(checkedAId == 0){
+        toast('请选择收货地址', 'warn')
+      }
+      next()
+    }
+    else{
+      next()
+    }
+  }
+}
+</script>

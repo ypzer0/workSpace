@@ -1,0 +1,35 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api.js'
+export const user = {
+  login: (params) => {
+    
+    return axios.request({
+      url: api.Login,//'user/login',
+      data: params,
+      method: 'post'
+    })
+  },
+  wechatLogin: (params) => {
+    return axios.request({
+      url: api.Y_UserLogin,
+      data: params,
+      method: 'post'
+    })
+  },
+  getUserInfo: (params) => {
+    console.log("login-paras:");
+    console.log(params);
+    return axios.request({
+      url: 'user/getUserInfo',
+      data: params,
+      method: 'post'
+    })
+  },
+  updateUserInfo: (params) => {
+    return axios.request({
+      url: 'user/updateUserInfo',
+      data: params,
+      method: 'post'
+    })
+  }
+}

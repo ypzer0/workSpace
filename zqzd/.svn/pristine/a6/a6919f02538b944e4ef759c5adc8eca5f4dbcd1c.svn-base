@@ -1,0 +1,54 @@
+<template>
+  <div>
+    <div align="center">
+      <img class="pay-success" src="../../static/images/succeed.png"/>
+    </div>
+    <p class="pay-success-title" >恭喜你</p>
+    <p class="pay-success-text">我们已经收到来自你的订单，卖家已经发货，优惠劵已存入您的卡包。点击查看<span>我的卡券</span>。</p>
+  </div>
+    
+</template>
+
+<script type="text/ecmascript-6">
+
+export default {
+  computed: {
+
+  },
+  components: {
+    
+  },
+  methods:{
+
+
+  },
+  created(){
+
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .pay-success{
+    width: 255px;
+    height: 255px;
+    margin-top: 100px;
+  }
+  .pay-success-title{
+    text-align: center;
+    font-size: 32px;
+    color: #333333;
+    margin-top: 40px;
+  }
+  .pay-success-text{
+    width: 80%;
+    margin: 0 auto; 
+    margin-top: 40px;
+    color: #838383;
+    line-height: 30px;
+    text-align: center;
+    span{
+      color: #2eacef;
+    }
+  }
+</style>

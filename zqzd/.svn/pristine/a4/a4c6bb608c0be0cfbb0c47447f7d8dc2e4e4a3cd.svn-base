@@ -1,0 +1,78 @@
+import { addr } from './addr'
+import { user } from './user'
+import { cart } from './cart'
+import {common} from './common'
+import {category} from './category'
+import {goods} from './goods'
+import {home} from './home'
+import {order} from './order'
+import {search} from './search'
+import {topic} from './topic'
+import {evaluate} from './evaluate'
+import {region} from './region'
+import {msg} from './msg'
+import {feed} from './feed'
+import {coupon} from './coupon'
+
+import {y_order} from './y_order'
+import {y_goods_home} from './y_goods_home'
+import {y_goods_detail} from './y_goods_detail'
+import {y_favorites} from './y_favorites'
+import {y_pay} from './y_pay'
+import {y_pay_success} from './y_pay_success'
+import {y_my} from './y_my'
+import {y_have_buy} from './y_have_buy'
+import {y_have_sell} from './y_have_sell'
+import {y_money_detail} from './y_money_detail'
+import {y_use_details} from './y_use_details'
+import {y_use_explain} from './y_use_explain'
+import {y_user_info} from './y_user_info'
+import {y_home} from './y_home'
+import {y_goods_home_classky_list} from './y_goods_home_classky_list'
+import {y_after_sales} from './y_after_sales'
+import {y_update_category} from './y_update_category'
+import {y_apply_disputes} from './y_apply_disputes'
+import {y_change_phone} from './y_change_phone'
+import {y_withdrawal} from './y_withdrawal'
+import {y_service} from './y_service'
+
+
+
+export const api = {
+  user,
+  cart,
+  common,
+  category,
+  goods,
+  home,
+  order,
+  search,
+  topic,
+  addr,
+  evaluate,
+  region,
+  msg,
+  feed,
+  coupon,
+  y_order,
+  y_goods_home,
+  y_goods_detail,
+  y_favorites,
+  y_pay,
+  y_pay_success,
+  y_my,
+  y_have_buy,
+  y_have_sell,
+  y_money_detail,
+  y_use_explain,
+  y_home,
+  y_goods_home_classky_list,
+  y_after_sales,
+  y_update_category,
+  y_apply_disputes,
+  y_use_details,
+  y_user_info,
+  y_change_phone,
+  y_withdrawal,
+  y_service,
+}

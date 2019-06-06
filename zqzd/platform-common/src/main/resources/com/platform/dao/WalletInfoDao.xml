@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.WalletInfoDao">
+
+    <resultMap type="com.platform.entity.WalletInfoEntity" id="walletInfoMap">
+        <result property="id" column="id"/>
+        <result property="uid" column="uid"/>
+        <result property="money" column="money"/>
+        <result property="wtype1" column="wtype1"/>
+        <result property="wtype2" column="wtype2"/>
+        <result property="orderSn" column="order_sn"/>
+        <result property="couponId" column="coupon_id"/>
+        <result property="transactionId" column="transaction_id"/>
+        <result property="outTradeNo" column="out_trade_no"/>
+        <result property="activityId" column="activity_id"/>
+        <result property="ctime" column="ctime"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.platform.entity.WalletInfoEntity">
+		select
+			`id`,
+			`uid`,
+			`money`,
+			`wtype1`,
+			`wtype2`,
+			`order_sn`,
+			`coupon_id`,
+			`transaction_id`,
+			`out_trade_no`,
+			`activity_id`,
+			`ctime`
+		from wallet_info
+		where id = #{id}
+	</select>
+
+	<select id="queryList" resultType="com.platform.entity.WalletInfoEntity">
+		select
+    		`id`,
+    		`uid`,
+    		`money`,
+    		`wtype1`,
+    		`wtype2`,
+    		`order_sn`,
+    		`coupon_id`,
+    		`transaction_id`,
+    		`out_trade_no`,
+    		`activity_id`,
+    		`ctime`
+		from wallet_info
+		WHERE 1=1
+		<if test="name != null and name.trim() != ''">
+			AND name LIKE concat('%',#{name},'%')
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from wallet_info
+		WHERE 1=1
+        <if test="name != null and name.trim() != ''">
+            AND name LIKE concat('%',#{name},'%')
+        </if>
+	</select>
+	 
+	
+	<select id="rptQueryWallet" resultType="com.platform.dto.RPTWalletInfoDto">
+		select
+    		wi.id,
+    		u.nickname,
+    		wi.money,
+    		wi.wtype1,
+    		wi.wtype2,
+    		wi.order_sn,
+    		wi.coupon_id,
+    		wi.transaction_id,
+    		wi.out_trade_no,
+    		wi.activity_id,
+    		wi.ctime
+		from wallet_info wi left join nideshop_user u on wi.uid = u.id
+		WHERE 1=1 
+		<if test="name != null and name.trim() != ''">
+			AND u.nickname LIKE concat('%',#{name},'%')
+		</if>
+		<if test="wt1 != null and wt1 != 0">
+			AND wi.wtype1 = #{wt1}
+		</if>
+		<if test="wt2 != null and wt2 != 0">
+			AND wi.wtype2 = #{wt2}
+		</if>
+		
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by wi.id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	<select id="rptQueryWalletTotal" resultType="int">
+		select count(*) from wallet_info wi left join nideshop_user u on wi.uid = u.id
+		WHERE 1=1 
+		<if test="name != null and name.trim() != ''">
+			AND u.nickname LIKE concat('%',#{name},'%')
+		</if>
+		<if test="wt1 != null and wt1 != 0">
+			AND wi.wtype1 = #{wt1}
+		</if>
+		<if test="wt2 != null and wt2 != 0">
+			AND wi.wtype2 = #{wt2}
+		</if>
+	</select>
+	
+	<select id="rptQueryWalletSum" resultType="java.util.HashMap">
+		select sum(wi.money) as money from wallet_info wi left join nideshop_user u on wi.uid = u.id
+		WHERE 1=1 
+		<if test="name != null and name.trim() != ''">
+			AND u.nickname LIKE concat('%',#{name},'%')
+		</if>
+		<if test="wt1 != null and wt1 != 0">
+			AND wi.wtype1 = #{wt1}
+		</if>
+		<if test="wt2 != null and wt2 != 0">
+			AND wi.wtype2 = #{wt2}
+		</if>
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<select id="rptQueryWalletCount" resultType="com.platform.dto.RPTWalletCountDto">
+		select
+			u.id,
+			u.nickname,
+			IFNULL(sum( case when wi.wtype1 = 2 then IFNULL(wi.money, 0) end ), 0.00) as inmoney,
+			IFNULL(sum( case when wi.wtype1 = 1 then IFNULL(wi.money, 0) end ), 0.00) as outmoney
+		from nideshop_user u left join wallet_info wi on wi.uid = u.id
+		where 1=1
+		<if test="name != null and name.trim() != ''">
+			AND u.nickname LIKE concat('%',#{name},'%')
+		</if>
+		<if test="wt1 != null and wt1 != 0">
+			AND wi.wtype1 = #{wt1}
+		</if>
+		<if test="wt2 != null and wt2 != 0">
+			AND wi.wtype2 = #{wt2}
+		</if>
+		group by u.id, u.nickname
+		
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by wi.id asc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	<select id="rptQueryWalletCountTotal" resultType="int">
+		select count(*) from (
+		select 1 from nideshop_user u left join wallet_info wi on wi.uid = u.id
+		where 1=1
+		<if test="name != null and name.trim() != ''">
+			AND u.nickname LIKE concat('%',#{name},'%')
+		</if>
+		<if test="wt1 != null and wt1 != 0">
+			AND wi.wtype1 = #{wt1}
+		</if>
+		<if test="wt2 != null and wt2 != 0">
+			AND wi.wtype2 = #{wt2}
+		</if>
+		group by u.id, u.nickname
+		) a
+	</select>
+	
+	<select id="rptQueryWalletCountSum" resultType="java.util.HashMap">
+		select 
+			sum(inmoney) as sumin,
+			sum(outmoney) as sumout
+		from (
+		select 
+			IFNULL(sum( case when wi.wtype1 = 2 then IFNULL(wi.money, 0) end ), 0.00) as inmoney,
+			IFNULL(sum( case when wi.wtype1 = 1 then IFNULL(wi.money, 0) end ), 0.00) as outmoney
+		from nideshop_user u left join wallet_info wi on wi.uid = u.id
+		where 1=1
+		<if test="name != null and name.trim() != ''">
+			AND u.nickname LIKE concat('%',#{name},'%')
+		</if>
+		<if test="wt1 != null and wt1 != 0">
+			AND wi.wtype1 = #{wt1}
+		</if>
+		<if test="wt2 != null and wt2 != 0">
+			AND wi.wtype2 = #{wt2}
+		</if>
+		
+		group by u.id, u.nickname
+		) a
+		
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<insert id="save" parameterType="com.platform.entity.WalletInfoEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into wallet_info(
+			`uid`,
+			`money`,
+			`wtype1`,
+			`wtype2`,
+			`order_sn`,
+			`coupon_id`,
+			`transaction_id`,
+			`out_trade_no`,
+			`activity_id`,
+			`ctime`)
+		values(
+			#{uid},
+			#{money},
+			#{wtype1},
+			#{wtype2},
+			#{orderSn},
+			#{couponId},
+			#{transactionId},
+			#{outTradeNo},
+			#{activityId},
+			#{ctime})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.WalletInfoEntity">
+		update wallet_info 
+		<set>
+			<if test="uid != null">`uid` = #{uid}, </if>
+			<if test="money != null">`money` = #{money}, </if>
+			<if test="wtype1 != null">`wtype1` = #{wtype1}, </if>
+			<if test="wtype2 != null">`wtype2` = #{wtype2}, </if>
+			<if test="orderSn != null">`order_sn` = #{orderSn}, </if>
+			<if test="couponId != null">`coupon_id` = #{couponId}, </if>
+			<if test="transactionId != null">`transaction_id` = #{transactionId}, </if>
+			<if test="outTradeNo != null">`out_trade_no` = #{outTradeNo}, </if>
+			<if test="activityId != null">`activity_id` = #{activityId}, </if>
+			<if test="ctime != null">`ctime` = #{ctime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from wallet_info where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from wallet_info where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

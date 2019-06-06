@@ -1,0 +1,58 @@
+package com.platform.dao;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.platform.entity.CouponCategoryVo;
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-22 11:35:38
+ */
+public interface ApiCategoryMapper extends BaseDao<CouponCategoryVo> {
+	/**
+	 * 批量修改isShow状态
+	 * @param map
+	 * @return
+	 */
+	int changeStatus(Map<String, Object> map);
+	/**
+	 * 批量修改分类状态
+	 * @param map
+	 * @return
+	 */
+	int changeStatusDelete(Map<String, Object> map);
+	/**
+	 * 批量修改isShow状态
+	 * @param map
+	 * @return
+	 */
+	HashMap<String, Object> querySum(Map<String, Object> map);
+	
+	/**
+	 * 查询种类名称
+	 * @param map
+	 * @return
+	 */
+	List<CouponCategoryVo> queryNameList(Map<String, Object> map);
+	
+	/**
+	 *根据父级Id查找 
+	 * @param map
+	 * @return
+	 */
+	List<CouponCategoryVo> queryByParentId(Integer parentId);
+	
+	CouponCategoryVo queryNameByParentId(Integer parentId);
+	/**
+	 * 获取当前商品分类
+	 * @param id
+	 * @return
+	 */
+	CouponCategoryVo queryObjectBuy(Integer id);
+	
+}

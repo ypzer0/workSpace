@@ -1,0 +1,59 @@
+<template>
+      <div>
+          <div>testOrder</div>
+        <order-s :testVar="testVar" :testObj="testObj" @btn-click="testBtn"></order-s>
+
+      </div>
+</template>
+
+
+
+<script type="text/ecmascript-6">
+
+import {mapState, mapGetters, mapActions} from 'vuex'
+import {toast} from '@/libs/cube-ui'
+import orderS from './common/order-s'
+
+
+export default{
+
+  data () {
+    return {
+      testVar: 'dddddd',
+      testObj: {
+          name:'name12312312312'
+      }
+    }
+  },
+  computed:{
+    ...mapState('order', ['order'])
+    
+  },
+  components: {
+    orderS,
+  },
+
+  methods: {
+      testBtn(){
+          debugger;
+      }
+      
+  },
+  created(){
+
+
+  }
+
+}
+
+</script>
+
+
+
+<style lang="less" scoped>
+
+
+
+
+</style>
+

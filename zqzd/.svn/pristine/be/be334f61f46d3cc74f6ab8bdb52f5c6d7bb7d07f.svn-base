@@ -1,0 +1,60 @@
+<template>
+    <div>
+        <div class="after_tab_list">
+            <ul class="after_tab_list_ul">
+                <li :class="{active:index == num}" v-for='(item,index) in tablist' :key="index" @click="clickTab(index)" :num="123456">{{item.name}}</li>
+            </ul>
+        </div>
+    </div>
+</template>
+
+<script type="text/ecmascript-6">
+
+export default {
+  data(){
+    return{
+      num: 0,
+      tablist: [
+            {
+                "oid": 0,
+                "name": "出售"
+            },
+            {
+                "oid": 1,
+                "name": "购买"
+            }
+        ]
+    }
+  },
+
+  components:{
+  },
+
+  methods: {
+    clickTab:function(index){
+      this.num = index
+      this.$emit('click-tab', { i : index });
+      console.log("num:", this.num);
+    }
+}
+}
+</script>
+
+<style>
+    .after_tab_list{
+        width: 100%;
+        height: 13.1vw;
+        background: #ffffff;
+        border-bottom: 1px solid #e5e5e5;
+    }
+    .after_tab_list_ul{
+        display: flex;
+        justify-content: space-around;
+        font-size: 4.3vw;
+        line-height: 13.1vw;
+        color: #333333;
+    }
+    .active{
+        color: #ff4539;
+    }
+</style>

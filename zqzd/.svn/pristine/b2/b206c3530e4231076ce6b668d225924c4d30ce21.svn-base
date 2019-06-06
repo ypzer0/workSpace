@@ -1,0 +1,177 @@
+<template>
+  <div :better-scroll="true" class="box">
+    <div class="page-header border-1px-bottom" slot="top">
+      <div class="header-left" @click="$back">
+        <i class="iconfont">&#xe601;</i>
+      </div>
+      <h3>更换手机</h3>
+      <div class="header-right">
+        <!-- <span @click="SaveAddr">保存</span> -->
+      </div>
+    </div>
+
+    <div class="former-phone">
+      <ul class="former-phone-ul">
+        <li class="former-phone-li" v-if="mobileValidatep">
+          <div class="former-phone-content">
+            <p class="former-phone-content-left">旧手机号<input class="former-phone-content-left-input" v-model="mobile.rawMobile" type="number" placeholder="请输入原手机号"/></p>
+            <!-- <button class="former-phone-content-btn" @click="getrawMobile">发送验证</button> -->
+          </div>
+        </li>
+        <!-- <li class="former-phone-li">
+          <div class="former-phone-content">
+            <p class="former-phone-content-left">验证码<input class="former-phone-content-left-input1" type="number" placeholder="请输入验证码"/></p>
+          </div>
+        </li> -->
+      </ul>
+      <div class="divider"></div>
+      <ul class="former-phone-ul new-phone">
+        <li class="former-phone-li">
+          <div class="former-phone-content">
+            <p class="former-phone-content-left">新手机号<input class="former-phone-content-left-input" v-model="mobile.newMobile" type="number" placeholder="请输入新手机号"/></p>
+            <button class="former-phone-content-btn" @click="getMobileSendchange">发送验证</button>
+          </div>
+        </li>
+        <li class="former-phone-li">
+          <div class="former-phone-content">
+            <p class="former-phone-content-left">验证码<input class="former-phone-content-left-input1" v-model="mobile.newCode" type="number" placeholder="请输入验证码"/></p>
+          </div>
+        </li>
+      </ul>
+
+      <button class="change-phone-btn" @click="subMobile">确定</button>
+    </div>
+    
+    
+  </div>
+    
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default {
+  computed: {
+    ...mapState('y_change_phone', ['changePhone', 'mobileValidatep', 'mobile', 'mobileSendchange']),
+  },
+  components: {
+
+  },
+  methods:{
+    ...mapActions('y_change_phone', ['getChangePhone', 'getMobileValidatep', 'getrawMobile', 'getNewMobile', 'getMobileSendchange','subMobile']),
+    
+  },
+  created(){
+    this.getMobileValidatep();
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .box{
+    width: 100%;
+    height: 100%;
+    background: #eeeded;
+    .page-header{
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 88px;
+      // background: #2eacef;
+      background: -webkit-linear-gradient(left, #ff6839 , #ff4439); /* Safari 5.1 - 6.0 */
+      background: -o-linear-gradient(right, #ff6839, #ff4439); /* Opera 11.1 - 12.0 */
+      background: -moz-linear-gradient(right, #ff6839, #ff4439); /* Firefox 3.6 - 15 */
+      background: linear-gradient(to right, #ff6839 , #ff4439); /* 标准的语法 */
+      .header-left{
+        position: absolute;
+        top:50%;
+        left:30px;
+        color: #fff;
+        transform: translateY(-50%);
+      }
+      h3{
+        font-size: 30px;
+        font-weight: 600;
+        color: #fff;
+      }
+      .header-right{
+        position: absolute;
+        top:50%;
+        right:30px;
+        transform: translateY(-50%);
+        span{
+          color:#666;
+        }
+      }
+    }
+  }
+
+  .former-phone{
+    width: 100%;
+    margin: 0 auto;
+    .new-phone{
+      
+    }
+    .divider{
+      width: 100%;
+      height: 20px;
+      margin: 0 auto;
+      background: #eeeded;
+    }
+    .former-phone-ul{
+      background: #fff;
+      .former-phone-li{
+        border-bottom: 1px solid #e5e5e5;
+        .former-phone-content{
+          width: 92%;
+          height: 98px;
+          margin: 0 auto;
+          display: flex;
+          justify-content: space-between;
+          .former-phone-content-left{
+            line-height: 98px;
+            font-size: 32px;
+            color: #333333;
+            .former-phone-content-left-input{
+              font-size: 30px;
+              color: #838383;
+              margin-left: 25px;
+              line-height: 96px;
+            }
+            .former-phone-content-left-input1{
+              font-size: 30px;
+              color: #838383;
+              margin-left: 55px;
+              line-height: 96px;
+            }
+          }
+          .former-phone-content-btn{
+            width: 150px;
+            height: 64px;
+            background: none;
+            border: 1px solid #ff4439;
+            border-radius: 6px;
+            font-size: 28px;
+            color: #ff4439;
+            margin: 17px 0;
+          }
+        }
+      }
+    }
+
+    .change-phone-btn{
+      width: 92%;
+      height: 98px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 100px;
+      background: #ff4439;
+      border-radius: 6px;
+      border: none;
+      font-size: 36px;
+      color: #fff; 
+    }
+  }
+
+ 
+</style>

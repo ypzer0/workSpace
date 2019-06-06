@@ -1,0 +1,5 @@
+export const REPORT_LIST = 'REPORT_LIST'
+export const REPORT_DOWNLOAD = 'REPORT_DOWNLOAD'
+
+
+

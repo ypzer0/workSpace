@@ -1,0 +1,59 @@
+package com.platform.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.dao.CouponFxUserLogDao;
+import com.platform.entity.CouponFxUserLogEntity;
+import com.platform.service.CouponFxUserLogService;
+
+/**
+ * Service实现类
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-24 10:23:35
+ */
+@Service("CouponfxUserLogService")
+public class CouponFxUserLogServiceImpl implements CouponFxUserLogService {
+    @Autowired
+    private CouponFxUserLogDao CouponfxUserLogDao;
+
+    @Override
+    public CouponFxUserLogEntity queryObject(Integer id) {
+        return CouponfxUserLogDao.queryObject(id);
+    }
+
+    @Override
+    public List<CouponFxUserLogEntity> queryList(Map<String, Object> map) {
+        return CouponfxUserLogDao.queryList(map);
+    }
+
+    @Override
+    public int queryTotal(Map<String, Object> map) {
+        return CouponfxUserLogDao.queryTotal(map);
+    }
+
+    @Override
+    public int save(CouponFxUserLogEntity CouponfxUserLog) {
+        return CouponfxUserLogDao.save(CouponfxUserLog);
+    }
+
+    @Override
+    public int update(CouponFxUserLogEntity CouponfxUserLog) {
+        return CouponfxUserLogDao.update(CouponfxUserLog);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return CouponfxUserLogDao.delete(id);
+    }
+
+    @Override
+    public int deleteBatch(Integer[] ids) {
+        return CouponfxUserLogDao.deleteBatch(ids);
+    }
+}

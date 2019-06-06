@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ApiOrderMapper">
+
+    <resultMap type="com.platform.entity.CouponOrderVo" id="CouponorderMap">
+        <result property="id" column="id"/>
+        <result property="orderSn" column="order_sn"/>
+        <result property="userId" column="user_id"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="payStatus" column="pay_status"/>
+        <result property="payType" column="pay_type"/>
+        <result property="orderPrice" column="order_price"/>
+        <result property="addTime" column="add_time"/>
+        <result property="confirmTime" column="confirm_time"/>
+        <result property="payTime" column="pay_time"/>
+        <result property="orderType" column="order_type"/>
+        <result property="gId" column="g_id"/>
+        <result property="uCode" column="u_code"/>
+        <result property="nickname" column="nickname"/>
+        <result property="platType" column="plat_type"/>
+        <result property="goodsSn" column="goods_sn"/>
+        <result property="name" column="name"/>
+        <result property="buyPrice" column="buy_price"/>
+        <result property="salePrice" column="sale_price"/>
+        <result property="name" column="name"/>
+        <result property="imgPath" column="img_path"/>
+        <result property="cCode" column="c_code"/>
+        <result property="picUrl" column="pic_url"/>
+        <result property="goodsId" column="goods_id"/>
+        
+    </resultMap>
+
+	<select id="queryObject" resultType="com.platform.entity.CouponOrderVo">
+		select
+			o.`id`,
+    		o.`order_sn`,
+    		o.`user_id`,
+    		o.`order_status`,
+    		o.`pay_status`,
+    		o.`pay_type`,
+    		o.`order_price`,
+    		o.`add_time`,
+    		o.`confirm_time`,
+    		o.`pay_time`,
+    		o.`order_type`,
+			o.`g_id`,
+			u.`nickname`,
+			u.`plat_type`,
+			(select count(*) from coupon_order_detail od where od.order_id = o.id) as buy_count,
+			cc.sale_price,
+			cc.`user_msg`,
+			cc.`name` as parentName,
+			pcc.`name` as topName
+		from coupon_order o
+		left join coupon_user u on o.user_id = u.id 
+		left join coupon_category cc on cc.id = o.`g_id`
+		left join coupon_category pcc on cc.parent_id = pcc.id
+		where o.`id` = #{id}
+	</select>
+	
+	<!-- <select id="queryMSG" resultType="com.platform.entity.CouponOrderVo">
+		select
+			o.`id`,
+    		o.`order_sn`,
+    		o.`user_id`,
+    		o.`order_status`,
+    		o.`pay_status`,
+    		o.`pay_type`,
+    		o.`order_price`,
+    		o.`add_time`,
+    		o.`confirm_time`,
+    		o.`pay_time`,
+    		o.`order_type`,
+			o.`g_id`,
+			cc.sale_price,
+			cc.`user_msg`,
+			cc.`name` as parentName
+			
+		from coupon_order o
+		left join coupon_order_detail od on od.order_id = o.id
+		left join coupon_goods_info g on g.id = od.goods_id
+		left join coupon_category cc on cc.id = o.`g_id`
+		
+		where g.id = #{id}
+	</select> -->
+	
+	<select id="queryOrderByNo" resultType="com.platform.entity.CouponOrderVo">
+		select
+			o.`id`,
+    		o.`order_sn`,
+    		o.`user_id`,
+    		o.`order_status`,
+    		o.`pay_status`,
+    		o.`pay_type`,
+    		o.`order_price`,
+    		o.`add_time`,
+    		o.`confirm_time`,
+    		o.`pay_time`,
+    		o.`order_type`,
+			o.`g_id`,
+			u.`nickname`,
+			ub.`u_code`,
+			u.`plat_type`,
+			g.`name`,
+			g.`redeem_code`,
+			g.`img_path`,
+			cc.`user_msg`,
+			ucb.`u_code` as c_code
+		from coupon_order o
+		left join coupon_order_detail cod on o.`id`= cod.`order_id`
+		left join coupon_user u on o.user_id = u.id
+		left join coupon_user_code_bom ub on o.user_id = ub.u_id
+		left join coupon_goods_info g on cod.goods_id = g.id
+		left join coupon_category cc on cc.id= g.c_id 
+		left join coupon_user_code_bom ucb on g.create_user_id = ucb.u_id
+		where o.`order_sn` = #{orderno}
+		
+	</select>
+	
+	<select id="queryOrderByNo1" resultType="com.platform.entity.CouponOrderVo">
+		select
+			o.`id`,
+    		o.`order_sn`,
+    		o.`user_id`,
+    		o.`order_status`,
+    		o.`pay_status`,
+    		o.`pay_type`,
+    		o.`order_price`,
+    		o.`add_time`,
+    		o.`confirm_time`,
+    		o.`pay_time`,
+    		o.`order_type`,
+			o.`g_id`,
+			u.`nickname`,
+			ub.`u_code`,
+			u.`plat_type`,
+			cc.`user_msg`	
+		from coupon_order o
+		left join coupon_user u on o.user_id = u.id
+		left join coupon_user_code_bom ub on o.user_id = ub.u_id
+		left join coupon_category cc on cc.id= o.`g_id`
+		where o.`order_sn` = #{orderno}	
+	</select>
+	
+	<select id="queryByUserId" resultType="com.platform.entity.CouponOrderVo">
+		select
+			o.`id`,
+    		o.`order_sn`,
+    		o.`user_id`,
+    		o.`order_status`,
+    		o.`pay_status`,
+    		o.`pay_type`,
+    		o.`order_price`,
+    		o.`add_time`,
+    		o.`confirm_time`,
+    		o.`pay_time`,
+    		o.`order_type`,
+			o.`g_id`,
+			u.`nickname`,
+			ub.`u_code`,
+			u.`plat_type`,
+			g.`name`,
+			g.`redeem_code`,
+			g.`img_path`,
+			g.`eff_time`,
+			ucb.`u_code` as c_code
+		from coupon_order o
+		left join coupon_user u on o.user_id = u.id
+		left join coupon_user_code_bom ub on o.user_id = ub.u_id
+		left join coupon_order_detail od on od.order_id = o.id
+		left join coupon_goods_info g on g.id = od.goods_id
+		left join coupon_user_code_bom ucb on g.create_user_id = ucb.u_id
+		where o.`user_id` = #{userId} 
+		<if test="status != null and status != ''">
+			AND o.`pay_type` = #{status}
+		</if>
+		order by o.`add_time` desc
+		limit 0,20
+	</select>
+	
+	<select id="queryGoodsByUserId" resultType="com.platform.entity.CouponOrderVo">
+		select
+			o.`id`,
+    		o.`order_sn`,
+    		o.`user_id`,
+    		o.`order_status`,
+    		o.`pay_status`,
+    		o.`pay_type`,
+    		o.`order_price`,
+    		o.`add_time`,
+    		o.`confirm_time`,
+    		o.`pay_time`,
+    		o.`order_type`,
+			o.`g_id`,
+			u.`nickname`,
+			ub.`u_code`,
+			u.`plat_type`,
+			g.`name`,
+			g.`redeem_code`,
+			g.`img_path`,
+			g.`eff_time`,
+			g.`is_used`,
+			g.`id` as goods_id,
+			ucb.`u_code` as c_code
+		from coupon_goods_info g
+		left join coupon_order_detail od on g.id = od.goods_id
+		left join coupon_order o on od.order_id = o.id
+		left join coupon_user u on o.user_id = u.id
+		left join coupon_user_code_bom ub on o.user_id = ub.u_id
+		left join coupon_user_code_bom ucb on g.create_user_id = ucb.u_id
+		where o.`user_id` = #{userId} 
+		AND o.`order_status` = #{status}
+		order by o.`add_time` desc
+		limit 0,20
+	</select>
+	
+	<select id="queryOrderList" resultType="com.platform.entity.CouponOrderVo">
+		select
+    		o.`id`,
+    		o.`order_sn`,
+    		o.`user_id`,
+    		o.`order_status`,
+    		o.`pay_status`,
+    		o.`pay_type`,
+    		o.`order_price`,
+    		o.`add_time`,
+    		o.`confirm_time`,
+    		o.`pay_time`,
+    		o.`order_type`,
+			o.`g_id`,
+			u.`nickname`,
+			u.`plat_type`,
+			g.id,
+			g.`name`,
+			g.goods_sn,
+			g.`redeem_code`,
+			g.`img_path`,
+			g.`eff_time`,
+			g.`is_used`,
+			od.buy_count,
+			od.goods_id,
+			cc.sale_price,
+			cc.`name` as parentName,
+			pcc.`name` as topName,
+			cc.pic_url
+		from coupon_order o 
+		left join coupon_order_detail od on od.order_id = o.id
+		left join coupon_goods_info g on g.id = od.goods_id
+		left join coupon_user u on o.user_id = u.id 
+		left join coupon_category cc on cc.id= g.c_id 
+		left join coupon_category pcc on cc.parent_id = pcc.id
+		WHERE 1=1
+		
+		<if test="userId != null and userId != ''">
+			AND o.`user_id` = #{userId}
+		</if>
+		<if test="orderStatus != null">
+			AND o.`order_status` = #{orderStatus}
+		</if>
+        order by o.add_time desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	
+ 	<select id="queryOrderTotal" resultType="int">
+		select count(1) from coupon_order o
+		WHERE 1=1
+		<if test="userId != null and userId != ''">
+			AND o.`user_id` = #{userId}
+		</if>
+		<if test="orderStatus != null and orderStatus != ''">
+			AND o.`order_status` = #{orderStatus}
+		</if>
+	</select>
+	
+	<select id="queryGoodsImg" resultType="com.platform.entity.CouponOrderVo">
+		select
+    		o.`id`,
+			g.id,
+			g.`name`,
+			g.goods_sn,
+			g.`redeem_code`,
+			g.`img_path`,
+			g.`eff_time`
+		from coupon_order o 
+		left join coupon_order_detail od on od.order_id = o.id
+		left join coupon_goods_info g on g.id = od.goods_id
+		WHERE 
+			g.id=#{gid}
+	</select>
+	 
+	 <select id="queryGoodsTotal" resultType="com.platform.entity.CouponOrderVo">
+		SELECT 
+			count(o.id) as sumId,
+			sum(order_price) as sumMoney 
+		from coupon_order o 
+		left join coupon_order_detail od on od.order_id = o.id
+		left join coupon_goods_info g on g.id = od.goods_id
+		where 
+			o.order_type = 1 
+		and 
+			g.`cc_id` = #{id}
+
+
+	</select>
+	
+	<select id="queryList" resultType="com.platform.entity.CouponOrderVo">
+		select
+    		o.`id`,
+    		o.`order_sn`,
+    		o.`user_id`,
+    		o.`order_status`,
+    		o.`pay_status`,
+    		o.`pay_type`,
+    		o.`order_price`,
+    		o.`add_time`,
+    		o.`confirm_time`,
+    		o.`pay_time`,
+    		o.`order_type`,
+			o.`g_id`,
+			u.`nickname`,
+			ub.`u_code`,
+			u.`plat_type`,
+			g.`name`,
+			g.`redeem_code`,
+			g.`c_id`,
+			g.`goods_sn`,
+			g.`img_path`,
+			ucb.`u_code` as c_code,
+			od.`buy_count`
+		from coupon_order o
+		left join coupon_user u on o.user_id = u.id
+		left join coupon_user_code_bom ub on o.user_id = ub.u_id
+		left join coupon_order_detail od on od.order_id = o.id
+		left join coupon_goods_info g on g.id = od.goods_id
+		left join coupon_user_code_bom ucb on g.create_user_id = ucb.u_id
+		left join coupon_order_detail od on o.`order_sn` = od.`order_sn`
+		WHERE 1=1
+		<if test="uCode != null and uCode.trim() != ''">
+			AND ub.`u_code` LIKE concat('%',#{uCode},'%')
+		</if>
+		
+		<if test="nickname != null and nickname.trim() != ''">
+			AND u.`nickname` LIKE concat('%',#{nickname},'%')
+		</if>
+		
+		<if test="orderSn != null and orderSn.trim() != ''">
+			AND o.`order_sn` LIKE concat('%',#{orderSn},'%')
+		</if>
+		
+		<if test="redeemCode != null and redeemCode.trim() != ''">
+			AND g.`redeem_code` LIKE concat('%',#{redeemCode},'%')
+		</if>
+		
+		<if test="orderStatus != null and orderStatus != ''">
+			AND o.`order_status` = #{orderStatus}
+		</if>
+		
+		<if test="confirmTimeBegin != null and confirmTimeBegin.trim() != ''">
+			AND o.`confirm_time` &gt;= #{confirmTimeBegin}
+		</if>
+		
+		<if test="confirmTimeEnd != null and confirmTimeEnd.trim() != ''">
+			AND o.`confirm_time` &lt;= #{confirmTimeEnd}
+		</if>
+		
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from coupon_order o
+		left join coupon_user u on o.user_id = u.id
+		left join coupon_user_code_bom ub on o.user_id = ub.u_id
+		left join coupon_order_detail od on od.order_id = o.id
+		left join coupon_goods_info g on g.id = od.goods_id
+		left join coupon_user_code_bom ucb on g.create_user_id = ucb.u_id
+		WHERE 1=1
+		<if test="uCode != null and uCode.trim() != ''">
+			AND ub.`u_code` LIKE concat('%',#{uCode},'%')
+		</if>
+		
+		<if test="nickname != null and nickname.trim() != ''">
+			AND u.`nickname` LIKE concat('%',#{nickname},'%')
+		</if>
+		
+		<if test="orderSn != null and orderSn.trim() != ''">
+			AND o.`order_sn` LIKE concat('%',#{orderSn},'%')
+		</if>
+		<if test="redeemCode != null and redeemCode.trim() != ''">
+			AND g.`redeem_code` LIKE concat('%',#{redeemCode},'%')
+		</if>
+		<if test="orderStatus != null and orderStatus != ''">
+			AND o.`order_status` = #{orderStatus}
+		</if>
+		
+		<if test="confirmTimeBegin != null and confirmTimeBegin.trim() != ''">
+			AND o.`confirm_time` &gt;= #{confirmTimeBegin}
+		</if>
+		
+		<if test="confirmTimeEnd != null and confirmTimeEnd.trim() != ''">
+			AND o.`confirm_time` &lt;= #{confirmTimeEnd}
+		</if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.CouponOrderVo" useGeneratedKeys="true" keyProperty="id">
+		insert into coupon_order(
+			`order_sn`,
+			`user_id`,
+			`order_status`,
+			`pay_status`,
+			`pay_type`,
+			`order_price`,
+			`add_time`,
+			`confirm_time`,
+			`pay_time`,
+			`order_type`,
+			`g_id`
+			)
+		values(
+			#{orderSn},
+			#{userId},
+			#{orderStatus},
+			#{payStatus},
+			#{payType},
+			#{orderPrice},
+			#{addTime},
+			#{confirmTime},
+			#{payTime},
+			#{orderType},
+			#{gId}
+			)
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.CouponOrderVo">
+		update coupon_order 
+		<set>
+			<if test="orderSn != null">`order_sn` = #{orderSn}, </if>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="orderStatus != null">`order_status` = #{orderStatus}, </if>
+			<if test="payStatus != null">`pay_status` = #{payStatus}, </if>
+			<if test="payType != null">`pay_type` = #{payType}, </if>
+			<if test="orderPrice != null">`order_price` = #{orderPrice}, </if>
+			<if test="addTime != null">`add_time` = #{addTime}, </if>
+			<if test="confirmTime != null">`confirm_time` = #{confirmTime}, </if>
+			<if test="payTime != null">`pay_time` = #{payTime}, </if>
+			<if test="gId != null">`g_id` = #{gId}, </if>
+			<if test="orderType != null">`order_type` = #{orderType}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	
+	<insert id="saveOrderDetail" parameterType="com.platform.entity.CouponOrderDetailVo" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO `coupon_order_detail`
+(`order_id`, `order_sn`, `goods_id`, `goods_sn`, `buy_count`, `buy_price`, `add_time`)
+VALUES 
+(#{orderId}, #{orderSn}, #{goodsId}, #{goodsSn}, #{buyCount}, #{buyPrice}, #{addTime});
+	</insert>
+	
+	
+	
+	<delete id="delete">
+		delete from coupon_order where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from coupon_order where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	
+	
+	<!-- 商品明细 -->
+	<select id="queryListInfo" resultType="com.platform.entity.CouponOrderVo">
+		select
+    		o.`id`,
+    		o.`order_sn`,
+    		o.`user_id`,
+    		o.`confirm_time`,
+    		o.`pay_time`,
+			o.`g_id`,
+			u.`nickname`,
+			ub.`u_code`,
+			u.`plat_type`,
+			g.`goods_sn`,
+			g.`name`,
+			c.buy_price,
+			c.sale_price
+		from coupon_order o
+		left join coupon_user u on o.user_id = u.id
+		left join coupon_user_code_bom ub on o.user_id = ub.u_id
+		left join coupon_goods_info g on o.g_id = g.id
+		left join coupon_category c on g.c_id = c.id
+		WHERE 1=1
+		<if test="goodsSn != null and goodsSn.trim() != ''">
+			AND g.`goods_sn` LIKE concat('%',#{goodsSn},'%')
+		</if>
+		
+		<if test="orderSn != null and orderSn.trim() != ''">
+			AND o.`order_sn` LIKE concat('%',#{orderSn},'%')
+		</if>
+		
+		<if test="userId != null and userId != ''">
+			AND o.`user_id` LIKE concat('%',#{userId},'%')
+		</if>
+		
+		<if test="payTimeBegin != null and payTimeBegin.trim() != ''">
+			AND o.`pay_time` &gt;= #{payTimeBegin}
+		</if>
+		
+		<if test="payTimeEnd != null and payTimeEnd.trim() != ''">
+			AND o.`pay_time` &lt;= #{payTimeEnd}
+		</if>
+		
+		<if test="confirmTimeBegin != null and confirmTimeBegin.trim() != ''">
+			AND o.`confirm_time` &gt;= #{confirmTimeBegin}
+		</if>
+		
+		<if test="confirmTimeEnd != null and confirmTimeEnd.trim() != ''">
+			AND o.`confirm_time` &lt;= #{confirmTimeEnd}
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotalInfo" resultType="int">
+		select count(*) from coupon_order o
+		left join coupon_user u on o.user_id = u.id
+		left join coupon_user_code_bom ub on o.user_id = ub.u_id
+		left join coupon_goods_info g on o.g_id = g.id
+		left join coupon_category c on g.c_id = c.id
+		WHERE 1=1
+		<if test="goodsSn != null and goodsSn.trim() != ''">
+			AND g.`goods_sn` LIKE concat('%',#{goodsSn},'%')
+		</if>
+		
+		<if test="orderSn != null and orderSn.trim() != ''">
+			AND o.`order_sn` LIKE concat('%',#{orderSn},'%')
+		</if>
+		
+		<if test="userId != null and userId != ''">
+			AND o.`user_id` LIKE concat('%',#{userId},'%')
+		</if>
+		
+		<if test="payTimeBegin != null and payTimeBegin.trim() != ''">
+			AND o.`pay_time` &gt;= #{payTimeBegin}
+		</if>
+		
+		<if test="payTimeEnd != null and payTimeEnd.trim() != ''">
+			AND o.`pay_time` &lt;= #{payTimeEnd}
+		</if>
+		
+		<if test="confirmTimeBegin != null and confirmTimeBegin.trim() != ''">
+			AND o.`confirm_time` &gt;= #{confirmTimeBegin}
+		</if>
+		
+		<if test="confirmTimeEnd != null and confirmTimeEnd.trim() != ''">
+			AND o.`confirm_time` &lt;= #{confirmTimeEnd}
+		</if>
+	</select>
+	
+	
+	
+	
+</mapper>

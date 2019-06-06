@@ -1,0 +1,31 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : yangpeng
+ Source Server Type    : MySQL
+ Source Server Version : 50535
+ Source Host           : localhost:3306
+ Source Schema         : zuoduan
+
+ Target Server Type    : MySQL
+ Target Server Version : 50535
+ File Encoding         : 65001
+
+ Date: 29/05/2019 10:43:47
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for zd_category
+-- ----------------------------
+DROP TABLE IF EXISTS `zd_category`;
+CREATE TABLE `zd_category`  (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(90) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '种类名称',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `name`(`name`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+SET FOREIGN_KEY_CHECKS = 1;

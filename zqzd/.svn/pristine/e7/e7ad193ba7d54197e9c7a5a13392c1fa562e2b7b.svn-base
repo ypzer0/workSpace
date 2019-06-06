@@ -1,0 +1,245 @@
+package com.platform.entity;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ * 实体
+ * 表名 coupon_issue_handle
+ * 纠纷处理
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-24 13:46:57
+ */
+public class CouponIssueHandleEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    //
+    private Integer id;
+    //用户id
+    private Integer uid;
+    //用户名
+    private String uname;
+    //订单号
+    private String orderSn;
+    //状态   0，待处理  1，已处理
+    private Integer status;
+    //申请原因
+    private String reason;
+    //处理意见
+    private String msg;
+    //添加时间
+    private Date addTime;
+    //修改时间
+    private Date updateTime;
+    //用户昵称
+    private String nickname;
+    //用户code
+    private Integer uCode;
+    //用户类型
+    private Integer platType;
+    //信用分
+    private Integer credit;
+    //微信号
+    private String weixinCode;
+    //订单总价
+    private BigDecimal orderPrice;
+    //图片路径（加密）
+    private String imgPath;
+    //卖家Id
+    private String cCode;
+    
+    
+    
+    @Override
+	public String toString() {
+		return "CouponIssueHandleEntity [id=" + id + ", uid=" + uid + ", uname=" + uname + ", orderSn=" + orderSn
+				+ ", status=" + status + ", reason=" + reason + ", msg=" + msg + ", addTime=" + addTime
+				+ ", updateTime=" + updateTime + ", nickname=" + nickname + ", uCode=" + uCode + ", platType="
+				+ platType + ", credit=" + credit + ", weixinCode=" + weixinCode + ", orderPrice=" + orderPrice
+				+ ", imgPath=" + imgPath + ", cCode=" + cCode + "]";
+	}
+
+	public String getImgPath() {
+		return imgPath;
+	}
+
+	public void setImgPath(String imgPath) {
+		this.imgPath = imgPath;
+	}
+
+	public String getcCode() {
+		return cCode;
+	}
+
+	public void setcCode(String cCode) {
+		this.cCode = cCode;
+	}
+
+	public String getWeixinCode() {
+		return weixinCode;
+	}
+
+	public void setWeixinCode(String weixinCode) {
+		this.weixinCode = weixinCode;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public Integer getuCode() {
+		return uCode;
+	}
+
+	public void setuCode(Integer uCode) {
+		this.uCode = uCode;
+	}
+
+	public Integer getPlatType() {
+		return platType;
+	}
+
+	public void setPlatType(Integer platType) {
+		this.platType = platType;
+	}
+
+	public Integer getCredit() {
+		return credit;
+	}
+
+	public void setCredit(Integer credit) {
+		this.credit = credit;
+	}
+
+	public BigDecimal getOrderPrice() {
+		return orderPrice;
+	}
+
+	public void setOrderPrice(BigDecimal orderPrice) {
+		this.orderPrice = orderPrice;
+	}
+
+	/**
+     * 设置：
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * 获取：
+     */
+    public Integer getId() {
+        return id;
+    }
+    /**
+     * 设置：用户id
+     */
+    public void setUid(Integer uid) {
+        this.uid = uid;
+    }
+
+    /**
+     * 获取：用户id
+     */
+    public Integer getUid() {
+        return uid;
+    }
+    /**
+     * 设置：用户名
+     */
+    public void setUname(String uname) {
+        this.uname = uname;
+    }
+
+    /**
+     * 获取：用户名
+     */
+    public String getUname() {
+        return uname;
+    }
+    /**
+     * 设置：订单号
+     */
+    public void setOrderSn(String orderSn) {
+        this.orderSn = orderSn;
+    }
+
+    /**
+     * 获取：订单号
+     */
+    public String getOrderSn() {
+        return orderSn;
+    }
+    /**
+     * 设置：状态   0，待处理  1，已处理
+     */
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    /**
+     * 获取：状态   0，待处理  1，已处理
+     */
+    public Integer getStatus() {
+        return status;
+    }
+    /**
+     * 设置：申请原因
+     */
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    /**
+     * 获取：申请原因
+     */
+    public String getReason() {
+        return reason;
+    }
+    /**
+     * 设置：处理意见
+     */
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    /**
+     * 获取：处理意见
+     */
+    public String getMsg() {
+        return msg;
+    }
+    /**
+     * 设置：添加时间
+     */
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+    /**
+     * 获取：添加时间
+     */
+    public Date getAddTime() {
+        return addTime;
+    }
+    /**
+     * 设置：修改时间
+     */
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    /**
+     * 获取：修改时间
+     */
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+}

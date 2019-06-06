@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ApiZdUserMapper">
+
+    <resultMap type="com.platform.entity.ZdUserVo" id="userMap">
+        <result property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="gender" column="gender"/>
+        <result property="registerTime" column="register_time"/>
+        <result property="lastLoginTime" column="last_login_time"/>
+        <result property="lastLoginIp" column="last_login_ip"/>
+        <result property="userLevelId" column="user_level_id"/>
+        <result property="mobile" column="mobile"/>
+        <result property="registerIp" column="register_ip"/>
+        <result property="age" column="age"/>
+        <result property="status" column="status"/>
+        <result property="remarks" column="remarks"/>
+        <result property="nickname" column="nickname"/>
+        <result property="weixin_openid" column="weixinOpenid"/>
+        <result property="weixin_code" column="weixinCode"/>
+        <result property="avatar" column="avatar"/>
+    </resultMap>
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.platform.entity.SmsLogVo" id="smslogMap">
+        <result property="id" column="id"/>
+        <result property="user_id" column="user_id"/>
+        <result property="phone" column="phone"/>
+        <result property="log_date" column="log_date"/>
+        <result property="sms_code" column="sms_code"/>
+        <result property="send_status" column="send_status"/>
+        <result property="sms_text" column="sms_text"/>
+        <result property="is_used" column="is_used"/>
+    </resultMap>
+    
+    <select id="queryByUserName" resultType="com.platform.entity.ZdUserVo">
+		select
+			`id`,
+			`nickname`,
+			`avatar`,
+			`weixin_code`,
+			`weixin_openid`,
+			`username`,
+			`password`,
+			`gender`,
+			`register_time`,
+			`last_login_time`,
+			`last_login_ip`,
+			`user_level_id`,
+			`mobile`,
+			`register_ip`,
+			`age`,
+			`status`,
+			`remarks`
+		from zd_user
+		where username = #{username}
+	</select>
+
+	<select id="queryObject" resultType="com.platform.entity.ZdUserVo">
+		select
+			`id`,
+			`nickname`,
+			`avatar`,
+			`weixin_code`,
+			`weixin_openid`,
+			`username`,
+			`password`,
+			`gender`,
+			`register_time`,
+			`last_login_time`,
+			`last_login_ip`,
+			`user_level_id`,
+			`mobile`,
+			`register_ip`,
+			`age`,
+			`status`,
+			`remarks`
+		from zd_user
+		where id = #{id}
+	</select>
+
+	<select id="queryList" resultType="com.platform.entity.ZdUserVo">
+		select
+    		`id`,
+    		`username`,
+    		`nickname`,
+    		`avatar`,
+			`weixin_code`,
+			`weixin_openid`,
+    		`password`,
+    		`gender`,
+    		`register_time`,
+    		`last_login_time`,
+    		`last_login_ip`,
+    		`user_level_id`,
+    		`mobile`,
+    		`register_ip`,
+    		`age`,
+    		`status`,
+    		`remarks`
+		from zd_user
+		WHERE 1=1
+		<if test="name != null and name.trim() != ''">
+			AND name LIKE concat('%',#{name},'%')
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from zd_user
+		WHERE 1=1
+        <if test="name != null and name.trim() != ''">
+            AND name LIKE concat('%',#{name},'%')
+        </if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.ZdUserVo" useGeneratedKeys="true" keyProperty="id">
+		insert into zd_user(
+			`username`,
+			`nickname`,
+			`weixin_code`,
+			`weixin_openid`,
+			`password`,
+			`gender`,
+			`register_time`,
+			`last_login_time`,
+			`last_login_ip`,
+			`user_level_id`,
+			`mobile`,
+			`register_ip`,
+			`age`,
+			`status`,
+			`avatar`,
+			`remarks`)
+		values(
+			#{username},
+			#{nickname},
+			#{weixinCode},
+			#{weixinOpenid},
+			#{password},
+			#{gender},
+			#{registerTime},
+			#{lastLoginTime},
+			#{lastLoginIp},
+			#{userLevelId},
+			#{mobile},
+			#{registerIp},
+			#{age},
+			#{status},
+			#{avatar},
+			#{remarks})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.ZdUserVo">
+		update zd_user 
+		<set>
+			<if test="username != null">`username` = #{username}, </if>
+			<if test="password != null">`password` = #{password}, </if>
+			<if test="gender != null">`gender` = #{gender}, </if>
+			<if test="registerTime != null">`register_time` = #{registerTime}, </if>
+			<if test="lastLoginTime != null">`last_login_time` = #{lastLoginTime}, </if>
+			<if test="lastLoginIp != null">`last_login_ip` = #{lastLoginIp}, </if>
+			<if test="userLevelId != null">`user_level_id` = #{userLevelId}, </if>
+			<if test="mobile != null">`mobile` = #{mobile}, </if>
+			<if test="registerIp != null">`register_ip` = #{registerIp}, </if>
+			<if test="age != null">`age` = #{age}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="remarks != null">`remarks` = #{remarks},</if>
+			<if test="nickname != null">`nickname` = #{nickname},</if>
+			<if test="avatar != null">`avatar` = #{avatar},</if>
+			<if test="weixinCode != null">`weixin_code` = #{weixinCode},</if>
+			<if test="weixinOpenid != null">`weixin_openid` = #{weixinOpenid}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from zd_user where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from zd_user where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<select id="queryByUserId" resultType="java.util.Map">
+		select
+			`id`,
+			`username`,
+			`password`,
+			`avatar`,
+			`nickname`,
+			`weixin_code`,
+			`weixin_openid`,
+			`gender`,
+			`register_time`,
+			`last_login_time`,
+			`last_login_ip`,
+			`user_level_id`,
+			`mobile`,
+			`register_ip`,
+			`age`,
+			`status`,
+			`remarks`
+		from zd_user
+		where id = #{id}
+		and status=0
+	</select>
+	
+	<insert id="saveSmsCodeLog" parameterType="com.platform.entity.SmsLogVo">
+        insert into zd_sms_log(
+        `id`,
+        `user_id`,
+        `phone`,
+        `log_date`,
+        `sms_code`,
+        `send_status`,
+        `type`,
+        `is_used`,
+        `sms_text`)
+        values(
+        #{id},
+        #{user_id},
+        #{phone},
+        #{log_date},
+        #{sms_code},
+        #{send_status},
+        #{type},
+        #{is_used},
+        #{sms_text}
+        )
+    </insert>
+    
+    <select id="querySmsCodeTodayLast" resultMap="smslogMap">
+		select
+		a.id,
+		a.user_id,
+		a.phone,
+		a.log_date,
+		a.sms_code,
+		a.send_status,
+		a.type,
+		a.is_used,
+		a.sms_text
+		from zd_sms_log a
+		where a.type = #{type} and a.phone = #{mobile}
+		and a.log_date > UNIX_TIMESTAMP(date_add(NOW(), interval -1 minute))
+		and a.is_used != 1
+		order by a.log_date desc
+		limit 1
+    </select>
+    
+    <update id="updateSmsLog" >
+      update zd_sms_log 
+		<set>
+			`is_used` = #{is_used}
+		</set>
+		where id = #{id}
+    </update>
+    
+    <update id="updateMobile" parameterType="com.platform.entity.ZdUserVo">
+      update zd_user 
+		<set>
+			<if test="mobile != null">`mobile` = #{mobile}, </if>
+		</set>
+		where id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,60 @@
+<template>
+  <page :better-scroll="true" ref="scroll">
+    <home-banner></home-banner>
+    <home-nav @click-tab="tabList"></home-nav>
+    <home-list-one v-show="this.listShow == 0"></home-list-one>
+    <home-list-two v-show="this.listShow == 1"></home-list-two>
+  </page>
+</template>
+
+<script type="text/ecmascript-6">
+import Vue from 'vue'
+import homeBanner from './home-banner'
+import homeNav from './home-nav'
+import homeListOne from './home-list-one'
+import homeListTwo from './home-list-two'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
+export default {
+  data (){
+    return{
+      listShow: 0,
+    }
+  },
+
+  computed: {
+    ...mapState('z_home', ['home'])
+    
+  },
+  components: {
+    homeBanner,
+    homeNav,
+    homeListOne,
+    homeListTwo,
+  },
+  methods: {
+    ...mapActions('z_home', ['getHome']),
+    tabList(dt){
+      
+      console.log("dt:",dt);
+      if(dt.item.id == 0){
+        this.listShow = 0;
+      }else if(dt.item.id == 1){
+        this.listShow = 1;
+      }
+    }
+  },
+  created() {
+    //this.getHome();
+  },
+  activated(){
+
+  },
+  
+}
+</script>
+
+
+<style lang="less" scoped>
+
+</style>

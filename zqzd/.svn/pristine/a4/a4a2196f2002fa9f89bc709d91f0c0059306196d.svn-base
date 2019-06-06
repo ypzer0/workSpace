@@ -1,0 +1,93 @@
+<template>
+    <div>
+        <div class="details-title-box">
+            <p class="details-title">{{goodsDetail.gname}}</p>
+            <p class="goods_describe">市场价最高可兑换{{goodsDetail.marketPrice}}元商品,最高可省{{goodsDetail.preferentialPrice}}元</p>
+            <p class="details-goods-message"><span class="details-goods-price">￥{{goodsDetail.price}}</span><span class="details-goods-inventory">库存：{{goodsDetail.count}}</span></p>
+        </div>
+        <div class="details-quantity">
+            <p class="details-selected">已选：<span>{{goodsDetailDt.count}}张</span></p>
+            <div class="details-amount">
+                <p class="details-goods-message">数量：</p>
+                <m-number :value="goodsDetailDt.count" @change="GoodsNumChange"></m-number>
+            </div>
+        </div>
+        
+    </div>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default{
+  props:['info', 'spro'],
+  data () {
+    return {
+        
+    }
+  },
+
+  computed: {
+      ...mapState('y_goods_detail', ['goodsDetail', 'goodsDetailDt']),
+  },
+
+  methods: {
+      ...mapActions('y_goods_detail', ['GoodsNumChange']),
+  },
+  created(){
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .details-title-box{
+      width: 92%;
+      margin: 0 auto;
+      margin-top: 20px;
+      font-size: 32px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid #e5e5e5;
+      .goods_describe{
+        left: 20px;
+        margin-top: 20px;
+        font-size: 24px;
+        color:#ff6839;
+      }
+      .details-goods-message{
+        display: flex;
+        justify-content: space-between;
+        margin-top: 40px;
+        .details-goods-price{
+            font-size: 40px;
+            color: #ff4539;
+        }
+        .details-goods-inventory{
+            font-size: 28px;
+            color: #838383;
+        }
+      }
+  }
+  .details-quantity{
+      width: 92%;
+      margin: 0 auto;
+      margin-top: 20px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid #e5e5e5;
+      .details-selected{
+          font-size: 30px;
+          color: #838383;
+          span{
+              color: #333333;
+          }
+      }
+      .details-amount{
+          display: flex;
+          margin-top: 20px;
+          .details-goods-message{
+              font-size: 30px;
+              color: #838383;
+              line-height: 6.667vw;
+          }
+      }
+  }
+    
+</style>

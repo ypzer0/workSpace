@@ -1,0 +1,424 @@
+package com.platform.entity;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ * 实体
+ * 表名 coupon_order
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-22 11:10:01
+ */
+public class CouponOrderVo implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    //
+    private Integer id;
+    //订单号
+    private String orderSn;
+    //用户ID
+    private Integer userId;
+    //订单状态  0：未支付  1：支付成功  2：支付失败  3：纠纷中 4：已完成   5：已关闭
+    private Integer orderStatus;
+    //购买成功 0:未支付 1:支付成功
+    private Integer payStatus;
+    //0:微信支付 1：支付宝
+    private Integer payType;
+    //订单总价
+    private BigDecimal orderPrice;
+    //添加时间
+    private Date addTime;
+    //下单时间
+    private Date confirmTime;
+    //支付时间
+    private Date payTime;
+    //订单类型0：正常订单 1：纠纷订单
+    private Integer orderType;
+    //商品二级分类Id
+    private Integer gId;
+    //用户昵称
+    private String nickname;
+    //用户编码
+    private String uCode;
+    //平台类型
+    private String platType;
+    //商品编号
+    private String goodsSn;
+    //商品名称
+    private String name;
+    //商品顶级分类
+    private String topName;
+    //商品上级分类
+    private String parentName;
+    //收购价
+    private BigDecimal buyPrice;
+    //卖出价
+    private BigDecimal salePrice;
+    //兑换码（加密）
+    private String redeemCode;
+    //图片路径（加密）
+    private String imgPath;
+    //卖家Id
+    private String cCode;
+    //商品种类id
+    private Integer cId;
+    //购买数量
+    private Integer buyCount;
+    // 有效期
+ 	private Date effTime;
+ 	// 是否使用
+ 	private Integer isUsed;
+ 	//使用须知
+ 	private String userMsg;
+ 	//商品分类图片
+ 	private String picUrl;
+ 	//商品id
+ 	private String goodsId;
+ 	// 是否使用
+  	private Integer sumId;
+  	//收购价
+    private BigDecimal sumMoney;
+	@Override
+	public String toString() {
+		return "CouponOrderVo [id=" + id + ", orderSn=" + orderSn + ", userId=" + userId + ", orderStatus="
+				+ orderStatus + ", payStatus=" + payStatus + ", payType=" + payType + ", orderPrice=" + orderPrice
+				+ ", addTime=" + addTime + ", confirmTime=" + confirmTime + ", payTime=" + payTime + ", orderType="
+				+ orderType + ", gId=" + gId + ", nickname=" + nickname + ", uCode=" + uCode + ", platType=" + platType
+				+ ", goodsSn=" + goodsSn + ", name=" + name + ", topName=" + topName + ", parentName=" + parentName
+				+ ", buyPrice=" + buyPrice + ", salePrice=" + salePrice + ", redeemCode=" + redeemCode + ", imgPath="
+				+ imgPath + ", cCode=" + cCode + ", cId=" + cId + ", buyCount=" + buyCount + ", effTime=" + effTime
+				+ ", isUsed=" + isUsed + ", userMsg=" + userMsg + "]";
+	}
+	
+	
+	public Integer getSumId() {
+		return sumId;
+	}
+
+
+	public void setSumId(Integer sumId) {
+		this.sumId = sumId;
+	}
+
+
+	public BigDecimal getSumMoney() {
+		return sumMoney;
+	}
+
+
+	public void setSumMoney(BigDecimal sumMoney) {
+		this.sumMoney = sumMoney;
+	}
+
+
+	public String getGoodsId() {
+		return goodsId;
+	}
+
+
+	public void setGoodsId(String goodsId) {
+		this.goodsId = goodsId;
+	}
+
+
+	public String getPicUrl() {
+		return picUrl;
+	}
+	public void setPicUrl(String picUrl) {
+		this.picUrl = picUrl;
+	}
+	
+	public String getUserMsg() {
+		return userMsg;
+	}
+
+	public void setUserMsg(String userMsg) {
+		this.userMsg = userMsg;
+	}
+
+	public String getTopName() {
+		return topName;
+	}
+	public void setTopName(String topName) {
+		this.topName = topName;
+	}
+	public String getParentName() {
+		return parentName;
+	}
+	public void setParentName(String parentName) {
+		this.parentName = parentName;
+	}
+	
+	public Integer getIsUsed() {
+		return isUsed;
+	}
+
+
+	public void setIsUsed(Integer isUsed) {
+		this.isUsed = isUsed;
+	}
+
+
+	public Date getEffTime() {
+		return effTime;
+	}
+
+
+	public void setEffTime(Date effTime) {
+		this.effTime = effTime;
+	}
+
+
+	public Integer getBuyCount() {
+		return buyCount;
+	}
+
+
+	public void setBuyCount(Integer buyCount) {
+		this.buyCount = buyCount;
+	}
+
+
+	public Integer getcId() {
+		return cId;
+	}
+
+	public void setcId(Integer cId) {
+		this.cId = cId;
+	}
+
+	public String getcCode() {
+		return cCode;
+	}
+
+	public void setcCode(String cCode) {
+		this.cCode = cCode;
+	}
+
+	public String getImgPath() {
+		return imgPath;
+	}
+
+	public void setImgPath(String imgPath) {
+		this.imgPath = imgPath;
+	}
+
+	public String getRedeemCode() {
+		return redeemCode;
+	}
+
+	public void setRedeemCode(String redeemCode) {
+		this.redeemCode = redeemCode;
+	}
+
+	public String getGoodsSn() {
+		return goodsSn;
+	}
+
+	public void setGoodsSn(String goodsSn) {
+		this.goodsSn = goodsSn;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public BigDecimal getBuyPrice() {
+		return buyPrice;
+	}
+
+	public void setBuyPrice(BigDecimal buyPrice) {
+		this.buyPrice = buyPrice;
+	}
+
+	public BigDecimal getSalePrice() {
+		return salePrice;
+	}
+
+	public void setSalePrice(BigDecimal salePrice) {
+		this.salePrice = salePrice;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public String getuCode() {
+		return uCode;
+	}
+
+	public void setuCode(String uCode) {
+		this.uCode = uCode;
+	}
+
+	public String getPlatType() {
+		return platType;
+	}
+
+	public void setPlatType(String platType) {
+		this.platType = platType;
+	}
+
+	public Integer getgId() {
+		return gId;
+	}
+
+	public void setgId(Integer gId) {
+		this.gId = gId;
+	}
+
+	/**
+     * 设置：
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * 获取：
+     */
+    public Integer getId() {
+        return id;
+    }
+    /**
+     * 设置：订单号
+     */
+    public void setOrderSn(String orderSn) {
+        this.orderSn = orderSn;
+    }
+
+    /**
+     * 获取：订单号
+     */
+    public String getOrderSn() {
+        return orderSn;
+    }
+    /**
+     * 设置：用户ID
+     */
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    /**
+     * 获取：用户ID
+     */
+    public Integer getUserId() {
+        return userId;
+    }
+    /**
+     * 设置：订单状态  0：未支付  1：支付成功  2：支付失败 3:纠纷中 4：订单完成 5：订单关闭
+     */
+    public void setOrderStatus(Integer orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    /**
+     * 获取：订单状态  0：未支付  1：支付成功  2：支付失败
+     */
+    public Integer getOrderStatus() {
+        return orderStatus;
+    }
+    /**
+     * 设置：购买成功
+     */
+    public void setPayStatus(Integer payStatus) {
+        this.payStatus = payStatus;
+    }
+
+    /**
+     * 获取：购买成功
+     */
+    public Integer getPayStatus() {
+        return payStatus;
+    }
+    /**
+     * 设置：0:微信支付 1：支付宝
+     */
+    public void setPayType(Integer payType) {
+        this.payType = payType;
+    }
+
+    /**
+     * 获取：0:微信支付 1：支付宝
+     */
+    public Integer getPayType() {
+        return payType;
+    }
+    /**
+     * 设置：订单总价
+     */
+    public void setOrderPrice(BigDecimal orderPrice) {
+        this.orderPrice = orderPrice;
+    }
+
+    /**
+     * 获取：订单总价
+     */
+    public BigDecimal getOrderPrice() {
+        return orderPrice;
+    }
+    /**
+     * 设置：添加时间
+     */
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+    /**
+     * 获取：添加时间
+     */
+    public Date getAddTime() {
+        return addTime;
+    }
+    /**
+     * 设置：下单时间
+     */
+    public void setConfirmTime(Date confirmTime) {
+        this.confirmTime = confirmTime;
+    }
+
+    /**
+     * 获取：下单时间
+     */
+    public Date getConfirmTime() {
+        return confirmTime;
+    }
+    /**
+     * 设置：支付时间
+     */
+    public void setPayTime(Date payTime) {
+        this.payTime = payTime;
+    }
+
+    /**
+     * 获取：支付时间
+     */
+    public Date getPayTime() {
+        return payTime;
+    }
+    /**
+     * 设置：订单类型
+     */
+    public void setOrderType(Integer orderType) {
+        this.orderType = orderType;
+    }
+
+    /**
+     * 获取：订单类型
+     */
+    public Integer getOrderType() {
+        return orderType;
+    }
+}

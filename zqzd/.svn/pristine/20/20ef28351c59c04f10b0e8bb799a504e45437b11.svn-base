@@ -1,0 +1,289 @@
+export default [
+  { 
+    path: '*', 
+    component: (resolve) => require(['../pages/error/404.vue'], resolve)  
+  },
+  {
+    path: '/MP_verify_VFWs6ecdlScbAQEY.txt',
+    name: '/',
+    component: () => import('@/secret/weixin1'),
+    // @/secret/weixin.txt
+  },
+  {
+    path: '/',
+    name: '/',
+    redirect: '/y-goods-home'
+  },
+  // {
+  //   path: '/test',
+  //   name: '/test',
+  //   component: () => import('@/pages/y_test/test')
+  // },
+  {
+    path: '/search',
+    name: 'search',
+    component: () => import('@/pages/search/search')
+  },
+  //卡券项目路由
+  {
+    path: '/y-login',
+    name: 'y-login',
+     meta: {
+       title: '用户登录',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/y-login/login')
+  },
+  {
+    path: '/y-order/list',
+    name: 'order-list',
+     meta: {
+       title: '订单列表',
+      requiresAuth: true
+     },
+    component: () => import('@/pages/y-order/order-list')
+  },
+
+  {
+    path: '/y-home',
+    name: 'y-home',
+     meta: {
+       title: '鼎鑫权益',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/y-home/home')
+  },
+
+  {
+    path: '/y-goods-home',
+    name: 'y-goods-home',
+     meta: {
+       title: '优惠券商城',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/y-goods-home/goods')
+  },
+
+  {
+    path: '/y-goods-home-classky-list',
+    name: 'y-goods-home-classky-list',
+     meta: {
+       title: '优惠券商城列表详情',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/y-goods-home-classky-list/goods-list')
+  },
+
+  {
+    path: '/y-details/:gid',
+    name: 'details',
+     meta: {
+       title: '商品详情',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/y-details/details')
+  },
+
+  {
+    path: '/y-favorites',
+    name: 'y-favorites',
+    meta: {
+      title: '收藏夹',
+      requiresAuth: true
+     },
+    component: () => import('@/pages/y-favorites/favorites')
+  },
+
+  {
+    path: '/y-pay',
+    name: 'pay',
+     meta: {
+      title: '支付',
+      requiresAuth: true
+     },
+    component: () => import('@/pages/y-pay/pay')
+  },
+
+  {
+    path: '/y-pay-success',
+    name: 'pay-success',
+     meta: {
+      title: '支付成功',
+      requiresAuth: true
+     },
+    component: () => import('@/pages/y-pay-success/pay-success')
+  },
+
+  {
+    path: '/y-my',
+    name: 'y-my',
+     meta: {
+       title: '我的',
+       requiresAuth: true
+     },
+    component: () => import('@/pages/y-my/my')
+  },
+
+  {
+    path: '/y-sell',
+    name: 'sell',
+     meta: {
+      title: '寄卖',
+      requiresAuth: true
+     },
+    component: () => import('@/pages/y-sell/sell-list')
+  },
+
+  {
+    path: '/y-buy',
+    name: 'buy',
+     meta: {
+      title: '购买',
+      requiresAuth: true
+     },
+    component: () => import('@/pages/y-buy/buy-list')
+  },
+
+  {
+    path: '/y-after-sales',
+    name: 'after-sales',
+     meta: {
+      title: '售后',
+      requiresAuth: true
+     },
+    component: () => import('@/pages/y-after-sales/after-sales')
+  },
+
+  {
+    path: '/y-money-detail',
+    name: 'money-detail',
+     meta: {
+      title: '资金明细',
+      requiresAuth: true
+     },
+    component: () => import('@/pages/y-money-detail/money-detail')
+  },
+  {
+    path: '/y-withdrawal',
+    name: 'withdrawal',
+     meta: {
+      title: '提现',
+      requiresAuth: true
+     },
+    component: () => import('@/pages/y-withdrawal/withdrawal')
+  },
+
+  {
+    path: '/y-service',
+    name: 'service',
+     meta: {
+       title: '客服',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/y-service/service')
+  },
+
+  {
+    path: '/y-use-explain/:gid',
+    name: 'use-explain',
+     meta: {
+       title: '卡券说明',
+    //   requiresAuth: true
+     },
+    component: () => import('@/pages/y-use-explain/use-explain')
+  },
+
+  {
+    path: '/y-use-details',
+    name: 'use-details',
+     meta: {
+      title: '使用详情',
+      requiresAuth: true
+     },
+    component: () => import('@/pages/y-use-details/use-details')
+  },
+
+  {
+    path: '/y-upload-category',
+    name: 'upload-category',
+     meta: {
+      title: '添加类目',
+      requiresAuth: true
+     },
+    component: () => import('@/pages/y-upload-category/upload-category')
+  },
+
+  {
+    path: '/y-change-phone',
+    name: 'change-phone',
+     meta: {
+      title: '更换手机',
+      requiresAuth: true
+     },
+    component: () => import('@/pages/y-change-phone/change-phone')
+  },
+
+  {
+    path: '/y-setting',
+    name: 'setting',
+     meta: {
+       title: '设置',
+      requiresAuth: true
+     },
+    component: () => import('@/pages/y-setting/setting')
+  },
+  
+  {
+    path: '/y-user-info',
+    name: 'userinfo',
+     meta: {
+       title: '用户信息',
+      requiresAuth: true
+     },
+    component: () => import('@/pages/y-user-info/userinfo')
+  },
+
+  {
+    path: '/y-apply-disputes/:oid',
+    name: 'apply-disputes',
+     meta: {
+       title: '申请纠纷',
+      requiresAuth: true
+     },
+    component: () => import('@/pages/y-apply-disputes/apply-disputes')
+  },
+
+  {
+    path: '/y-about-us',
+    name: 'about',
+     meta: {
+       title: '申请纠纷',
+      requiresAuth: true
+     },
+    component: () => import('@/pages/y-about-us/about')
+  },
+
+  {
+    path: '/y-commission-detail',
+    name: 'commission-detail',
+     meta: {
+       title: '我的推广',
+      requiresAuth: true
+     },
+    component: () => import('@/pages/y-commission-detail/commission-detail')
+  },
+
+
+
+
+  // {
+  //   path: '/order-test',
+  //   name: 'order-test',
+  //   meta: {
+  //     title: '我的订单',
+  //     requiresAuth: true
+  //   },
+  //   component: () => import('@/pages/order-test/order')
+  // },
+
+]

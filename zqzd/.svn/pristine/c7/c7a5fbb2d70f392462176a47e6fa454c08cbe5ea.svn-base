@@ -1,0 +1,232 @@
+<template>
+    <div class="coupon-container">
+        <div class="coupon-form">
+            <div class="input-box">
+                <input class="coupon-sn" placeholder="请输入优惠码" />
+            </div>
+            <div class="add-btn disabled">兑换</div>
+        </div>
+        <div class="help">使用说明</div>
+    <!-- <show-empty-data v-if="list.length<=0" showType="NO_COUPON"></show-empty-data> -->
+        <div v-if="list.length > 0" class="coupon-list">
+            <div v-for="item in list" :key="item.id">
+                <div class="item" :style="item.coupon_status==1?'background: linear-gradient(to right,#cfa568,#e3bf79)':'linear-gradient(to right,#999,#DDDDDD)'">
+                    <!-- <div class="tag">新人专享</div>  -->
+                    <div class="content">
+                    <div class="left">
+                        <div class="name">{{item.name}}</div>
+                        <div class="time">有效期至{{item.use_end_date}}</div>
+                    </div>
+                    <div class="right">
+                        <img v-if="item.coupon_status==1" class='mid-img' src='../../static/images/coupon/coupon_ksy.png'/>
+                        <img v-if="item.coupon_status==2" class='mid-img' src='../../static/images/coupon/coupon_ysy.png'/>
+                        <img v-if="item.coupon_status==3" class='mid-img' src='../../static/images/coupon/coupon_gq.png'/>
+                    </div>
+                    </div>
+                    <div class="condition">
+                    <text class="txt">满￥{{item.min_goods_amount}} 减￥{{item.type_money}}</text>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+
+<script type="text/ecmascript-6">
+import Vue from 'vue'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
+export default {
+  props:[],
+  computed: {
+    ...mapState('coupon', ['list']),
+
+  },
+  components: {
+
+  },
+  methods: {
+  },
+  
+}
+</script>
+
+
+<style lang="less" scoped>
+
+.coupon-container{
+
+.coupon-form{
+  height: 110px;
+  width: 100%;
+  background: #fff;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 20px;
+  display: flex;
+
+    .input-box{
+        flex: 1;
+        height: 70px;
+        color: #333;
+        font-size: 24px;
+        background: #fff;
+        position: relative;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        border-radius: 4px;
+        margin-right: 30px;
+
+        .coupon-sn{
+            position: absolute;
+            top: 10px;
+            left: 30px;
+            height: 50px;
+            width: 100%;
+            color: #000;
+            line-height: 50px;
+            font-size: 24px;
+        }
+        .clear-icon{
+            position: absolute;
+            top: 21px;
+            right: 30px;
+            width: 28px;
+            height: 28px;
+        }
+
+    }
+
+    
+    .add-btn{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 70px;
+        border:none;
+        width: 168px;
+        background: #b4282d;
+        border-radius: 0;
+        line-height: 70px;
+        color: #fff;
+        font-size: 28px;
+    }
+    .disabled{
+        background: #ccc;
+    }
+
+
+}
+
+    .help{
+    height: 72px;
+    line-height: 72px;
+    text-align: right;
+    padding-right: 30px;
+    background: url(https://platform-wxmall.oss-cn-beijing.aliyuncs.com/upload/20180727/15032866437ca8.png) 590px center no-repeat;
+    background-size: 28px;
+    color: #999;
+    font-size: 24px;
+    }
+
+    .coupon-list{
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    padding-left: 30px;
+    padding-right: 30px;
+    }
+
+    .item{
+    position: relative;
+    height: 290px;
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    padding-top: 52px;
+    }
+
+    .tag{
+    height: 32px;
+    background: #A48143;
+    padding-left: 16px;
+    padding-right: 16px;
+    position: absolute;
+    left: 20px;
+    color: #fff;
+    top: 20px;
+    font-size: 20px;
+    text-align: center;
+    line-height: 32px;
+    }
+
+
+    .content{
+    margin-top: 24px;
+    margin-left: 40px;
+    display: flex;
+    margin-right: 40px;
+    flex-direction: row;
+    align-items: center;
+    }
+
+    .content .left{
+    flex: 1;
+    }
+
+    .name{
+    font-size: 44px;
+    color: #fff;
+    margin-bottom: 14px;
+    }
+
+    .time{
+    font-size: 24px;
+    color: rgba(255,255,255, 0.8);
+    line-height: 30px;
+    }
+
+    .content .right{
+    width: 162px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+
+    .content .right  .mid-img {
+    width: 100px;
+    height: 100px;
+    }
+
+    .condition{
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left:0;
+    height: 78px;
+    background: rgba(0,0,0,.08);
+    padding: 24px 40px;
+    display: flex;
+    flex-direction: row;
+    }
+
+    .condition .txt{
+    display: block;
+    height: 30px;
+    flex: 1;
+    overflow: hidden;
+    font-size: 24px;
+    line-height: 30px;
+    color: #fff;
+    }
+
+
+    .condition .icon{
+    margin-left: 30px;
+    width: 24px;
+    height: 24px;
+    }
+
+    
+}
+</style>

@@ -1,0 +1,43 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api'
+
+export const addr = {
+
+    //获取地址列表
+    getAddressList: (params) => {
+        return axios.request({
+        url: api.AddressList,
+        data: params,
+        method: 'post'
+        })
+    },
+
+    //收货地址详情
+    getAddressDetail: (params) => {
+        return axios.request({
+        url: api.AddressDetail,
+        data: params,
+        method: 'post'
+        })
+    },
+    //保存收货地址
+    SaveAddress: (params) => {
+        return axios.request({
+        url: api.AddressSave,
+        data: params,
+        method: 'post'
+        },
+        {
+          cp : 'application/json'
+        })
+    },
+    //删除收货地址
+    DeleteAddress: (params) => {
+        return axios.request({
+        url: api.AddressDelete,
+        data: params,
+        method: 'post'
+        })
+    }
+
+}

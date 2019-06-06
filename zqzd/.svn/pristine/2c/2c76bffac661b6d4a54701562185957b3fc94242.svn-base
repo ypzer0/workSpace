@@ -1,0 +1,46 @@
+<template>
+  <page :better-scroll="true">
+    <feed-header slot="top"></feed-header>
+    <feed-content ></feed-content>
+    <feed-footer @sbmit-feedback="sbmitFeedback" slot="bottom"></feed-footer>
+    
+  </page>
+</template>
+
+<script type="text/ecmascript-6">
+import feedHeader from './feed-header'
+import feedContent from './feed-content'
+import feedFooter from './feed-footer'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {toast} from '@/libs/cube-ui'
+
+export default {
+    
+  data(){
+      return{
+        array: ['请选择反馈类型', '商品相关', '物流状况', '客户服务', '优惠活动', '功能异常', '产品建议', '其他'],
+        
+      }
+  },
+  computed: {
+    ...mapState('feed', ['feedForm']),
+
+  },
+  components: {
+    feedHeader,
+    feedContent,
+    feedFooter
+  },
+  methods:{
+    ...mapActions('feed', ['saveFeed']),
+    sbmitFeedback (e){
+        this.saveFeed();
+    },
+  }
+}
+</script>
+
+<style lang="less" scoped>
+
+
+</style>

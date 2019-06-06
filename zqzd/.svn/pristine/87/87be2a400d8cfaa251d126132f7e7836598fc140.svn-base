@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>测试界面</title>
+ 	#parse("sys/header.html")
+</head>
+<body>
+	<div id="test">
+		<h1>{{ name }}</h1>
+	</div>
+	<script type="test.js"></script>
+</body>
+</html>

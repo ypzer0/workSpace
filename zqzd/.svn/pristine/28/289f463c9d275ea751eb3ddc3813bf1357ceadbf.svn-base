@@ -1,0 +1,59 @@
+package com.platform.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.dao.CouponIssueHandleLogDao;
+import com.platform.entity.CouponIssueHandleLogEntity;
+import com.platform.service.CouponIssueHandleLogService;
+
+/**
+ * Service实现类
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-24 13:46:57
+ */
+@Service("CouponissueHandleLogService")
+public class CouponIssueHandleLogServiceImpl implements CouponIssueHandleLogService {
+    @Autowired
+    private CouponIssueHandleLogDao CouponissueHandleLogDao;
+
+    @Override
+    public CouponIssueHandleLogEntity queryObject(Integer id) {
+        return CouponissueHandleLogDao.queryObject(id);
+    }
+
+    @Override
+    public List<CouponIssueHandleLogEntity> queryList(Map<String, Object> map) {
+        return CouponissueHandleLogDao.queryList(map);
+    }
+
+    @Override
+    public int queryTotal(Map<String, Object> map) {
+        return CouponissueHandleLogDao.queryTotal(map);
+    }
+
+    @Override
+    public int save(CouponIssueHandleLogEntity CouponissueHandleLog) {
+        return CouponissueHandleLogDao.save(CouponissueHandleLog);
+    }
+
+    @Override
+    public int update(CouponIssueHandleLogEntity CouponissueHandleLog) {
+        return CouponissueHandleLogDao.update(CouponissueHandleLog);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return CouponissueHandleLogDao.delete(id);
+    }
+
+    @Override
+    public int deleteBatch(Integer[] ids) {
+        return CouponissueHandleLogDao.deleteBatch(ids);
+    }
+}

@@ -1,0 +1,79 @@
+import * as types from './mutation-types'
+
+export const mutations = {
+  [types.INIT_IDENTIFY_TIMER] (state, o) {
+    state.identifyingCode.timer = o
+  },
+  [types.CLEAR_IDENTIFY_TIMER] (state) {
+    clearInterval(state.identifyingCode.timer)
+    state.identifyingCode.timer = null
+    state.identifyingCode.time = 60
+  },
+  [types.UPDATE_IDENTIFY_TIMER] (state, n) {
+    state.identifyingCode.time = n
+  },
+
+  [types.LOAD_ORDER](state, n){
+    state.order.list.old = n;
+    state.order.list.list = [];
+
+    n.data.forEach(ele => {
+      ele.goods = n.goodsList.filter(m => {
+        return m.order_id == ele.id
+      })
+      state.order.list.list.push(ele);
+    });
+    
+  },
+  
+  [types.LOAD_WAITPAY] (state, n) {
+    state.order.waitPay.old = n;
+    state.order.waitPay.list = [];
+    
+    n.data.forEach(ele => {
+      ele.goods = n.goodsList.filter(m => {
+        return m.order_id == ele.id
+      })
+      state.order.waitPay.list.push(ele);
+    });
+
+  },
+  [types.LOAD_WAITSHIP] (state, n) {
+    
+    state.order.waitShip.old = n;
+    state.order.waitShip.list = [];
+
+    n.data.forEach(ele => {
+      ele.goods = n.goodsList.filter(m => {
+        return m.order_id == ele.id
+      })
+      state.order.waitShip.list.push(ele);
+    });
+  },
+  [types.LOAD_READYSHIP] (state, n) {
+    
+    state.order.readyShip.old = n;
+    state.order.readyShip.list = [];
+
+    n.data.forEach(ele => {
+      ele.goods = n.goodsList.filter(m => {
+        return m.order_id == ele.id
+      })
+      state.order.readyShip.list.push(ele);
+    });
+
+  },
+  [types.LOAD_RECODE] (state, n) {
+    
+    state.order.recode.old = n;
+    state.order.recode.list = [];
+
+    n.data.forEach(ele => {
+      ele.goods = n.goodsList.filter(m => {
+        return m.order_id == ele.id
+      })
+      state.order.recode.list.push(ele);
+    });
+
+  },
+}

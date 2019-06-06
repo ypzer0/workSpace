@@ -1,0 +1,61 @@
+import * as types from './mutation-types'
+import {api} from '@/service/api'
+import {toast} from '@/libs/cube-ui'
+//import session from '@/libs/session'
+
+export const actions = {
+  async getHaveBuy ({dispatch, commit}, o) {
+      let res = await api.y_have_buy.haveBuy(o)
+      if (res.success) {
+        commit(types.INIT_Have_Buy, res.data)
+      } else {
+        toast(res.msg, 'warn')
+      }
+  },
+
+  //购买-未使用
+  async getUnusedBuy ({dispatch, commit}, o) {
+
+    o = {
+      status: 0
+    }
+
+    let res = await api.y_have_buy.unusedBuy(o)
+    if (res.success) {
+      commit(types.INIT_UNUSED, res.data)
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+  //购买-已完成
+  async getCompleteBuy ({dispatch, commit}, o) {
+
+    o = {
+      status: 1
+    }
+
+    let res = await api.y_have_buy.completeBuy(o)
+    if (res.success) {
+      commit(types.INIT_COMPLETE, res.data)
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+  //购买-处理中
+  async getProcessingBuy ({dispatch, commit}, o) {
+
+    o = {
+      status: 2
+    }
+
+    let res = await api.y_have_buy.processingBuy(o)
+    if (res.success) {
+      commit(types.INIT_PROCESSING, res.data)
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+}

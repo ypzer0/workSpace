@@ -1,0 +1,4 @@
+export const INIT_PROMOTE = 'INIT_PROMOTE'
+export const INIT_COMMISSION = 'INIT_COMMISSION'
+export const INIT_JUNIOR = 'INIT_JUNIOR'
+

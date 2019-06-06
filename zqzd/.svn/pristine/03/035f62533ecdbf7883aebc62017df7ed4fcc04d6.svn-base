@@ -1,0 +1,18 @@
+import * as types from './mutation-types'
+
+export const mutations = {
+  [types.INIT_HOME_CLASSIFY] (state, o) {
+    state.homeClassify = o;
+  },
+  //赋值父目录
+  [types.INIT_PARENT_CLASSIFY](state, o){
+    state.parentClassfy = o.epmi;
+  },
+  
+  //赋值子目录
+  [types.INIT_CHILD_CLASSIFY](state, o){
+    state.childClassfy = o.secondClassify;
+  }
+
+
+}

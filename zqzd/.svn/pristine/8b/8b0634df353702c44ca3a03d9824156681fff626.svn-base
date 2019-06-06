@@ -1,0 +1,50 @@
+<template>
+  <div slot="top">
+    <div class="but_Show_hidden" @click="btnShow"><img src="../../static/images/buy-show.png" /></div>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+
+export default{
+  data () {
+    return {
+
+    }
+  },
+  computed: {
+
+  },
+  components: {
+
+  },
+  methods: {
+    //伸缩显示隐藏事件
+    btnShow:function(){
+      console.log("000");
+      this.$emit('click-hide');
+      console.log("111");
+    }
+    
+
+  },
+  created () {
+  }
+}
+</script>
+
+
+<style lang="less" scoped>
+  .but_Show_hidden{
+    //width: 66px;
+    height: 150px;
+    position: fixed;
+    top: 45%;
+    left: 0%;
+    z-index: 9;
+    img{
+      //width: 100%;
+      height: 100%;
+    }
+  }
+</style>

@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ApiCategoryMapper">
+
+    <resultMap type="com.platform.entity.CouponCategoryVo" id="CouponcategoryMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="keywords" column="keywords"/>
+        <result property="frontDesc" column="front_desc"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="sortOrder" column="sort_order"/>
+        <result property="isShow" column="is_show"/>
+        <result property="marketPrice" column="market_price"/>
+        <result property="salePrice" column="sale_price"/>
+        <result property="buyPrice" column="buy_price"/>
+        <result property="proPrice" column="pro_price"/>
+        <result property="src" column="src"/>
+        <result property="goodsDesc" column="goods_desc"/>
+        <result property="reminder" column="reminder"/>
+        <result property="service" column="service"/>
+        <result property="userMsg" column="user_msg"/>
+        <result property="maxCount" column="max_count"/>
+        <result property="saleTimes" column="sale_times"/>
+        <result property="picUrl" column="pic_url"/>
+        <result property="picBigUrl" column="pic_big_url"/>
+        <result property="handlerId" column="handler_id"/>
+        <result property="addTime" column="add_time"/>
+        <result property="parentName" column="parent_name"/>
+        <result property="handlerName" column="username"/>
+        <result property="status" column="status"/>
+        <result property="goodsNumber" column="goods_number"/>
+        
+    </resultMap>
+
+
+	<select id="queryObjectBuy" resultType="com.platform.entity.CouponCategoryVo">
+		select
+			c.`id`,
+			c.`name`,
+			c.`keywords`,
+			c.`front_desc`,
+			c.`parent_id`,
+			c.`sort_order`,
+			c.`is_show`,
+			c.`market_price`,
+			c.`sale_price`,
+			c.`buy_price`,
+			c.`pro_price`,
+			c.`src`,
+			c.`goods_desc`,
+			c.`reminder`,
+			c.`service`,
+			c.`user_msg`,
+			c.`max_count`,
+			c.`sale_times`,
+			c.`pic_url`,
+			c.`pic_big_url`,
+			c.`handler_id`,
+			c.`add_time`,
+			pc.`name` as parent_name,
+			su.username,
+    		(select count(*) from coupon_goods_info gg 
+    		where gg.c_id = c.id and gg.is_delete = 0 and gg.is_on_sale != 2
+    		and ifnull(UNIX_TIMESTAMP(gg.eff_time), 0) - UNIX_TIMESTAMP(NOW()) > 0
+    		) `goods_number`,
+			c.`status`
+		from coupon_category c
+		left join coupon_category pc on c.parent_id = pc.id
+		left join sys_user su on su.user_id = c.handler_id
+		where c.id = #{id}
+	</select>
+
+
+	<select id="queryObject" resultType="com.platform.entity.CouponCategoryVo">
+		select
+			c.`id`,
+			c.`name`,
+			c.`keywords`,
+			c.`front_desc`,
+			c.`parent_id`,
+			c.`sort_order`,
+			c.`is_show`,
+			c.`market_price`,
+			c.`sale_price`,
+			c.`buy_price`,
+			c.`pro_price`,
+			c.`src`,
+			c.`goods_desc`,
+			c.`reminder`,
+			c.`service`,
+			c.`user_msg`,
+			c.`max_count`,
+			c.`sale_times`,
+			c.`pic_url`,
+			c.`pic_big_url`,
+			c.`handler_id`,
+			c.`add_time`,
+			pc.`name` as parent_name,
+			su.username,
+			c.`status`
+		from coupon_category c
+		left join coupon_category pc on c.parent_id = pc.id
+		left join sys_user su on su.user_id = c.handler_id
+		where c.id = #{id}
+		
+	</select>
+	
+	<select id="queryByParentId" resultType="com.platform.entity.CouponCategoryVo">
+		select
+			c.`id`,
+			c.`name`,
+			c.`keywords`,
+			c.`front_desc`,
+			c.`parent_id`,
+			c.`sort_order`,
+			c.`is_show`,
+			c.`market_price`,
+			c.`sale_price`,
+			c.`buy_price`,
+			c.`pro_price`,
+			c.`src`,
+			c.`goods_desc`,
+			c.`reminder`,
+			c.`service`,
+			c.`user_msg`,
+			c.`max_count`,
+			c.`sale_times`,
+			c.`pic_url`,
+			c.`pic_big_url`,
+			c.`handler_id`,
+			c.`add_time`,
+			pc.`name` as parent_name,
+			su.username,
+			c.`status`
+		from coupon_category c
+		left join coupon_category pc on c.parent_id = pc.id
+		left join sys_user su on su.user_id = c.handler_id
+		where c.`parent_id` = #{parentId}
+		and c.`is_show` = 1
+	</select>
+	
+	<select id="queryNameByParentId" resultType="com.platform.entity.CouponCategoryVo">
+		select
+			name
+		from 
+			coupon_category 
+		where `id` = #{parentId}
+	</select>
+	
+	<select id="queryList" resultType="com.platform.entity.CouponCategoryVo">
+		select
+			c.`id`,
+			c.`name`,
+			c.`keywords`,
+			c.`front_desc`,
+			c.`parent_id`,
+			c.`sort_order`,
+			c.`is_show`,
+			c.`market_price`,
+			c.`sale_price`,
+			c.`buy_price`,
+			c.`pro_price`,
+			c.`src`,
+			c.`goods_desc`,
+			c.`reminder`,
+			c.`service`,
+			c.`user_msg`,
+			c.`max_count`,
+			c.`sale_times`,
+			c.`pic_url`,
+			c.`pic_big_url`,
+			c.`handler_id`,
+			c.`add_time`,
+			pc.`name` as parent_name,
+			su.username,
+			c.`status`
+		from coupon_category c
+		left join coupon_category pc on c.parent_id = pc.id
+		left join sys_user su on su.user_id = c.handler_id
+		WHERE 1=1 and c.`parent_id` = 0
+		<if test="status != null">
+			AND c.status = #{status}
+		</if>
+		<if test="nostatus != null">
+			AND c.status != #{nostatus}
+		</if>
+		<if test="noParentId != null">
+			AND c.parent_id != #{noParentId}
+		</if>
+		<if test="isShow != null">
+			AND c.is_show = #{isShow}
+		</if>
+		<if test="saleTime != null">
+			AND c.sale_times = #{saleTime}
+		</if>
+		<if test="parentId != null">
+			AND c.parent_id = #{parentId}
+		</if>
+		<if test="name != null and name.trim() != ''">
+			AND c.name LIKE concat('%',#{name},'%')
+		</if>
+		
+		<if test="ids != null and ids.length != 0">
+			AND c.id in 
+			<foreach item="id" collection="ids" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+		
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by c.sort_order
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) 
+		from coupon_category c
+		left join coupon_category pc on c.parent_id = pc.id
+		WHERE 1=1
+		<if test="status != null">
+			AND c.status = #{status}
+		</if>
+		<if test="nostatus != null">
+			AND c.status != #{nostatus}
+		</if>
+		<if test="noParentId != null">
+			AND c.parent_id != #{noParentId}
+		</if>
+		<if test="isShow != null">
+			AND c.is_show = #{isShow}
+		</if>
+		<if test="saleTime != null">
+			AND c.sale_times = #{saleTime}
+		</if>
+		<if test="parentId != null">
+			AND c.parent_id = #{parentId}
+		</if>
+		<if test="name != null and name.trim() != ''">
+			AND c.name LIKE concat('%',#{name},'%')
+		</if>
+		
+	</select>
+	
+ 	<select id="querySum" resultType="java.util.HashMap">
+		select 
+		ifnull(sum(c.market_price), 0.00) as marketPrice,
+		ifnull(sum(c.sale_price), 0.00) as salePrice,
+		ifnull(sum(c.buy_price), 0.00) as buyPrice,
+		ifnull(sum(c.pro_price), 0.00) as proPrice
+		from coupon_category c
+		left join coupon_category pc on c.parent_id = pc.id
+		WHERE 1=1
+		<if test="status != null">
+			AND c.status = #{status}
+		</if>
+		<if test="nostatus != null">
+			AND c.status != #{nostatus}
+		</if>
+		<if test="noParentId != null">
+			AND c.parent_id != #{noParentId}
+		</if>
+		<if test="isShow != null">
+			AND c.is_show = #{isShow}
+		</if>
+		<if test="saleTime != null">
+			AND c.sale_times = #{saleTime}
+		</if>
+		<if test="parentId != null">
+			AND c.parent_id = #{parentId}
+		</if>
+		<if test="name != null and name.trim() != ''">
+			AND c.name LIKE concat('%',#{name},'%')
+		</if>
+		
+	</select>
+	
+	 
+	<insert id="save" parameterType="com.platform.entity.CouponCategoryVo" useGeneratedKeys="true" keyProperty="id">
+		insert into coupon_category(
+			`name`,
+			`keywords`,
+			`front_desc`,
+			`parent_id`,
+			`sort_order`,
+			`is_show`,
+			`market_price`,
+			`sale_price`,
+			`buy_price`,
+			`pro_price`,
+			`src`,
+			`goods_desc`,
+			`reminder`,
+			`service`,
+			`user_msg`,
+			`max_count`,
+			`sale_times`,
+			`pic_url`,
+			`pic_big_url`,
+			`handler_id`,
+			`add_time`,
+			`status`)
+		values(
+			#{name},
+			#{keywords},
+			#{frontDesc},
+			#{parentId},
+			#{sortOrder},
+			#{isShow},
+			#{marketPrice},
+			#{salePrice},
+			#{buyPrice},
+			#{proPrice},
+			#{src},
+			#{goodsDesc},
+			#{reminder},
+			#{service},
+			#{userMsg},
+			#{maxCount},
+			#{saleTimes},
+			#{picUrl},
+			#{picBigUrl},
+			#{handlerId},
+			#{addTime},
+			#{status})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.CouponCategoryVo">
+		update coupon_category 
+		<set>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="keywords != null">`keywords` = #{keywords}, </if>
+			<if test="frontDesc != null">`front_desc` = #{frontDesc}, </if>
+			<if test="parentId != null">`parent_id` = #{parentId}, </if>
+			<if test="sortOrder != null">`sort_order` = #{sortOrder}, </if>
+			<if test="isShow != null">`is_show` = #{isShow}, </if>
+			<if test="marketPrice != null">`market_price` = #{marketPrice}, </if>
+			<if test="salePrice != null">`sale_price` = #{salePrice}, </if>
+			<if test="buyPrice != null">`buy_price` = #{buyPrice}, </if>
+			<if test="proPrice != null">`pro_price` = #{proPrice}, </if>
+			<if test="src != null">`src` = #{src}, </if>
+			<if test="goodsDesc != null">`goods_desc` = #{goodsDesc}, </if>
+			<if test="reminder != null">`reminder` = #{reminder}, </if>
+			<if test="service != null">`service` = #{service}, </if>
+			<if test="userMsg != null">`user_msg` = #{userMsg}, </if>
+			<if test="maxCount != null">`max_count` = #{maxCount}, </if>
+			<if test="saleTimes != null">`sale_times` = #{saleTimes}, </if>
+			<if test="picUrl != null">`pic_url` = #{picUrl}, </if>
+			<if test="picBigUrl != null">`pic_big_url` = #{picBigUrl}, </if>
+			<if test="handlerId != null">`handler_id` = #{handlerId}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="addTime != null">`add_time` = #{addTime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from coupon_category where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from coupon_category where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<update id="changeStatus">
+	update coupon_category set is_show = #{showId}
+	where id in 
+		<foreach item="id" collection="ids" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+	
+	<update id="changeStatusDelete">
+	update coupon_category set status = #{status}
+	where id in 
+		<foreach item="id" collection="ids" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+	
+	
+	
+	
+	<select id="queryNameList" resultType="com.platform.entity.CouponCategoryVo">
+		select
+			`id`,
+			`name`
+		from coupon_category 
+	</select>
+	
+</mapper>

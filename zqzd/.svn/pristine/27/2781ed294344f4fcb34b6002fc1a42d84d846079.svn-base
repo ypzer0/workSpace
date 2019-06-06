@@ -1,0 +1,45 @@
+<template>
+  <div class="category-header border-1px-bottom">
+    <div class="header-search">
+      <i class="iconfont order_search_icon">&#xe670;</i><input class="order_search_input" type="text" placeholder="请输入搜索的内容">
+    </div>
+  </div>
+</template>
+
+<style lang="less" scoped>
+  @import '../../static/less/index';
+  .category-header{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 88px;
+    padding:0 28px;
+    background: white;
+    .header-search{
+      display: flex;
+      align-items: center;
+      flex:1;
+      height: 59px;
+      padding-left:28px;
+      border-radius: 50px;
+      background: #f4f4f4;
+      i{
+        color:#666;
+      }
+      span{
+        padding-left:20px;
+        color:#999;
+      }
+    }
+  }
+  .order_search_input{
+    width: 70vw;
+    height: 8vw;
+    background: #f4f4f4;
+  }
+  .order_search_icon{
+    line-height: 8vw;
+    margin-right: 2vw;
+    margin-left: 3vw;
+  }
+</style>

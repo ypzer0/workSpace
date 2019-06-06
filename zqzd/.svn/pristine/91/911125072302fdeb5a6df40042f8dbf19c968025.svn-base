@@ -1,0 +1,55 @@
+<template>
+  <div class="category-content">
+    <goods-nav-list>
+    </goods-nav-list>
+    <goods-content-sub-list v-if="showTab == 0" :goodsList="goodsList"></goods-content-sub-list>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import goodsNavList from './goods-nav-list'
+import goodsContentSubList from './goods-content-sub-list'
+import {mapState, mapActions} from 'vuex'
+
+export default{
+  data () {
+    return {
+      // currentList: null
+      showTab: 0,
+      scaling: true,
+    }
+  },
+  //props: ['list', 'sublist'],
+  computed: {
+    ...mapState('y_goods_home', ['goodsList'])
+    // subList () {
+    //   if (this.currentList) {
+    //     return this.currentList
+    //   } else {
+    //     return this.list.length ? this.list[0] : {}
+    //   }
+    // }
+  },
+  components: {
+    goodsNavList,
+    goodsContentSubList
+  },
+  methods: {
+    ...mapActions('y_goods_home', ['getGoodsListByCid']),
+  },
+  created(){
+    // this.getGoodsListByCid();
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  @import '../../static/less/index';
+  .category-content{
+    position: absolute;
+    top:0;
+    bottom:0;
+    width:100%;
+    background: white;
+  }
+</style>

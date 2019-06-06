@@ -1,0 +1,15 @@
+import * as types from './mutation-types'
+import { debug } from 'util';
+
+export const mutations = {
+//客服售后
+[types.INIT_SERVICE] (state, o) {
+  state.service = o;
+},
+
+//客服售后获取微信号和手机号
+[types.INIT_CUSTOMER_LOAD] (state, o) {
+  state.customerLoad = o.data;
+},
+
+}

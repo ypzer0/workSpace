@@ -1,0 +1,71 @@
+package com.platform.entity;
+
+public class WeiXinConfigVo {
+	//appId
+	private String appId;
+	//密钥
+	private String secret;
+	//商户号
+	private String mchId;
+	//支付签名
+	private String paySignKey;
+	//微信统一下单
+	private String uniformorder;
+	//返回跳转url
+	private String notifyUrl;
+	//交易类型
+	private String tradeType;
+	//获取用户信息
+	private String usermsg;
+	
+	
+	public String getAppId() {
+		return appId;
+	}
+	public void setAppId(String appId) {
+		this.appId = appId;
+	}
+	public String getSecret() {
+		return secret;
+	}
+	public void setSecret(String secret) {
+		this.secret = secret;
+	}
+	public String getMchId() {
+		return mchId;
+	}
+	public void setMchId(String mchId) {
+		this.mchId = mchId;
+	}
+	public String getPaySignKey() {
+		return paySignKey;
+	}
+	public void setPaySignKey(String paySignKey) {
+		this.paySignKey = paySignKey;
+	}
+	public String getUniformorder() {
+		return uniformorder;
+	}
+	public void setUniformorder(String uniformorder) {
+		this.uniformorder = uniformorder;
+	}
+	public String getNotifyUrl() {
+		return notifyUrl;
+	}
+	public void setNotifyUrl(String notifyUrl) {
+		this.notifyUrl = notifyUrl;
+	}
+	public String getTradeType() {
+		return tradeType;
+	}
+	public void setTradeType(String tradeType) {
+		this.tradeType = tradeType;
+	}
+	public String getUsermsg() {
+		return usermsg;
+	}
+	public void setUsermsg(String usermsg) {
+		this.usermsg = usermsg;
+	}
+	
+}

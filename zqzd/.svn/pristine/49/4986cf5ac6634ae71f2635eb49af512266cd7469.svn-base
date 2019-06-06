@@ -1,0 +1,30 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api'
+export const evaluate = {
+  list: (params) => {
+    return axios.request({
+      url: api.CommentList,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  totalCount: (params) => {
+    return axios.request({
+      url: api.CommentCount,
+      data: params,
+      method: 'post'
+    })
+  },
+  
+  add: (params) => {
+    return axios.request({
+      url: api.CommentPost,
+      data: params,
+      method: 'post'
+    },{
+      cp : 'application/json'
+    })
+  },
+
+}

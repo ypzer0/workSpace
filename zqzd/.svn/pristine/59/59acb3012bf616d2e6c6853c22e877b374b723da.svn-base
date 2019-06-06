@@ -1,0 +1,62 @@
+<template>
+  <page :better-scroll="true" >
+    <msg-detail-header slot="top"></msg-detail-header>
+    <msg-detail-list :list="msglist"></msg-detail-list>
+    <msg-detail-action slot="bottom" @send-msg="sendMsg" :sendAction="sendAction"></msg-detail-action>
+  </page>
+</template>
+
+<script type="text/ecmascript-6">
+import Vue from 'vue'
+import msgDetailHeader from './msg-detail-header'
+import msgDetailList from './msg-detail-list'
+import msgDetailAction from './msg-detail-action'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {toast} from '@/libs/cube-ui'
+
+export default {
+    data(){
+        return {
+            aid : this.$route.params.aid,
+            sendAction: {
+              msg: ''
+            }
+        }
+    },
+  computed: {
+    ...mapState('msg', ['msglist', 'currentAsk']),
+  },
+  components: {
+    msgDetailHeader,
+    msgDetailList,
+    msgDetailAction
+  },
+  methods: {
+    ...mapActions('msg', ['initDetail']),
+    ...mapActions('msg', ['msgSend']),
+    sendMsg(){
+      if(this.sendAction.msg == ''){
+        toast('请输入消息！', 'error');
+        return;
+      }
+      this.msgSend({
+        aid: this.aid,
+        msg: this.sendAction.msg
+      }).then(res=>{
+        if(res.success){
+          this.sendAction.msg = '';
+          
+          // this.$refs.scroll.scrollTo('#goods-details')
+        }
+      });
+    }
+  },
+  created() {
+      this.initDetail( { aid : parseInt(this.aid) } );
+  },
+  activated(){
+
+  },
+  
+}
+</script>

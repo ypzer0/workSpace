@@ -1,0 +1,21 @@
+export default {
+  //商品信息
+  goodsMsg:{
+    // "id": 1,
+    // "remainTime": "01:59:59",
+    // "goodsCategory": "星巴克-大杯 | 中信",
+    // "quantity": 12,
+    // "price": 12.33,
+    // "allPrice": 458.98,
+    // "goodsDetails": "458.98商品类别：星巴克-大杯 | 中信商品类别：星巴克-大杯 | 中信商品类别：星巴克-大杯 | 中信商品类别：星巴克-大杯 | 中信"
+  },
+
+  payDt:{
+    payt : 2,
+    oid: 1,
+
+  }
+
+
+
+}

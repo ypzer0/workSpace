@@ -1,0 +1,12 @@
+export default {
+  //商品信息
+  useExplain:{
+    // "goodsid": "123456",
+    // "instructions": "交流方式看见了第三方离开的福建发的链接东方红郡大富科技打发时间来看打发时间",
+    // "UsingLocal": "看电视了房价来说第三方进来看的十分激烈的将发动机的发生了空间",
+    // "orderCode": "12345678979",
+    // "orderTime": "2019-02-23 11:20:30",
+    // "orderUseImg": "///kjjjjjj"
+  }
+
+}

@@ -1,0 +1,30 @@
+import * as types from './mutation-types'
+import { api } from '@/service/api'
+import {toast} from '@/libs/cube-ui'
+
+export const actions = {
+  //用户注册
+  async getRegister ({dispatch, commit, state}, o) {
+    //debugger;
+      let user;
+      if(state.radioChecke.username == ''){
+        toast('请填写姓名', 'warn')
+      }
+      user = {
+        username: state.radioChecke.username,
+        gender: state.radioChecke.checkedValue,
+        age: state.radioChecke.age,
+        mobile: state.radioChecke.mobile,
+      };
+    
+      //debugger;
+      let res = await api.z_register.register(user)
+      
+      if (res.success) {
+        commit(types.INIT_REGISTER, res.data)
+      } else {
+        toast(res.msg, 'warn')
+      }
+  },
+  
+}

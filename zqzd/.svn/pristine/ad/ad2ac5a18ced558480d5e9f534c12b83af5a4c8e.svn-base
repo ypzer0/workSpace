@@ -1,0 +1,7 @@
+#########################################
+# Caffeine configuration
+# [name] = size, xxxx[s|m|h|d]
+#########################################
+default=1000, 60m
+couponSysCache=1000, 60m
+couponShopCache= 1000, 60m

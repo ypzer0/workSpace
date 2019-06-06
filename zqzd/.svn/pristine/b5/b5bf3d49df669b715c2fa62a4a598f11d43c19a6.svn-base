@@ -1,0 +1,56 @@
+<template>
+  <page page-background="#eeeded" :better-scroll="true" class="box">
+    <commission-detail-nav @click-tab="clickFatherTab"></commission-detail-nav>
+    <commission-detail-my v-if="showTab == 0"></commission-detail-my>
+    <commission-detail-statistical :afterSales="afterSales" v-if="showTab == 1"></commission-detail-statistical>
+    <commission-detail-below v-if="showTab == 2"></commission-detail-below>
+
+  </page>
+</template>
+
+<script type="text/ecmascript-6">
+import commissionDetailNav from './commission-detail-nav'
+import commissionDetailStatistical from './commission-detail-statistical'
+import commissionDetailMy from './commission-detail-my'
+import commissionDetailBelow from './commission-detail-below'
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default {
+  data(){
+    return{
+      showTab: 0,
+    }
+  },
+  computed: {
+    ...mapState('y_afterSales', ['afterSales']),
+  },
+  components:{
+    commissionDetailNav,
+    commissionDetailStatistical,
+    commissionDetailBelow,
+    commissionDetailMy,
+  },
+
+  methods: {
+    ...mapActions('y_afterSales', ['getAfterSales']),
+    clickFatherTab(dt){
+      this.showTab = dt.i;
+      console.log(dt);
+    }
+  },
+  created(){
+    this.getAfterSales();
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .box{
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    background: #eeeded;
+  }
+
+
+  
+</style>

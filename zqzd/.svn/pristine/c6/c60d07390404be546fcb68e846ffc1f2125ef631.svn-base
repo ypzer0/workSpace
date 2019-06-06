@@ -1,0 +1,39 @@
+export default {
+  identifyingCode: {
+    timer: null,
+    time: 60
+  },
+  order: {
+    list: {
+      list:[],
+      old:{
+        count: 0
+      }
+    },
+    waitPay: {
+      list:[],
+      old:{
+        count: 0
+      }
+    },
+    waitShip: {
+      list:[],
+      old:{
+        count: 0
+      }
+    },
+    readyShip: {
+      list:[],
+      old:{
+        count: 0
+      }
+    },
+    recode: {
+      list:[],
+      old:{
+        count: 0
+      }
+    }
+  }
+
+}

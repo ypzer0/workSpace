@@ -1,0 +1,4 @@
+export const INIT_LIST = 'INIT_LIST'
+export const INIT_TOTALCOUNT = 'INIT_TOTALCOUNT'
+export const ADD_COMMENT = 'ADD_COMMENT'
+export const LOAD_DATAS = 'LOAD_DATAS'

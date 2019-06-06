@@ -1,0 +1,1 @@
+export const INIT_MSG_LIST = 'INIT_MSG_LIST'

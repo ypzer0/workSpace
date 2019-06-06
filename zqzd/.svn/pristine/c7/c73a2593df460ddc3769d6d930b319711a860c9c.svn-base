@@ -1,0 +1,48 @@
+<template>
+    <div>
+        <div class="total-spending">
+            <p class="total-spending-p1">汇总：<span>￥0.00</span></p>
+            <p class="total-spending-p2">可提现：<span>￥0.00</span></p>
+        </div>
+    </div>
+</template>
+
+<script type="text/ecmascript-6">
+
+export default {
+    props: ['afterSales'],
+  data(){
+    return{
+      
+    }
+  },
+
+  components:{
+  },
+
+  methods: {
+    
+    }
+}
+</script>
+
+<style lang="less" scoped>
+    .total-spending{
+        width: 92%;
+        margin: 40px auto;
+        font-size: 36px;
+        display: flex;
+        flex-wrap: wrap;
+        .total-spending-p1{
+            span{
+            color: #ff4439;
+            }
+        }
+        .total-spending-p2{
+            margin-left: 100px;
+            span{
+            color: #ff4439;
+            }
+        }
+    }
+</style>

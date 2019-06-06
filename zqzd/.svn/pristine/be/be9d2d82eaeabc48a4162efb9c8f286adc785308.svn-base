@@ -1,0 +1,115 @@
+<template>
+  <page :better-scroll="true">
+    <transaction-header slot="top"></transaction-header>
+    <transaction-result :trape="trape"></transaction-result>
+    <transaction-info :bdata="transactionInfo"></transaction-info>
+    <transaction-action
+      :bdata="transactionInfo"
+      @check="check"
+      slot="bottom"></transaction-action>
+  </page>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapActions} from 'vuex'
+import {toast} from '@/libs/cube-ui'
+import transactionHeader from './transaction-header'
+import transactionResult from './transaction-result'
+import transactionInfo from './transaction-info'
+import transactionAction from './transaction-action'
+import transactionPayWay from './transaction-pay-way'
+export default {
+  data () {
+    return {
+      orderId: this.$route.params.id,
+      fromid: 2,
+      transactionInfo: {
+        order: {
+          order_price: 0
+        },
+        goods: [],
+        shipping: []
+      },
+      trape: {
+        suc: false,
+        msg : '交易失败',
+        show: true
+      },
+      propTool: null
+    }
+  },
+  components: {
+    transactionHeader,
+    transactionResult,
+    transactionInfo,
+    transactionAction,
+    transactionPayWay
+  },
+  methods: {
+    ...mapActions('cart', ['getTransactionInfo']),
+    ...mapActions('order', ['getOrderDetail']),
+    check () {
+      this.$go('/order?from=' + this.fromid, false)
+    },
+    searchOMsg(isp){
+
+      this.getTransactionInfo({ oid: this.orderId }).then(res => {
+        
+        if(res.success){
+          // toast(res.msg, 'correct')
+          this.getOrderDetail({ id: this.orderId }).then(res1 => {
+            this.transactionInfo.order = res1.orderInfo;
+            this.transactionInfo.goods = res1.orderGoods;
+            this.transactionInfo.shipping = res1.shippingList;
+          })
+          this.trape.msg = "交易成功";
+          this.trape.suc = true;
+        }
+        else{
+          this.trape.msg = "交易失败";
+          this.trape.suc = false;
+          if(isp){
+            this.propOper();
+          }
+        }
+        // this.transactionInfo = res
+      })
+    },
+
+    readyPay(){
+      this.searchOMsg(false);
+      this.fromid = 2;
+      this.propTool.close();
+    },
+    notPay(a, b){
+      this.propTool.close();
+      this.fromid = 1;
+    }
+    ,
+    propOper(){
+
+      this.propTool = this.$mPopup({
+        mask: true,
+        close(){ 
+
+          debugger;
+        }
+      }, (h) => {
+        return h(transactionPayWay, {
+          props:{
+          },
+          on:{
+            handle: this.readyPay,
+            handle1: this.notPay,
+          }
+        })
+      })
+
+    }
+
+  },
+  created () {
+    this.propOper();
+  }
+}
+</script>

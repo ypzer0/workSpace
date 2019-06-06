@@ -1,0 +1,47 @@
+package com.platform.entity;
+
+import java.io.Serializable;
+
+/**
+ * 实体
+ * 表名 zd_category
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-05-30 12:54:18
+ */
+public class ZdCategoryVo implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    //
+    private Integer id;
+    //种类名称
+    private String name;
+
+    /**
+     * 设置：
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * 获取：
+     */
+    public Integer getId() {
+        return id;
+    }
+    /**
+     * 设置：种类名称
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * 获取：种类名称
+     */
+    public String getName() {
+        return name;
+    }
+}

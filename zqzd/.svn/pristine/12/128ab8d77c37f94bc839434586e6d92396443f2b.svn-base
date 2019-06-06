@@ -1,0 +1,25 @@
+/**
+ * 意见表
+ **/
+-- ----------------------------
+-- Table structure for `zd_opinion`
+-- ----------------------------
+DROP TABLE IF EXISTS `zd_opinion`;
+CREATE TABLE `zd_opinion` (
+
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+	`user_id` int(11) unsigned DEFAULT '0' COMMENT '用户ID',
+	`nickname` varchar(300) DEFAULT '' COMMENT '用户昵称',
+	`opinion_name` varchar(2000) DEFAULT '' COMMENT '意见',
+	
+  `handler_id` int(11) DEFAULT 0 COMMENT '操作人',
+  `add_time` datetime not null COMMENT '添加时间',
+  `is_delete` tinyint(1) unsigned DEFAULT '0' COMMENT '是否删除  0-未删除，1-已删除',
+  
+  PRIMARY KEY (`id`) USING BTREE,
+	INDEX `user_id` (`user_id`) USING BTREE,
+	INDEX `nickname` (`nickname`) USING BTREE,
+  INDEX `handler_id`(`handler_id`) USING BTREE,
+  INDEX `is_delete`(`is_delete`) USING BTREE,
+  INDEX `add_time`(`add_time`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;

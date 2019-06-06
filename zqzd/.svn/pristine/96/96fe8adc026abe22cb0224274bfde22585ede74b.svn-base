@@ -1,0 +1,50 @@
+<template>
+  <page page-background="#eeeded" :better-scroll="true" class="box">
+    <money-detail-nav @click-tab="clickFatherTab"></money-detail-nav>
+    <money-detail-spending :moneyDetail="moneyDetail" v-if="showTab == 0"></money-detail-spending>
+    <money-detail-income :moneyDetail="moneyDetail" v-if="showTab == 1"></money-detail-income>
+    
+  </page>
+</template>
+
+<script type="text/ecmascript-6">
+import moneyDetailNav from './money-detail-nav'
+import moneyDetailSpending from './money-detail-spending'
+import moneyDetailIncome from './money-detail-income'
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default {
+  data(){
+    return{
+      showTab: 0,
+    }
+  },
+  computed: {
+    ...mapState('y_money_detail', ['moneyDetail']),
+  },
+  components:{
+    moneyDetailNav,
+    moneyDetailSpending,
+    moneyDetailIncome,
+  },
+
+  methods: {
+    ...mapActions('y_money_detail', ['getMoneyDetail']),
+    clickFatherTab(dt){
+      this.showTab = dt.i;
+      console.log(dt);
+    }
+  },
+  created(){
+    this.getMoneyDetail();
+  }
+}
+</script>
+
+<style>
+  
+.box{
+  background: #eeeded;
+}
+
+  
+</style>

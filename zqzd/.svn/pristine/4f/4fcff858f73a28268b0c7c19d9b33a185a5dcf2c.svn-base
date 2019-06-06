@@ -1,0 +1,345 @@
+$(function () {
+    $("#jqGrid").Grid({
+        url: '../couponcategory/list',
+        colModel: [
+			{label: 'id', name: 'id', index: 'id', key: true, hidden: true},
+			{label: 'parentId', name: 'parentId', index: 'parentId', hidden: true},
+			{label: '分类', name: 'name', index: 'name', width: 80, align:'center', sortable: false},
+			{label: '类目', name: 'parentName', index: 'parentName', width: 80, align:'center', sortable: false},
+			{label: '市场价(元)', name: 'marketPrice', index: 'market_price', width: 80, align:'center', sortable: false, formatter: "currency", formatoptions: {decimalSeparator:".", prefix:"￥", decimalPlaces: 2} },
+			{label: '收购价', name: 'buyPrice', index: 'buy_price', width: 80, align:'center', sortable: false, formatter: "currency", formatoptions: {decimalSeparator:".", prefix:"￥", decimalPlaces: 2}},
+			{label: '出售价', name: 'salePrice', index: 'sale_price', width: 80, align:'center', sortable: false, formatter: "currency", formatoptions: {decimalSeparator:".", prefix:"￥", decimalPlaces: 2}},
+			{label: '推广费用(元)', name: 'proPrice', index: 'pro_price', width: 80, align:'center', sortable: false, formatter: "currency", formatoptions: {decimalSeparator:".", prefix:"￥", decimalPlaces: 2}},
+			{label: '库存', name: 'maxCount', index: 'max_count', width: 80, align:'center', sortable: false},
+			{label: '来源及提示', name: 'src', index: 'src', width: 80, align:'center', sortable: false,
+		        formatter : function(value, options, rData){
+		            return value == null ? '' : value.ellipsis(10);
+		          }
+			},
+			{label: '商品描述', name: 'goodsDesc', index: 'goods_desc', width: 80, align:'center', sortable: false,
+		        formatter : function(value, options, rData){
+		            return value == null ? '' : value.ellipsis(10);
+		          }
+			},
+			{label: '温馨提示', name: 'reminder', index: 'reminder', width: 80, align:'center', sortable: false,
+				        formatter : function(value, options, rData){
+				            return value.ellipsis(10);
+				          }
+			},
+			{label: '服务协议', name: 'service', index: 'service', width: 80, align:'center', sortable: false,
+		        formatter : function(value, options, rData){
+		            return value == null ? '' : value.ellipsis(10);
+		          }
+			},
+			{label: '使用需知', name: 'userMsg', index: 'user_msg', width: 80, align:'center', sortable: false,
+		        formatter : function(value, options, rData){
+		            return value == null ? '' : value.ellipsis(10);
+		          }
+			},
+			{label: '商品缩略图', name: 'picUrl', index: 'pic_url', width: 80, align:'center', sortable: false,
+		        formatter : function(value, options, rData){
+		            return "<img class='cc-img' src='" + value + "' />";
+		          }
+			},
+			{label: '商品大图url', name: 'picBigUrl', index: 'pic_big_url', width: 80, align:'center', sortable: false,
+		        formatter : function(value, options, rData){
+		            return "<img class='cc-img' src='" + value + "' />";
+		          }
+            },
+			{label: '显示', name: 'isShow', index: 'is_show', width: 80, align:'center', sortable: false,
+		        formatter : function(value, options, rData){
+                	var rt = "";
+                	var cls = "";
+                	cls = 'info';
+                	if (value == '1') {
+                    	rt =  '是';
+                    } else if (value == '0') {
+                    	rt =  '否';
+                    	cls = '';
+                    }
+                    else{
+                        rt =  '-';
+                    }
+                	return '<span class="label label-'+ cls +'">' + rt + '</span>';
+		          }
+            },
+			{label: '操作人', name: 'handlerName', index: 'handlerName', width: 80, align:'center', sortable: false},
+			{label: '添加时间', name: 'addTime', index: 'add_time', width: 140, align:'center', sortable: false,
+				formatter: function (value) {
+					return transDate(value);
+				}
+			}
+			],
+			footerrow: true,
+			gridComplete: function() {
+	        },
+	        loadComplete: function(xhr){
+	    		
+	        	var total = {
+	        		money: 0
+	        	};
+	        	if(xhr.total != null){
+	        		total.marketPrice = xhr.total.marketPrice;
+	        		total.salePrice = xhr.total.salePrice;
+	        		total.buyPrice = xhr.total.buyPrice;
+	        		total.proPrice = xhr.total.proPrice;
+	        	}
+	        	
+				var rows = $("#jqGrid").jqGrid("getRowData");
+	        	$("#jqGrid").jqGrid("footerData", "set", { name: "--合计--", marketPrice: total.marketPrice
+	        		, salePrice: total.salePrice
+	        		, buyPrice: total.buyPrice
+	        		, proPrice: total.proPrice});
+	        }
+    
+    });
+});
+
+var setting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "id",
+            pIdKey: "parentId",
+            rootPId: -1
+        },
+        key: {
+            url: "nourl"
+        }
+    }
+};
+var ztree;
+
+let vm = new Vue({
+	el: '#rrapp',
+	data: {
+        showList: true,
+        title: null,
+		Couponcategory: {},
+		ruleValidate: {
+			name: [
+				{required: true, message: '名称不能为空', trigger: 'blur'}
+			],
+            parentName: [
+                {required: true, message: '上级类目不能为空', trigger: 'blur'}
+            ]
+		},
+		q: {
+		    name: ''
+		}
+	},
+	methods: {
+		query: function () {
+			vm.reload();
+		},
+		add: function () {
+			vm.showList = false;
+			vm.title = "新增";
+
+		    var row = getSelectedRowData("jqGrid");
+			vm.Couponcategory = {
+				parentId: row.parentId === undefined ? 1 : row.parentId,
+				parentName: null,
+				marketPrice: 0,
+				salePrice: 0,
+				buyPrice: 0,
+				proPrice: 0,
+				picUrl: '',
+				picBigUrl: '',
+				saleTimes: 0,
+				isShow: 1
+			};
+			vm.getCate();
+		},
+		update: function (event) {
+            let id = getSelectedRow("#jqGrid");
+			if (id == null) {
+				return;
+			}
+			vm.showList = false;
+            vm.title = "修改";
+
+            vm.getInfo(id);
+            setTimeout(() => {
+    			vm.getCate();
+			}, 100);
+		},
+		saveOrUpdate: function (event) {
+            let url = vm.Couponcategory.id == null ? "../couponcategory/save" : "../couponcategory/update";
+            Ajax.request({
+			    url: url,
+                params: JSON.stringify(vm.Couponcategory),
+                type: "POST",
+			    contentType: "application/json",
+                successCallback: function (r) {
+                    alert('操作成功', function (index) {
+                        vm.reload();
+                    });
+                }
+			});
+		},
+		del: function (event) {
+            let ids = getSelectedRows("#jqGrid");
+			if (ids == null){
+				return;
+			}
+
+			confirm('确定要删除选中的记录？', function () {
+                Ajax.request({
+				    url: "../couponcategory/delete",
+                    params: JSON.stringify(ids),
+                    type: "POST",
+				    contentType: "application/json",
+                    successCallback: function () {
+                        alert('操作成功', function (index) {
+                            vm.reload();
+                        });
+					}
+				});
+			});
+		},
+		getInfo: function(id){
+            Ajax.request({
+                url: "../couponcategory/info/"+id,
+                async: true,
+                successCallback: function (r) {
+                    vm.Couponcategory = r.Couponcategory;
+                }
+            });
+		},
+		reload: function (event) {
+			vm.showList = true;
+            let page = $("#jqGrid").jqGrid('getGridParam', 'page');
+			$("#jqGrid").jqGrid('setGridParam', {
+                postData: {'parentName': vm.q.parentName},
+                page: page
+            }).trigger("reloadGrid");
+            vm.handleReset('formValidate');
+		},
+        reloadSearch: function() {
+            vm.q = {
+                name: ''
+            }
+            vm.reload();
+        },
+        handleSubmit: function (name) {
+            handleSubmitValidate(this, name, function () {
+                vm.saveOrUpdate()
+            });
+        },
+        handleReset: function (name) {
+            handleResetForm(this, name);
+        },
+        
+        enable: function(){
+
+            let ids = getSelectedRows("#jqGrid");
+			if (ids == null){
+				return;
+			}
+			
+			confirm('确定要启用选中的记录？', function () {
+                Ajax.request({
+				    url: "../couponcategory/changeenable/1",
+                    params: JSON.stringify(ids),
+                    type: "POST",
+				    contentType: "application/json",
+                    successCallback: function () {
+                        alert('启用成功', function (index) {
+                            vm.reload();
+                        });
+					}
+				});
+			});
+        },
+        //禁用
+        disenable: function(){
+
+            let ids = getSelectedRows("#jqGrid");
+			if (ids == null){
+				return;
+			}
+			
+			confirm('确定要禁用删除选中的记录？', function () {
+                Ajax.request({
+				    url: "../couponcategory/changeenable/0",
+                    params: JSON.stringify(ids),
+                    type: "POST",
+				    contentType: "application/json",
+                    successCallback: function () {
+                        alert('禁用成功', function (index) {
+                            vm.reload();
+                        });
+					}
+				});
+			});
+        },
+        
+        //商品缩略图
+        handleSuccessPicUrl: function (res, file) {
+            vm.Couponcategory.picUrl = file.response.url;
+        },
+        eyePicUrl: function () {
+            var url = vm.Couponcategory.picUrl;
+            eyeImage(url);
+        },//商品大图
+        handleSuccessPicBig: function (res, file) {
+            vm.Couponcategory.picBigUrl = file.response.url;
+        },
+        eyePicBig: function () {
+            var url = vm.Couponcategory.picBigUrl;
+            eyeImage(url);
+        },
+        handleFormatError: function (file) {
+            this.$Notice.warning({
+                title: '文件格式不正确',
+                desc: '文件 ' + file.name + ' 格式不正确，请上传 jpg 或 png 格式的图片。'
+            });
+        },
+        handleMaxSize: function (file) {
+            this.$Notice.warning({
+                title: '超出文件大小限制',
+                desc: '文件 ' + file.name + ' 太大，不能超过 2M。'
+            });
+        },
+        parentTree: function () {
+            openWindow({
+                title: "选择类目",
+                area: ['300px', '450px'],
+                content: jQuery("#catelayer"),
+                btn: ['确定', '取消'],
+                btn1: function (index) {
+                    var node = ztree.getSelectedNodes();
+                    //选择上级菜单
+                    vm.Couponcategory.parentId = node[0].id;
+                    vm.Couponcategory.parentName = node[0].name;
+
+                    layer.close(index);
+                }
+            });
+        },
+        getCate: function (menuId) {
+            //加载分类树
+            Ajax.request({
+                url: "../couponcategory/select",
+                async: true,
+                successCallback: function (r) {
+                    ztree = $.fn.zTree.init($("#cateTree"), setting, r.cateList);
+                    var node = ztree.getNodeByParam("id", vm.Couponcategory.parentId);
+                    if (node) {
+                        ztree.selectNode(node);
+                        vm.Couponcategory.parentName = node.name;
+                    } else {
+                        node = ztree.getNodeByParam("id", 1);
+                        if(node){
+                            ztree.selectNode(node);
+                            vm.Couponcategory.parentName = node.name;
+                        }
+                    }
+                }
+            });
+        }
+        
+        
+	}
+});

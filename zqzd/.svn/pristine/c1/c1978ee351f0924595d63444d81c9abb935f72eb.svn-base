@@ -1,0 +1,143 @@
+package com.platform.entity;
+
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * 
+ * @author 杨鹏
+ * @date 2019/05/23
+ *
+ */
+public class ZdUserVo implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * id 
+	 */
+    private Integer id;
+    /**
+     * 	用户名
+     */
+    private String username;
+    /**
+              * 密码
+     */
+    private String password;
+    /**
+     *  性别
+     */
+    private Integer gender;
+    /**
+     * 注册时间
+     */
+    private Date registerTime;
+    /**
+     * 最后登录时间
+     */
+    private Date lastLoginTime;
+    /**
+     * 最后登录 ip
+     */
+    private String lastLoginIp;
+    /**
+     * 用户级别
+     */
+    private Integer userLevelId;
+    /**
+     * 手机
+     */
+    private String mobile;
+    /**
+     * 注册ip
+     */
+    private String registerIp;
+    /**
+     * 用户年龄
+     */
+    private Integer age;
+    /**
+     * 状态
+     */
+    private Integer status;
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public Integer getGender() {
+		return gender;
+	}
+	public void setGender(Integer gender) {
+		this.gender = gender;
+	}
+	public Date getRegisterTime() {
+		return registerTime;
+	}
+	public void setRegisterTime(Date registerTime) {
+		this.registerTime = registerTime;
+	}
+	public Date getLastLoginTime() {
+		return lastLoginTime;
+	}
+	public void setLastLoginTime(Date lastLoginTime) {
+		this.lastLoginTime = lastLoginTime;
+	}
+	public String getLastLoginIp() {
+		return lastLoginIp;
+	}
+	public void setLastLoginIp(String lastLoginIp) {
+		this.lastLoginIp = lastLoginIp;
+	}
+	public Integer getUserLevelId() {
+		return userLevelId;
+	}
+	public void setUserLevelId(Integer userLevelId) {
+		this.userLevelId = userLevelId;
+	}
+	public String getMobile() {
+		return mobile;
+	}
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+	public String getRegisterIp() {
+		return registerIp;
+	}
+	public void setRegisterIp(String registerIp) {
+		this.registerIp = registerIp;
+	}
+	public Integer getAge() {
+		return age;
+	}
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+	@Override
+	public String toString() {
+		return "ZdUserVo [username=" + username + ", password=" + password + ", gender=" + gender + ", registerTime="
+				+ registerTime + ", lastLoginTime=" + lastLoginTime + ", lastLoginIp=" + lastLoginIp + ", userLevelId="
+				+ userLevelId + ", mobile=" + mobile + ", registerIp=" + registerIp + ", age=" + age + ", status="
+				+ status + "]";
+	}
+   
+}

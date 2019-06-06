@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.CouponIssueHandleDao">
+
+    <resultMap type="com.platform.entity.CouponIssueHandleEntity" id="CouponissueHandleMap">
+        <result property="id" column="id"/>
+        <result property="uid" column="uid"/>
+        <result property="uname" column="uname"/>
+        <result property="orderSn" column="order_sn"/>
+        <result property="status" column="status"/>
+        <result property="reason" column="reason"/>
+        <result property="msg" column="msg"/>
+        <result property="addTime" column="add_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="nickname" column="nickname"/>
+        <result property="uCode" column="uCode"/>
+        <result property="platType" column="platType"/>
+        <result property="credit" column="credit"/>
+        <result property="weixinCode" column="weixin_code"/>
+        <result property="orderPrice" column="orderPrice"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.platform.entity.CouponIssueHandleEntity">
+		select
+    		i.`id`,
+    		i.`uid`,
+    		i.`uname`,
+    		i.`order_sn`,
+    		i.`status`,
+    		i.`reason`,
+    		i.`msg`,
+    		i.`add_time`,
+    		i.`update_time`,
+    		u.`nickname`,
+    		u.`plat_type`,
+    		u.`credit`,
+    		u.`weixin_code`,
+    		ub.`u_code`,
+    		o.`order_price`,
+    		g.`img_path`,
+			ucb.`u_code` as c_code
+		from coupon_issue_handle i
+		left join coupon_user u on i.uid = u.id
+		left join coupon_user_code_bom ub on ub.u_id = u.id
+		left join coupon_order o on i.order_sn = o.order_sn
+		left join coupon_goods_info g on o.`g_id` = g.id
+		left join coupon_user_code_bom ucb on g.create_user_id = ucb.u_id
+		where i.id = #{id}
+	</select>
+
+	<select id="queryList" resultType="com.platform.entity.CouponIssueHandleEntity">
+		select
+    		i.`id`,
+    		i.`uid`,
+    		i.`uname`,
+    		i.`order_sn`,
+    		i.`status`,
+    		i.`reason`,
+    		i.`msg`,
+    		i.`add_time`,
+    		i.`update_time`,
+    		u.`nickname`,
+    		u.`plat_type`,
+    		u.`credit`,
+    		u.`weixin_code`,
+    		ub.`u_code`,
+    		o.`order_price`,
+    		g.`img_path`,
+			ucb.`u_code` as c_code
+		from coupon_issue_handle i
+		left join coupon_user u on i.uid = u.id
+		left join coupon_user_code_bom ub on ub.u_id = u.id
+		left join coupon_order o on i.order_sn = o.order_sn
+		left join coupon_goods_info g on o.`g_id` = g.id
+		left join coupon_user_code_bom ucb on g.create_user_id = ucb.u_id
+		WHERE 1=1
+		<if test="name != null and name.trim() != ''">
+			AND u.`nickname` LIKE concat('%',#{name},'%')
+		</if>
+		<if test="status != null and status.trim() != ''">
+			AND i.`status` = #{status}
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from coupon_issue_handle i
+		left join coupon_user u on i.uid = u.id
+		left join coupon_user_code_bom ub on ub.u_id = u.id
+		left join coupon_order o on i.order_sn = o.order_sn
+		left join coupon_goods_info g on o.`g_id` = g.id
+		left join coupon_user_code_bom ucb on g.create_user_id = ucb.u_id
+		WHERE 1=1
+        <if test="name != null and name.trim() != ''">
+            AND u.`nickname` LIKE concat('%',#{name},'%')
+        </if>
+        <if test="status != null and status.trim() != ''">
+			AND i.`status` = #{status}
+		</if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.CouponIssueHandleEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into coupon_issue_handle(
+			`uid`,
+			`uname`,
+			`order_sn`,
+			`status`,
+			`reason`,
+			`msg`,
+			`add_time`,
+			`update_time`)
+		values(
+			#{uid},
+			#{uname},
+			#{orderSn},
+			#{status},
+			#{reason},
+			#{msg},
+			#{addTime},
+			#{updateTime})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.CouponIssueHandleEntity">
+		update coupon_issue_handle 
+		<set>
+			<if test="uid != null">`uid` = #{uid}, </if>
+			<if test="uname != null">`uname` = #{uname}, </if>
+			<if test="orderSn != null">`order_sn` = #{orderSn}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="reason != null">`reason` = #{reason}, </if>
+			<if test="msg != null">`msg` = #{msg}, </if>
+			<if test="addTime != null">`add_time` = #{addTime}, </if>
+			<if test="updateTime != null">`update_time` = #{updateTime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from coupon_issue_handle where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from coupon_issue_handle where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

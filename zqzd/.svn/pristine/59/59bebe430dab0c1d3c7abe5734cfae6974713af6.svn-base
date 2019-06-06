@@ -1,0 +1,244 @@
+<template>
+<div class="my-service-box">
+    <div class="my-order">
+        <div class="my-order-title">
+          <div class="my-order-title-iner" @click="$go('/y-buy')">
+            <span class="my-order-title-name"><i class="iconfont my-service-icon1">&#xe692;</i><span>我的卡券</span></span>
+            <span class="my-order-title-state"><i class="iconfont">&#xe65f;</i></span>
+        </div>
+      </div>
+
+       <div class="my-order-title">
+           <!-- @click="$go('/y-commission-detail')" -->
+          <div class="my-order-title-iner">
+            <span class="my-order-title-name"><i class="iconfont my-service-icon2">&#xe618;</i><span>我的推广</span></span>
+            <span class="my-order-title-state"><i class="iconfont">&#xe65f;</i></span>
+        </div>
+      </div>
+
+      <div class="my-order-title">
+          <div class="my-order-title-iner" @click="$go('/y-after-sales')">
+            <span class="my-order-title-name"><i class="iconfont my-service-icon3">&#xe602;</i><span>售后</span></span>
+            <span class="my-order-title-state"><i class="iconfont">&#xe65f;</i></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="my-kefu">
+      <div class="my-order-title">
+          <div class="my-order-title-iner" @click="$go('/y-service')">
+            <span class="my-order-title-name"><i class="iconfont my-service-icon">&#xe600;</i><span>客服</span></span>
+            <span class="my-order-title-state"><i class="iconfont">&#xe65f;</i></span>
+        </div>
+      </div>
+    </div>
+    <div class="my-we">
+      <div class="my-order-title">
+          <div class="my-order-title-iner" @click="$go('/y-about-us')">
+            <span class="my-order-title-name"><i class="iconfont my-service-icon">&#xe6e6;</i><span>关于我们</span></span>
+            <span class="my-order-title-state"><i class="iconfont">&#xe65f;</i></span>
+        </div>
+      </div>
+    </div>
+</div>
+</template>
+
+<script type="text/ecmascript-6">
+
+export default {
+props: [''],
+  computed: {
+
+  },
+  components: {
+    
+  },
+  methods:{
+
+
+  },
+  created(){
+
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.my-service-box{
+    padding-bottom: 100px;
+}
+    
+  .my-order{
+      width: 92%;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 6px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      .my-order-title{
+          border-bottom: 1px solid #e5e5e5;
+        .my-order-title-iner{
+            display: flex;
+            justify-content: space-between;
+            width: 92%;
+            margin: 0 auto;
+            padding: 23px 0;
+            .my-order-title-name{
+                font-size: 32px;
+                color: #333333;
+                .my-service-icon1{
+                    color: #1dd275;
+                    margin-right: 20px;
+                    font-size: 40px;
+                    margin-top: 10px;
+                }
+                .my-service-icon2{
+                    color: #8797ef;
+                    margin-right: 20px;
+                    font-size: 40px;
+                    margin-top: 10px;
+                }
+                .my-service-icon3{
+                    color: #4faf08;
+                    margin-right: 20px;
+                    font-size: 40px;
+                    margin-top: 10px;
+                }
+            }
+            .my-order-title-state{
+                font-size: 26px;
+                color: #838383;
+                .my-order-go{
+                    font-size: 26px;
+                    color: #838383;
+                    margin-left: 15px;
+                }
+            }
+        }
+      }
+      .my-order-classify{
+            display: flex;
+            justify-content: space-around;
+            padding: 44px 0;
+            .my-order-classify-state{
+                img{
+                    height: 44px;
+                    margin: 0 20px;
+                }
+                p{
+                    font-size: 26px;
+                    color: #333333;
+                    margin-top: 12px;
+                }
+            }
+      }
+  }
+
+  .my-kefu{
+      width: 92%;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 6px;
+      margin-top: 20px;
+      //margin-bottom: 20px;
+      .my-order-title{
+          border-bottom: 1px solid #e5e5e5;
+        .my-order-title-iner{
+            display: flex;
+            justify-content: space-between;
+            width: 92%;
+            margin: 0 auto;
+            padding: 23px 0;
+            .my-order-title-name{
+                font-size: 32px;
+                color: #333333;
+                .my-service-icon{
+                    color: #0077dd;
+                    margin-right: 20px;
+                    font-size: 40px;
+                    margin-top: 10px;
+                }
+            }
+            .my-order-title-state{
+                font-size: 26px;
+                color: #838383;
+                .my-order-go{
+                    font-size: 26px;
+                    color: #838383;
+                    margin-left: 15px;
+                }
+            }
+        }
+      }
+      .my-order-classify{
+            display: flex;
+            justify-content: space-around;
+            padding: 44px 0;
+            .my-order-classify-state{
+                img{
+                    height: 44px;
+                    margin: 0 20px;
+                }
+                p{
+                    font-size: 26px;
+                    color: #333333;
+                    margin-top: 12px;
+                }
+            }
+      }
+  }
+
+  .my-we{
+      width: 92%;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 6px;
+      //margin-top: 20px;
+      //margin-bottom: 100px;
+      .my-order-title{
+          border-bottom: 1px solid #e5e5e5;
+        .my-order-title-iner{
+            display: flex;
+            justify-content: space-between;
+            width: 92%;
+            margin: 0 auto;
+            padding: 23px 0;
+            .my-order-title-name{
+                font-size: 32px;
+                color: #333333;
+                .my-service-icon{
+                    color: #6c8cc1;
+                    margin-right: 20px;
+                    font-size: 40px;
+                    margin-top: 10px;
+                }
+            }
+            .my-order-title-state{
+                font-size: 26px;
+                color: #838383;
+                .my-order-go{
+                    font-size: 26px;
+                    color: #838383;
+                    margin-left: 15px;
+                }
+            }
+        }
+      }
+      .my-order-classify{
+            display: flex;
+            justify-content: space-around;
+            padding: 44px 0;
+            .my-order-classify-state{
+                img{
+                    height: 44px;
+                    margin: 0 20px;
+                }
+                p{
+                    font-size: 26px;
+                    color: #333333;
+                    margin-top: 12px;
+                }
+            }
+      }
+  }
+</style>

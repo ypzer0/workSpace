@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.SysOperLogDao">
+
+    <resultMap type="com.platform.entity.SysOperLogEntity" id="sysOperLogMap">
+        <result property="id" column="id"/>
+        <result property="flag" column="flag"/>
+        <result property="hid" column="hid"/>
+        <result property="name" column="name"/>
+        <result property="title" column="title"/>
+        <result property="params" column="params"/>
+        <result property="createDate" column="create_date"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.platform.entity.SysOperLogEntity">
+		select
+			`id`,
+			`flag`,
+			`hid`,
+			`name`,
+			`title`,
+			`params`,
+			`create_date`
+		from sys_oper_log
+		where id = #{id}
+	</select>
+	
+	<select id="queryLastLog" resultType="com.platform.entity.SysOperLogEntity" parameterType="int">
+		select
+			`id`,
+			`flag`,
+			`hid`,
+			`name`,
+			`title`,
+			`params`,
+			`create_date`
+		from sys_oper_log order by create_date desc limit 0, #{ct}
+	</select>
+	
+
+	<select id="queryList" resultType="com.platform.entity.SysOperLogEntity">
+		select
+    		sol.`id`,
+    		sol.`flag`,
+    		sol.`hid`,
+    		sol.`name`,
+    		sol.`title`,
+    		sol.`params`,
+    		sol.`create_date`,
+				su.username,
+				sd.name AS deptName
+		from sys_oper_log sol
+		left join sys_user su on su.user_id = sol.hid
+		
+		
+		left join sys_dept sd on su.dept_id=sd.dept_id 
+		
+		WHERE 1=1
+		<if test="name != null and name.trim() != ''">
+			AND sol.name LIKE concat('%',#{name},'%')
+		</if>
+		<if test="username != null and username.trim() != ''">
+			AND su.username LIKE concat('%',#{username},'%')
+		</if>
+		<if test="createDate != null and createDate.trim() != ''">
+			AND to_days(DATE_FORMAT(sol.`create_date`,'%Y-%m-%d')) = to_days(#{createDate})
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from sys_oper_log
+		WHERE 1=1
+        <if test="name != null and name.trim() != ''">
+            AND sol.name LIKE concat('%',#{name},'%')
+        </if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.SysOperLogEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into sys_oper_log(
+			`flag`,
+			`hid`,
+			`name`,
+			`title`,
+			`params`,
+			`create_date`)
+		values(
+			#{flag},
+			#{hid},
+			#{name},
+			#{title},
+			#{params},
+			#{createDate})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.SysOperLogEntity">
+		update sys_oper_log 
+		<set>
+			<if test="flag != null">`flag` = #{flag}, </if>
+			<if test="hid != null">`hid` = #{hid}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="title != null">`title` = #{title}, </if>
+			<if test="params != null">`params` = #{params}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from sys_oper_log where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from sys_oper_log where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -1,0 +1,85 @@
+package com.platform.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.platform.dao.ZdDepartmentDao;
+import com.platform.dao.ZdDoctorDao;
+import com.platform.entity.ZdDepartmentEntity;
+import com.platform.entity.ZdDoctorEntity;
+import com.platform.service.ZdDoctorService;
+import com.platform.utils.R;
+
+/**
+ * Service实现类
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-05-30 15:08:05
+ */
+@Service("ZddoctorService")
+public class ZdDoctorServiceImpl implements ZdDoctorService {
+    @Autowired
+    private ZdDoctorDao ZddoctorDao;
+    @Autowired
+    private ZdDepartmentDao zdDepartmentDao;
+
+    @Override
+    public ZdDoctorEntity queryObject(Integer id) {
+        return ZddoctorDao.queryObject(id);
+    }
+
+    @Override
+    public List<ZdDoctorEntity> queryList(Map<String, Object> map) {
+        return ZddoctorDao.queryList(map);
+    }
+
+    @Override
+    public int queryTotal(Map<String, Object> map) {
+        return ZddoctorDao.queryTotal(map);
+    }
+
+    @Override
+    public int save(ZdDoctorEntity Zddoctor) {
+        return ZddoctorDao.save(Zddoctor);
+    }
+
+    @Override
+    public int update(ZdDoctorEntity Zddoctor) {
+        return ZddoctorDao.update(Zddoctor);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return ZddoctorDao.delete(id);
+    }
+
+    @Override
+    public int deleteBatch(Integer[] ids) {
+        return ZddoctorDao.deleteBatch(ids);
+    }
+    
+    @Override
+	public R selectDepartment() {
+		try {
+			HashMap<String,Object> params=new HashMap<>();
+			List<ZdDepartmentEntity> dataList=zdDepartmentDao.queryList(params);
+			List<HashMap<String,Object>> resultList=new ArrayList<>();
+			for(ZdDepartmentEntity entity:dataList) {
+				HashMap<String,Object> resultMap=new HashMap<>(1);
+				resultMap.put("key", entity.getId());
+				resultMap.put("val", entity.getDepartmentName());
+				resultList.add(resultMap);
+			}
+			return R.ok().put("list", resultList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return R.error("选择科室名称失败");
+		}
+	}
+}

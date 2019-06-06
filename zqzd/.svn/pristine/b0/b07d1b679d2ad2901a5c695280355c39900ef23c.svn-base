@@ -1,0 +1,93 @@
+package com.platform.entity;
+
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * 实体
+ * 表名 zd_opinion
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-05-30 13:13:21
+ */
+public class ZdOpinionEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    //
+    private Integer id;
+    //用户ID
+    private Integer userId;
+    //意见
+    private String opinion;
+    //添加时间
+    private Date addTime;
+    //是否删除  0-未删除，1-已删除
+    private Integer isDelete;
+
+    /**
+     * 设置：
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * 获取：
+     */
+    public Integer getId() {
+        return id;
+    }
+    /**
+     * 设置：用户ID
+     */
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    /**
+     * 获取：用户ID
+     */
+    public Integer getUserId() {
+        return userId;
+    }
+    /**
+     * 设置：意见
+     */
+    public void setOpinion(String opinion) {
+        this.opinion = opinion;
+    }
+
+    /**
+     * 获取：意见
+     */
+    public String getOpinion() {
+        return opinion;
+    }
+    /**
+     * 设置：添加时间
+     */
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+    /**
+     * 获取：添加时间
+     */
+    public Date getAddTime() {
+        return addTime;
+    }
+    /**
+     * 设置：是否删除  0-未删除，1-已删除
+     */
+    public void setIsDelete(Integer isDelete) {
+        this.isDelete = isDelete;
+    }
+
+    /**
+     * 获取：是否删除  0-未删除，1-已删除
+     */
+    public Integer getIsDelete() {
+        return isDelete;
+    }
+}

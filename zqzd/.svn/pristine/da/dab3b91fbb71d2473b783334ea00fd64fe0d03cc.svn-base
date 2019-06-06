@@ -1,0 +1,14 @@
+package com.platform.dao;
+
+import com.platform.entity.CouponIssueHandleLogVo;
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-24 13:46:57
+ */
+public interface ApiIssueHandleLogMapper extends BaseDao<CouponIssueHandleLogVo> {
+
+}

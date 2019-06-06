@@ -1,0 +1,39 @@
+<template>
+    <div class="details-banner">
+        <img :src="goodsDetail.gimg"/>
+    </div>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default{
+  data () {
+    return {
+
+    }
+  },
+
+  computed: {
+      ...mapState('y_goods_detail', ['goodsDetail']),
+  },
+  methods: {
+    
+  },
+  created(){
+    
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .details-banner{
+      width: 100%;
+      height: 750px;
+      margin-top: 88px;
+      img{
+          width: 100%;
+          height: 100%;
+      }
+  }
+    
+</style>

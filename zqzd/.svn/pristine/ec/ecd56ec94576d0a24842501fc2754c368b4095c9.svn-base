@@ -1,0 +1,13 @@
+export default {
+  register:{
+
+  },
+  radioChecke:{
+    checkedValue: 0,
+    username: '',
+    age: '',
+    mobile: '',
+    code: '',
+  }
+  
+}

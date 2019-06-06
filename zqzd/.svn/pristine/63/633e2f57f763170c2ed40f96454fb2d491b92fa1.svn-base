@@ -1,0 +1,180 @@
+<template>
+  <page :better-scroll="true">
+    <template slot="extra-top">
+      <account-warm></account-warm>
+      <order-type
+        :type="type"
+        @current-type="currentType" :order="order"></order-type>
+    </template>
+    <order-status-all :list="order.list" v-if="type === 0" @btn-click="btnClick"></order-status-all>
+    <order-status-uncleared :list="order.waitPay" v-if="type === 1" @btn-click="btnClick"></order-status-uncleared>
+    <order-status-dispatched :list="order.waitShip" v-if="type === 2" @btn-click="btnClick"></order-status-dispatched>
+    <order-status-received :list="order.readyShip" v-if="type === 3" @btn-click="btnClick"></order-status-received>
+    <order-status-refund :list="order.recode" v-if="type === 4" @btn-click="btnClick"></order-status-refund>
+  </page>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+import accountWarm from '../common/account-warm'
+import orderType from './order-type'
+import orderStatusAll from './order-status-all'
+import orderStatusUncleared from './order-status-uncleared'
+import orderStatusDispatched from './order-status-dispatched'
+import orderStatusRefund from './order-status-refund'
+import orderStatusReceived from './order-status-received'
+import {toast} from '@/libs/cube-ui'
+export default{
+  data () {
+    return {
+      type: isNaN(parseInt(this.$route.query.from)) ? 0 : parseInt(this.$route.query.from),
+      thisOid: 0,
+    }
+  },
+  computed:{
+    ...mapState('order', ['order'])
+    
+  },
+  components: {
+    accountWarm,
+    orderType,
+    orderStatusAll,
+    orderStatusUncleared,
+    orderStatusDispatched,
+    orderStatusRefund,
+    orderStatusReceived
+  },
+  methods: {
+    currentType (n) {
+      this.type = n
+    },
+    ...mapActions('order', ['getOrderList', 'orderEventClick']),
+    loadAllOrder(){
+      
+    },
+    loadOrderList(tp){
+      this.getOrderList({ state : (tp != undefined ? tp : this.type) });
+    },
+    showDialog (ct, tle, sfn, efn) {
+      this.$createDialog({
+        type: 'confirm',
+        content: ct,
+        confirmBtn: {
+          text: tle,
+          active: true,
+          disabled: false,
+          href: 'javascript:;'
+        },
+        cancelBtn: {
+          text: '再想想~~',
+          active: false,
+          disabled: false,
+          href: 'javascript:;'
+        },
+        onConfirm: () => {
+          // @TODO
+          if(sfn != undefined){
+            sfn();
+          }
+        },
+        onCancel: () => {
+          if(efn != undefined){
+            efn();
+          }
+        }
+      }).show()
+    },
+    btnClick(d, vali){
+      
+      if(vali == undefined)
+      switch(d.btn.type){
+        case "commentList":
+        // this.$go('/order?from=' + this.type);
+        this.$go('/evaluate/' + d.data.goods[0].goods_id)
+        return;
+
+        case "sureShip":
+        this.showDialog('确定收货？', '确定好啦~~', ()=>{
+          this.btnClick(d, 1);
+        });
+        return;
+        case "waitPayCancel":
+        this.showDialog('确定取消订单？', '取意已决', ()=>{
+          this.btnClick(d, 1);
+        });
+        return;
+        case "orderRefund":
+        this.showDialog('确定退款？', '取意已决', ()=>{
+          this.btnClick(d, 1);
+        });
+        return;
+
+        case "returnGoods":
+        this.showDialog('确定退货？', '取意已决', ()=>{
+          this.btnClick(d, 1);
+        });
+        return;
+      }
+
+      let rt = this.orderEventClick(d);
+
+      rt.then(res => {
+        
+        switch(d.btn.type){
+          case "waitPayPay":
+            if(res.success){
+              const div = document.createElement('iframe');
+              div.onload = this.payLoadSuc
+              this.thisOid =  d.data.id;
+              div.src = res.data.url + "&redirect_url=" + window.location.origin + "/dx/transaction/" + d.data.id;
+              document.body.appendChild(div);
+            }
+          break;
+          case "sureShip":
+            if(res.success){
+              toast("操作成功！", 'correct')
+            }else{
+              toast("操作失败！", 'correct')
+            }
+          break;
+          case "waitPayCancel":
+            if(res.success){
+              toast('取消订单成功！', 'correct')
+            }
+            else{
+              toast('取消订单失败！', 'correct')
+            }
+          break;
+          //提交退款申请
+          case "orderRefund":
+            if(res.success){
+              this.$go('/msg/msgdetail/' + res.data.aid);
+            }
+          break;
+          //提交退货申请
+          case "returnGoods":
+            if(res.success){
+              this.$go('/msg/msgdetail/' + res.data.aid);
+            }
+          break;
+          
+        }
+        
+        this.loadOrderList();
+
+      });
+      
+    },
+    payLoadSuc(e){
+      this.$go("/transaction/" + this.thisOid, false);
+    }
+  },
+  created(){
+    this.loadOrderList(0);
+    this.loadOrderList(1);
+    this.loadOrderList(2);
+    this.loadOrderList(3);
+    this.loadOrderList(4);
+  }
+}
+</script>

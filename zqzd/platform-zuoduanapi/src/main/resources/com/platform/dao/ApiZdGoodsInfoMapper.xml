@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ApiZdGoodsInfoMapper">
+
+    <resultMap type="com.platform.entity.ZdGoodsInfoVo" id="goodsInfoMap">
+        <result property="id" column="id"/>
+        <result property="cId" column="c_id"/>
+        <result property="goodsName" column="goods_name"/>
+        <result property="goodsSn" column="goods_sn"/>
+        <result property="status" column="status"/>
+        <result property="price" column="price"/>
+        <result property="goodsNumber" column="goods_number"/>
+        <result property="smallImgPath" column="small_img_path"/>
+        <result property="bigImgPath" column="big_img_path"/>
+        <result property="goodsDesc" column="goods_desc"/>
+        <result property="addTime" column="add_time"/>
+        
+        <result property="cName" column="cName"/>
+        <result property="hName" column="hName"/>
+    </resultMap>
+
+	<select id="queryBuyGoods" resultType="com.platform.entity.ZdGoodsInfoVo">
+		select
+			g.`id`,
+			g.`c_id`,
+			g.`goods_name`,
+			g.`goods_sn`,
+			g.`status`,
+			g.`price`,
+			g.`goods_desc`,
+			g.`goods_number`,
+			g.`small_img_path`,
+			g.`big_img_path`,
+			g.`add_time`,
+			c.`name` AS cName
+		from zd_goods_info g
+		left join zd_category c on g.c_id=c.id
+		where 1=1
+		AND g.`goods_number`>= #{count}
+		AND g.id = #{id}
+		AND g.status=1
+	</select>
+	
+	
+	<select id="queryGoodsByOId" resultType="com.platform.entity.ZdGoodsInfoVo">
+		select
+			g.`id`,
+			g.`c_id`,
+			g.`goods_name`,
+			g.`goods_sn`,
+			g.`status`,
+			g.`price`,
+			g.`goods_desc`,
+			g.`goods_number`,
+			g.`small_img_path`,
+			g.`big_img_path`,
+			g.`add_time`,
+			c.`name` AS cName
+		from zd_goods_info g
+		left join zd_category c on g.c_id=c.id
+		left join zd_order o on g.id=o.goods_id
+		where o.id = #{oid} and o.user_id=#{uid}
+		limit 0,20
+	</select>
+	
+	<select id="payquerySuccess" resultType="java.util.HashMap">
+		select
+			g.`id`,
+			g.`c_id`,
+			g.`goods_name`,
+			g.`goods_sn`,
+			g.`status`,
+			g.`price`,
+			g.`goods_desc`,
+			g.`goods_number`,
+			g.`small_img_path`,
+			g.`big_img_path`,
+			g.`add_time`,
+			c.`name` AS cName,
+			o.order_price
+		from zd_goods_info g
+		left join zd_category c on g.c_id=c.id
+		left join zd_order o on g.id=o.goods_id
+		where o.id = #{oid}
+		limit 0,1
+	</select>
+
+	<select id="queryObject" resultType="com.platform.entity.ZdGoodsInfoVo">
+		select
+			`id`,
+			`c_id`,
+			`goods_name`,
+			`goods_sn`,
+			`status`,
+			`price`,
+			`goods_desc`,
+			`goods_number`,
+			`small_img_path`,
+			`add_time`,
+			`big_img_path`
+		from zd_goods_info
+		where id = #{id}
+	</select>
+	
+	
+	
+	<select id="goodsCategoryList" resultType="com.platform.entity.ZdGoodsInfoVo">
+		select
+			g.`id`,
+			g.`c_id`,
+			g.`goods_name`,
+			g.`goods_sn`,
+			g.`status`,
+			g.`price`,
+			g.`goods_desc`,
+			g.`goods_number`,
+			g.`small_img_path`,
+			g.`add_time`,
+			c.`name` AS cName
+		from zd_goods_info g
+		left join zd_category c on c.id=g.c_id
+		where status = 1
+		AND c.`id` =#{cId}
+		order by g.`add_time` desc
+	</select>
+	
+	<select id="queryGoodsList" resultType="com.platform.entity.ZdGoodsInfoVo">
+		select
+			g.`id`,
+			g.`c_id`,
+			g.`goods_name`,
+			g.`goods_sn`,
+			g.`status`,
+			g.`price`,
+			g.`goods_desc`,
+			g.`goods_number`,
+			g.`small_img_path`,
+			g.`add_time`,
+			c.`name` AS cName
+		from zd_goods_info g
+		left join zd_category c on c.id=g.c_id
+		where status = 1
+		order by g.`add_time` desc
+	</select>
+	
+	<select id="queryByGoodsId" resultType="java.util.Map">
+		select
+			g.`id`,
+			g.`c_id`,
+			g.`goods_name`,
+			g.`goods_sn`,
+			g.`status`,
+			g.`price`,
+			g.`goods_desc`,
+			g.`goods_number`,
+			g.`small_img_path`,
+			g.`big_img_path`,
+			g.`add_time`,
+			c.`name` AS cName
+		from zd_goods_info g
+		left join zd_category c on c.id=g.c_id
+		where g.id = #{id}
+	</select>
+	
+	<select id="queryGoodsTotal" resultType="java.lang.Integer">
+		select
+			count(1)
+		from zd_goods_info g
+		left join zd_category c on c.id=g.c_id
+		where status = 1
+	</select>
+
+	<select id="queryList" resultType="com.platform.entity.ZdGoodsInfoVo">
+		select
+    		`id`,
+    		`c_id`,
+    		`goods_name`,
+    		`goods_sn`,
+    		`status`,
+    		`price`,
+    		`goods_desc`,
+    		`goods_number`,
+    		`small_img_path`,
+    		`add_time`,
+    		`big_img_path`
+		from zd_goods_info
+		WHERE 1=1
+		<if test="name != null and name.trim() != ''">
+			AND name LIKE concat('%',#{name},'%')
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from zd_goods_info
+		WHERE 1=1
+        <if test="name != null and name.trim() != ''">
+            AND name LIKE concat('%',#{name},'%')
+        </if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.ZdGoodsInfoVo" useGeneratedKeys="true" keyProperty="id">
+		insert into zd_goods_info(
+			`c_id`,
+			`goods_name`,
+			`goods_sn`,
+			`status`,
+			`goods_desc`,
+			`price`,
+			`goods_number`,
+			`small_img_path`,
+			`add_time`,
+			`big_img_path`)
+		values(
+			#{cId},
+			#{goodsName},
+			#{goodsSn},
+			#{status},
+			#{price},
+			#{goodsNumber},
+			#{smallImgPath},
+			#{bigImgPath},
+			#{addTime},
+			#{goodsDesc})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.ZdGoodsInfoVo">
+		update zd_goods_info 
+		<set>
+			<if test="cId != null">`c_id` = #{cId}, </if>
+			<if test="goodsName != null">`goods_name` = #{goodsName}, </if>
+			<if test="goodsSn != null">`goods_sn` = #{goodsSn}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="price != null">`price` = #{price}, </if>
+			<if test="goodsNumber != null">`goods_number` = #{goodsNumber}, </if>
+			<if test="smallImgPath != null">`small_img_path` = #{smallImgPath}, </if>
+			<if test="bigImgPath != null">`big_img_path` = #{bigImgPath},</if>
+			<if test="goodsDesc != null">`goods_desc` = #{goodsDesc},</if>
+			<if test="addTime != null">`add_time` = #{addTime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from zd_goods_info where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from zd_goods_info where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

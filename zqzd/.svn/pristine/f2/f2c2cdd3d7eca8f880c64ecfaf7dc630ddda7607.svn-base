@@ -1,0 +1,91 @@
+<template>
+    <div class="classify_nav">
+        <div class="classify_list_tab_list">
+            <ul class="classify_list_tab_list_ul">
+                <li class="classify_list_tab_list_ul_li" :class="{active:index == num}" v-for='(item,index) in goodsClassifyNavList.goodsClassNav' :key="index" @click="clickTab(index,item)" :num="123456">{{item.name}}</li>
+            </ul>
+        </div>
+    </div>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default {
+    props:['goodsClassifyNavList'],
+  data(){
+    return{
+      num: 0,
+      tablist: [
+            // {
+            //     "oid": 1,
+            //     "name": "全部订单"
+            // },
+            // {
+            //     "oid": 2,
+            //     "name": "等待付款"
+            // },
+            // {
+            //     "oid": 3,
+            //     "name": "付款完成"
+            // }
+        ]
+    }
+  },
+
+  computed: {
+    //...mapState('y_order', ['allOrderList'])
+  },
+
+  components:{
+  },
+
+  methods: {
+    clickTab:function(index,item){
+      this.num = index;
+      this.$emit('click-tab', { i : index, item : item });
+      console.log("num:", this.num);
+      console.log("item:", item);
+    }
+}
+}
+</script>
+
+<style lang="less" scoped>
+    .classify_nav{
+        position: fixed;
+        top: 186px;
+        width: 100%;
+        height: 98px;
+        z-index: 9;
+    }
+    .classify_list_tab_list{
+        width: 100%;
+        height: 98px;
+        background: #ffffff;
+        border-bottom: 1px solid #e5e5e5;
+        overflow: hidden;
+        overflow-x: auto;
+        position: fixed;
+    }
+    .classify_list_tab_list_ul{
+        /* display: flex;
+        justify-content: space-around; */
+        font-size: 4.3vw;
+        line-height: 13.1vw;
+        color: #333333;
+        overflow-x: auto;
+        list-style: none;
+        white-space:nowrap;  /* 元素不换行 */
+        width: auto;
+    }
+    .classify_list_tab_list_ul_li{
+        // width: 120px;
+        padding: 0 20px;
+        text-align: center;
+        margin-left: 20px;
+        display: inline-block;
+    }
+    .active{
+        color: #ff4539;
+    }
+</style>

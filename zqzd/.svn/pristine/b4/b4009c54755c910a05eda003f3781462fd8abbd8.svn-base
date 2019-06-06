@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ApiZdDepartmentMapper">
+
+    <resultMap type="com.platform.entity.ZdDepartmentVo" id="departmentMap">
+        <result property="id" column="id"/>
+        <result property="departmentName" column="department_name"/>
+        <result property="hospitalId" column="hospital_id"/>
+        <result property="handlerId" column="handler_id"/>
+        <result property="addTime" column="add_time"/>
+        <result property="isDelete" column="is_delete"/>
+    </resultMap>
+    
+    <select id="queryByhospitalId" resultType="com.platform.entity.ZdDepartmentVo">
+		select
+			`id`,
+			`department_name`,
+			`hospital_id`,
+			`handler_id`,
+			`add_time`,
+			`is_delete`
+		from zd_department
+		where hospital_id = #{hospitalId}
+		AND is_delete =#{isDelete}
+	</select>
+
+	<select id="queryObject" resultType="com.platform.entity.ZdDepartmentVo">
+		select
+			`id`,
+			`department_name`,
+			`hospital_id`,
+			`handler_id`,
+			`add_time`,
+			`is_delete`
+		from zd_department
+		where id = #{id}
+	</select>
+
+	<select id="queryList" resultType="com.platform.entity.ZdDepartmentVo">
+		select
+    		`id`,
+    		`department_name`,
+    		`hospital_id`,
+    		`handler_id`,
+    		`add_time`,
+    		`is_delete`
+		from zd_department
+		WHERE 1=1
+		<if test="name != null and name.trim() != ''">
+			AND name LIKE concat('%',#{name},'%')
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from zd_department
+		WHERE 1=1
+        <if test="name != null and name.trim() != ''">
+            AND name LIKE concat('%',#{name},'%')
+        </if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.ZdDepartmentVo" useGeneratedKeys="true" keyProperty="id">
+		insert into zd_department(
+			`department_name`,
+			`hospital_id`,
+			`handler_id`,
+			`add_time`,
+			`is_delete`)
+		values(
+			#{departmentName},
+			#{hospitalId},
+			#{handlerId},
+			#{addTime},
+			#{isDelete})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.ZdDepartmentVo">
+		update zd_department 
+		<set>
+			<if test="departmentName != null">`department_name` = #{departmentName}, </if>
+			<if test="hospitalId != null">`hospital_id` = #{hospitalId}, </if>
+			<if test="handlerId != null">`handler_id` = #{handlerId}, </if>
+			<if test="addTime != null">`add_time` = #{addTime}, </if>
+			<if test="isDelete != null">`is_delete` = #{isDelete}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from zd_department where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from zd_department where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

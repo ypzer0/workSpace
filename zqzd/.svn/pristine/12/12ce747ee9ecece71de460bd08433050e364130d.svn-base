@@ -1,0 +1,56 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api.js'
+export const y_update_category = {
+    
+  //买家上传上品页面数据
+  uploadGoods: (params) => {
+    
+    return axios.request({
+      url: api.Y_SellerUploadGoods,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  //通通过手机号获取短信验证码
+  mobileSend: (params) => {
+    
+    return axios.request({
+      url: api.Y_MobileSend,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  //验证短信验证码
+  mobileValidate: (params) => {
+    
+    return axios.request({
+      url: api.Y_MobileValidate,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  //获取手机号是否已经绑定手机
+  getMobile: (params) => {
+    
+    return axios.request({
+      url: api.Y_MobileGet,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  //卖家上传商品页面提交资料
+  saleBatchAdd: (params) => {
+    
+    return axios.request({
+      url: api.Y_SaleBatchAdd,
+      data: params,
+      method: 'post'
+    }, {
+      cp : 'application/json'
+    })
+  },
+}

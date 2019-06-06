@@ -1,0 +1,122 @@
+<template>
+  <div class="category-content-list">
+    <div class="buyers_tab_list">
+        <ul class="buyers_tab_list_ul">
+          <li :class="{active:index == num}" v-for='(item,index) in goodsNavList' :key="index" @click="clickTab(item)">{{item.name}}</li>
+        </ul>
+        
+    </div>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default{
+  data () {
+    return {
+      scaling: false,
+      num: 0,
+      // tablist: ["推荐","饮品","美食","购物","视频","出行","通讯","观影"]
+    }
+  },
+  //props: ['list'],
+  computed: {
+      ...mapState('y_goods_home', ['goodsNavList']),
+  },
+  methods: {
+    ...mapActions('y_goods_home', ['getgoodsNavList', 'getGoodsListByCid']),
+    clickTab:function(it){
+      this.$go(`/y-goods-home-classky-list?cid=${it.id}`);
+      this.getGoodsListByCid({cid : it.id});
+      console.log("1级cid:",it.id)
+    },
+
+  },
+  created(){
+    // this.getgoodsNavList();
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  @import '../../static/less/index';
+  .category-content-list{
+    position: absolute;
+    top:0;
+    bottom:0;
+    width:167px;
+    background: #f4f4f4;
+    .list-item{
+      display: flex;
+      align-items: center;
+      height: 103px;
+      span{
+        position: relative;
+        display: inline-block;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        flex:1;
+        color:#666;
+      }
+      &-active{
+        background: white;
+        span{
+          font-size: 28px;
+          color:#ab2b2b;
+          &::before{
+            position: absolute;
+            content: '';
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0;
+            border-left: 5px solid #ab2b2b;
+          }
+        }
+      }
+    }
+  }
+
+
+  .buyers_tab_list{
+        width: 100%;
+        height: 13.1vw;
+        // background: #ffffff;
+        // border-bottom: 1px solid #e5e5e5;
+    }
+    .buyers_tab_list_ul{
+        // display: flex;
+        // justify-content: space-around;
+        font-size: 4.3vw;
+        line-height: 13.1vw;
+        color: #333333;
+        li{
+          text-align: center;
+        }
+    }
+    .active{
+        color: #ff4539;
+        background: #ffffff;
+        border-bottom: 1px solid #e5e5e5;
+    }
+    .but_Show_hidden{
+      // width: 200px;
+      // height: 100px;
+      // border:1px solid #2eacef;
+      // background-color: #2eacef;
+      // border-radius: 0 0 200px 200px;
+      position: absolute;
+      top: 45%;
+      left: 100%;
+      //width: 20vw;
+      height: 20vw;
+      // opacity: 0.6;
+      // transform:rotate(-90deg);
+      // -ms-transform:rotate(-90deg); 	/* IE 9 */
+      // -moz-transform:rotate(-90deg); 	/* Firefox */
+      // -webkit-transform:rotate(-90deg); /* Safari 和 Chrome */
+      // -o-transform:rotate(-90deg); 	/* Opera */
+    }
+    
+</style>

@@ -1,0 +1,41 @@
+<template>
+    <div class="success-remind">
+      <p class="success-remind-p1">温馨提醒：</p>
+      <p class="success-remind-p2">如使用出现问题请在1小时内联系客服处理,如超期导致无法追踪,则买家担责.</p>
+    </div>
+    
+</template>
+
+<script type="text/ecmascript-6">
+
+export default {
+  computed: {
+
+  },
+  components: {
+    
+  },
+  methods:{
+
+
+  },
+  created(){
+
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .success-remind{
+    width: 80%;
+    margin: 0 auto;
+    font-size: 32px;
+    color: #2eacef;
+    margin-top: 40px;
+    .success-remind-p2{
+      margin-top: 20px;
+      font-size: 28px;
+      line-height: 35px;
+    }
+  }
+</style>

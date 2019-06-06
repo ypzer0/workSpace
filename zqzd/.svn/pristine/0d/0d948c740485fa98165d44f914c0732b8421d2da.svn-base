@@ -1,0 +1,25 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api.js'
+export const z_service = {
+    
+  //客服售后
+  service: (params) => {
+    
+    return axios.request({
+      url: api.z_OpinionSub,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  //客服售后微信号和手机号
+  customerLoad: (params) => {
+    
+    return axios.request({
+      url: api.z_CustomerLoad,
+      data: params,
+      method: 'post'
+    })
+  },
+
+}

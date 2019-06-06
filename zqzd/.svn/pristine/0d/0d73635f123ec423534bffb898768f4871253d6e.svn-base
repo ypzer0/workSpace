@@ -1,0 +1,58 @@
+<template>
+  <div class="trans-action ">
+
+    <div class="action-right">
+      <m-button @click.native="notPay" class="right-item right-item-not">
+        <span>暂不支付</span>
+      </m-button>
+      
+      <m-button @click.native="readyPay" class="right-item right-item-pay">
+        <span>已支付</span>
+      </m-button>
+    </div>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+export default {
+  props: [],
+  methods: {
+    readyPay (o) {
+      this.$emit('handle', o)
+    },
+    notPay (o) {
+      this.$emit('handle1', o)
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .trans-action{
+    height: 400px;
+    padding:0 28px;
+    background: white;
+   
+    .action-right{
+      padding-top: 10px;
+      align-items: center;
+      .right-item{
+        margin-top: 10px;
+        text-align: center;
+        line-height: 40px;
+        border-radius: 3px;
+        font-size: 25px;
+        &-pay{
+          background: #80f575;
+          border: none;
+        }
+        // &-not{
+        //   background: #aa8a59;
+        // }
+        // &:nth-child(2){
+        //   margin-top: 10px;
+        // }
+      }
+    }
+  }
+</style>

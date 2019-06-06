@@ -1,0 +1,138 @@
+<template>
+	<div class="bind-account" style="display: none;">
+		<div class="bind-account-bg"></div>
+    <div class="bind-account-alert-box">
+      <div class="bind-account-alert-box-title">手机验证</div>
+      <p class="Phone-verification-phone">验证手机：12345678912</p>
+      <div class="Phone-verification">
+        <input class="Phone-verification-code" type="text" placeholder="请输入验证码"/>
+        <button class="Phone-verification-phone-btn">发送验证码</button>
+      </div>
+      <button class="bind-account-btn">提现</button>
+    </div>
+    
+	</div>
+</template>
+
+
+<script type="text/ecmascript-6">
+
+export default {
+  props: [''],
+
+	data () {
+    return {
+     
+    }
+  },
+
+  computed: {
+
+  },
+  components: {
+    
+  },
+  methods:{
+
+
+  },
+  created(){
+
+  }
+}
+</script>
+
+
+<style lang="less" scoped>
+.bind-account{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 99;
+  .bind-account-bg{
+    background: #333333;
+    width: 100%;
+    height: 100%;
+    background-size: 100%;
+    opacity: 0.4;
+    position: relative;
+  }
+  .bind-account-alert-box{
+    width: 550px;
+    height: 550px;
+    background: #ffffff;
+    position: absolute;
+    top: 30%;
+    left: 12%;
+    border-radius: 6px;
+    .Phone-verification-phone{
+      font-size: 28px;
+      color: #333333;
+      margin-top: 50px;
+      margin-left: 6%;
+    }
+    .Phone-verification{
+      display: flex;
+      margin-top: 55px;
+      .Phone-verification-code{
+        width: 250px;
+        height: 78px;
+        display: block;
+        background: #f7f7f7;
+        border: 1px solid #ff4439;
+        border-radius: 6px;
+        font-size: 30px;
+        color: #838383;
+        padding-left: 10px;
+        margin-right: 20px;
+        margin-left: 6%;
+      }
+      .Phone-verification-phone-btn{
+        width: 180px;
+        height: 78px;
+        display: block;
+        background: #f7f7f7;
+        border: 1px solid #ff4439;
+        border-radius: 6px;
+        font-size: 30px;
+        color: #ff4439;
+        text-align: center;
+        line-height: 78px;
+        margin-top: 2px;
+      }
+    }
+    .bind-account-alert-box-title{
+      font-size: 36px;
+      text-align: center;
+      margin-top: 50px;
+      color: #ff4439;
+    }
+    .bind-account-mark{
+      width: 400px;
+      height: 78px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 50px;
+      background: #f7f7f7;
+      border: 1px solid #ff4439;
+      border-radius: 6px;
+      font-size: 30px;
+      color: #838383;
+      padding-left: 10px;
+    }
+    .bind-account-btn{
+      width: 400px;
+      height: 78px;
+      margin: 0 auto;
+      display: block;
+      margin-top: 60px;
+      background: #ff4439;
+      border: 1px solid #ff4439;
+      border-radius: 6px;
+      font-size: 36px;
+      color: #fff;
+    }
+  }
+}
+</style>

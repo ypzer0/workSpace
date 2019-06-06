@@ -1,0 +1,17 @@
+export default {
+  //商品信息
+  moneyDetail:[{
+        // "userid": "DX123",
+        // "spendingTotal": "99.98",
+        // "spendingTime": "2019-11-12 10:30:22",
+        // "spendingPrice": "26.6",
+        // "spendingNote": "绝对是浪费精力上的房间里看到放暑假了",
+        // "incomeTotal": "256.98",
+        // "incomeDeposit": "111.98",
+        // "incomeFreeze": "18.98",
+        // "incomeTime": "2019-12-12 18:30:22",
+        // "incomePrice": "10.22",
+        // "incomeNote": "待付款尽量快点放假了东风科技代付款"
+  }]
+
+}

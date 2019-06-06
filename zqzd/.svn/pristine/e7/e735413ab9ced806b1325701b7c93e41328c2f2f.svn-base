@@ -1,0 +1,33 @@
+import * as types from './mutation-types'
+import {api} from '@/service/api'
+import {toast} from '@/libs/cube-ui'
+
+export const actions = {
+  //买家1级分类
+  async getgoodsNavList ({dispatch, commit}, o) {
+    
+    let res = await api.y_goods_home.goodsHomeList(o)
+    //debugger;
+    if (res.success) {
+      // toast('获取订单数据成功', 'correct')
+      commit(types.INIT_ORDER, res.data);
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+  //买家首页默认商品列表
+  async getGoodsListByCid ({dispatch, commit}, o) {
+    
+    let res = await api.y_goods_home.getGoodsListByCid(o)
+    if (res.success) {
+      // toast('获取订单数据成功', 'correct')
+      commit(types.INIT_GoodsList, res.data);
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+
+  
+}

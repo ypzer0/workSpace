@@ -1,0 +1,122 @@
+$(function () {
+    $("#jqGrid").Grid({
+        url: '../Zduser/list',
+        colModel: [
+			{label: 'id', name: 'id', index: 'id', key: true, hidden: true },
+			{label: '用户名', name: 'username', index: 'username', width: 80, align: 'center', sortable: false },
+			{label: '密码', name: 'password', index: 'password', width: 80, align: 'center', sortable: false },
+			{label: '性别：0:女 1男', name: 'gender', index: 'gender', width: 80, align: 'center', sortable: false },
+			{label: '注册时间', name: 'registerTime', index: 'register_time', width: 80, align: 'center', sortable: false },
+			{label: '最后登录时间', name: 'lastLoginTime', index: 'last_login_time', width: 80, align: 'center', sortable: false },
+			{label: '最后登录 ip', name: 'lastLoginIp', index: 'last_login_ip', width: 80, align: 'center', sortable: false },
+			{label: '用户级别', name: 'userLevelId', index: 'user_level_id', width: 80, align: 'center', sortable: false },
+			{label: '手机', name: 'mobile', index: 'mobile', width: 80, align: 'center', sortable: false },
+			{label: '注册ip', name: 'registerIp', index: 'register_ip', width: 80, align: 'center', sortable: false },
+			{label: '年龄', name: 'age', index: 'age', width: 80, align: 'center', sortable: false },
+			{label: '状态 0，正常 1，禁用 2，删除', name: 'status', index: 'status', width: 80, align: 'center', sortable: false },
+			{label: '', name: 'remarks', index: 'remarks', width: 80, align: 'center', sortable: false }]
+    });
+});
+
+let vm = new Vue({
+	el: '#rrapp',
+	data: {
+        showList: true,
+        title: null,
+		Zduser: {},
+		ruleValidate: {
+			name: [
+				{required: true, message: '名称不能为空', trigger: 'blur'}
+			]
+		},
+		q: {
+		    name: ''
+		}
+	},
+	methods: {
+		query: function () {
+			vm.reload();
+		},
+		add: function () {
+			vm.showList = false;
+			vm.title = "新增";
+			vm.Zduser = {};
+		},
+		update: function (event) {
+            let id = getSelectedRow("#jqGrid");
+			if (id == null) {
+				return;
+			}
+			vm.showList = false;
+            vm.title = "修改";
+
+            vm.getInfo(id)
+		},
+		saveOrUpdate: function (event) {
+            let url = vm.Zduser.id == null ? "../Zduser/save" : "../Zduser/update";
+            Ajax.request({
+			    url: url,
+                params: JSON.stringify(vm.Zduser),
+                type: "POST",
+			    contentType: "application/json",
+                successCallback: function (r) {
+                    alert('操作成功', function (index) {
+                        vm.reload();
+                    });
+                }
+			});
+		},
+		del: function (event) {
+            let ids = getSelectedRows("#jqGrid");
+			if (ids == null){
+				return;
+			}
+
+			confirm('确定要删除选中的记录？', function () {
+                Ajax.request({
+				    url: "../Zduser/delete",
+                    params: JSON.stringify(ids),
+                    type: "POST",
+				    contentType: "application/json",
+                    successCallback: function () {
+                        alert('操作成功', function (index) {
+                            vm.reload();
+                        });
+					}
+				});
+			});
+		},
+		getInfo: function(id){
+            Ajax.request({
+                url: "../Zduser/info/"+id,
+                async: true,
+                successCallback: function (r) {
+                    vm.Zduser = r.Zduser;
+                }
+            });
+		},
+		reload: function (event) {
+			vm.showList = true;
+            let page = $("#jqGrid").jqGrid('getGridParam', 'page');
+			$("#jqGrid").jqGrid('setGridParam', {
+                postData: {'name': vm.q.name},
+                page: page
+            }).trigger("reloadGrid");
+            vm.handleReset('formValidate');
+		},
+        reloadSearch: function() {
+            vm.q = {
+                name: ''
+            }
+            vm.reload();
+        },
+        handleSubmit: function (name) {
+            handleSubmitValidate(this, name, function () {
+                vm.saveOrUpdate()
+            });
+        },
+        handleReset: function (name) {
+            handleResetForm(this, name);
+        }
+	}
+});

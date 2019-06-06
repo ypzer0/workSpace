@@ -1,0 +1,82 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api.js'
+export const y_order = {
+
+    //获取全部订单数据
+    allOrderList: (params) => {
+        var paraStr = "";
+        if(params != undefined){
+            paraStr = Object.keys(params).map(function (key) {
+                // body...
+                return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
+                }).join("&");
+            paraStr = "?" + paraStr;
+        }
+
+        return axios.request({
+            url: api.Y_OrderList + paraStr,
+            data: params,
+            method: 'post'
+        })
+    },
+
+    //获取等待付款数据
+    orderWaitPay: (params) => {
+        var paraStr = "";
+        if(params != undefined){
+            paraStr = Object.keys(params).map(function (key) {
+                // body...
+                return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
+                }).join("&");
+            paraStr = "?" + paraStr;
+        }
+
+        return axios.request({
+            url: api.Y_OrderList + paraStr,
+            data: params,
+            method: 'post'
+        })
+    },
+
+    //获取付款完成数据
+    orderFinish: (params) => {
+        var paraStr = "";
+        if(params != undefined){
+            paraStr = Object.keys(params).map(function (key) {
+                // body...
+                return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
+                }).join("&");
+            paraStr = "?" + paraStr;
+        }
+
+        return axios.request({
+            url: api.Y_OrderList + paraStr,
+            data: params,
+            method: 'post'
+        })
+    },
+
+    //立即使用传参
+    useAsk: (params) => {
+        var paraStr = "";
+        if(params != undefined){
+            paraStr = Object.keys(params).map(function (key) {
+                // body...
+                return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
+                }).join("&");
+            paraStr = "?" + paraStr;
+        }
+
+        return axios.request({
+            url: api.Y_UseAsk + paraStr,
+            data: params,
+            method: 'post'
+        },
+        {
+        cp : 'application/json'
+        })
+    },
+
+
+
+}

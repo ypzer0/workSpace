@@ -1,0 +1,23 @@
+export default {
+  //收藏列表
+  favorites: [
+    // {
+      // "id":1,
+      // "img": "/ddddd",
+      // "name": "玛呖德 糕点 紫米面包1100g",
+      // "price": 12.33
+      //checkboxItem: false,  //列表选择
+    // }
+  ],
+
+  //收藏列表页面 取消收藏
+  collectRemove: {
+
+    },
+
+  checkbox: {
+    checkedAll: false,   //全选
+  },
+
+
+}

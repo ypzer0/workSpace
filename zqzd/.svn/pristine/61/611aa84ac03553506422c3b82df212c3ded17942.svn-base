@@ -1,0 +1,5 @@
+export const INIT_GOODS_DETAIL='INIT_GOODS_DETAIL'
+export const GET_SELECT_INFO='GET_SELECT_INFO'
+
+
+

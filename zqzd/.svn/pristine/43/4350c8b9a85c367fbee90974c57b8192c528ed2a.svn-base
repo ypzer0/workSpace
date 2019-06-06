@@ -1,0 +1,240 @@
+import * as types from './mutation-types'
+import {api} from '@/service/api'
+import {toast} from '@/libs/cube-ui'
+import Vue from 'vue';
+//import session from '@/libs/session'
+
+export const actions = {
+  // async getUseExplain ({dispatch, commit}, o) {
+  //     let res = await api.y_use_explain.useExplain(o)
+  //     if (res.success) {
+  //       commit(types.INIT_Use_Explain, res.data)
+  //     } else {
+  //       toast(res.msg, 'warn')
+  //     }
+  // },
+
+  //买家上传上品页面数据
+  async getUploadGoods ({dispatch, commit, state}, o) {
+      let para = {
+        gid: state.cateDt.gid
+      }
+      let res = await api.y_update_category.uploadGoods(para)
+      if (res.success) {
+        commit(types.INIT_UPLOAD_GOODS, res.data)
+      } else {
+        toast(res.msg, 'warn')
+      }
+  },
+
+  ////通通过手机号获取短信验证码
+  async getMobileSend ({dispatch, commit, state}, o) {
+    
+    let para = {
+      mobile: state.cateDt.mobile
+    }
+    
+    let res = await api.y_update_category.mobileSend(para)
+    //debugger;
+    if (res.success) {
+      commit(types.INIT_MOBILE_SEND, res.data)
+    } else {
+      toast(res.msg, 'warn')
+    }
+    return res;
+},
+
+//验证短信验证码
+async getMobileValidate ({dispatch, commit, state}, o) {
+  let para = {
+    code: state.cateDt.code
+  }
+  let res = await api.y_update_category.mobileValidate(para)
+  if (res.success) {
+    commit(types.INIT_MOBILE_VALIDATE, res.data)
+  } else {
+    toast(res.msg, 'warn')
+  }
+},
+
+//获取手机号是否已经绑定手机
+async getMobileGet ({dispatch, commit, state}, o) {
+  let res = await api.y_update_category.getMobile(o)
+  //debugger;
+  if (res.success) {
+    commit(types.INIT_MOBILE_GET, res.data)
+  } else {
+    toast(res.msg, 'warn')
+  }
+  return res;
+},
+
+//卖家上传商品页面提交资料
+async getSaleBatchAdd ({dispatch, commit, state}, o) {
+  let res = await api.y_update_category.saleBatchAdd(o)
+  //debugger;
+  if (res.success) {
+    commit(types.INIT_SALE_BATCH_ADD, res.data)
+  } else {
+    toast(res.msg, 'warn')
+  }
+},
+
+
+
+//发送手机验证码
+async sendPhoneCode ({dispatch, commit, state}, o) {
+    
+  let para = {
+    mobile: state.valiPhoneData.phone
+  }
+  
+  let res = await api.y_update_category.mobileSend(para)
+  //debugger;
+  if (res.success) {
+    toast('验证码已经发送请注意接收', 'correct')
+  } else {
+    toast(res.msg, 'warn')
+  }
+  return res;
+},
+
+//发送手机验证码
+async getgain ({dispatch, commit, state}, o) {
+
+  let phone = state.valiPhoneData.phone;
+  if(phone == undefined || phone == null || phone.trim() == ''){
+    toast('手机号不能为空！', 'warn')
+    return;
+  }
+  if(!(/^1[3|5|7|8][0-9]\d{4,8}$/.test(phone))){
+    toast('不是完整的11位手机号，或者正确的前七位', 'warn')
+    return;
+  }
+  let phoneSend = dispatch('sendPhoneCode');
+},
+
+
+
+// 提交按钮
+async submitBtnFun ({dispatch, commit, state}, o) {
+console.log("goodsList:", state.goodsList);
+
+  //验证上传数据
+  let valite = true;
+  let imgdt = {};
+  let para = [];
+  state.goodsList.forEach(res=>{
+    if(res.files == null || res.files.length == 0){
+      valite = false;
+      return false;
+    }
+    imgdt = res.files[0];
+    var onefile = res.files[0];
+    if(onefile.response == null || onefile.response == "" || !onefile.response.success){
+      
+      valite = false;
+      return false;
+    }
+    res.img = res.files[0].response.data.url;
+
+    para = {
+      img: res.img,
+      code: res.code,
+      time: res.date
+    }
+  })
+  if(!valite){
+    toast('请完善' + imgdt.code + '的图片！', 'warn');
+    return;
+  }
+
+
+  // debugger;
+  let phoneVal = dispatch('getMobileGet');
+
+  phoneVal.then(res=>{
+    // debugger;
+    if(res.success && res.data.valisuc){
+      let addrt = dispatch('addBatchCoupon');
+      
+      state.isShowHide.isShowValiPhone = false;
+    }
+    else{
+      state.isShowHide.isShowValiPhone = true;
+    }
+
+  })
+  
+},
+
+// 验证手机
+async successfulAlert ({dispatch, commit, state}, o) {
+
+  let code = state.valiPhoneData.code;
+  if(code == undefined || code == null || code.trim() == ''){
+    toast('验证码不能为空！', 'warn')
+    return;
+  }
+
+  let para = {
+    code: code
+  }
+  let res = await api.y_update_category.mobileValidate(para)
+  if(res.success){
+
+    state.isShowHide.isShowValiPhone = false;
+    dispatch('addBatchCoupon');
+  }else{
+    toast(res.msg, 'warn')
+  }
+  
+},
+
+
+// 隐藏弹框
+async hidefulAlert ({dispatch, commit, state}, o) {
+  //debugger;
+  state.isShowHide.isShowValiPhone = false; 
+},
+
+
+
+// 上传数据
+async addBatchCoupon ({dispatch, commit, state}, o) {
+  if(state.goodsList.length < 0){
+    toast('您还没有添加商品', 'warn')
+    return;
+  }
+  let goods = [];
+  state.goodsList.forEach(ele => {
+    goods.push({
+      time: new Date(ele.date),
+      code: ele.code,
+      img: ele.img
+    })
+  });
+  //debugger;
+  let para = {
+    cid: state.cateDt.gid,
+    goods: goods
+  }
+  
+  let res = await api.y_update_category.saleBatchAdd(para);
+  //debugger;
+  if (res.success) {
+    toast('上传商品成功!', 'correct');
+    state.goodsList = [];
+  } else {
+    toast(res.msg, 'warn')
+  }
+  return res;
+  
+},
+
+
+
+
+
+
+}

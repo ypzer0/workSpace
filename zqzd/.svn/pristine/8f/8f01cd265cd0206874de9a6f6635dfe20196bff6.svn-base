@@ -1,0 +1,20 @@
+import * as types from './mutation-types'
+import {api} from '@/service/api'
+import {toast} from '@/libs/cube-ui'
+//import session from '@/libs/session'
+
+export const actions = {
+  async getUseDetails ({dispatch, commit, state}, o) {
+    //debugger;
+    let parem ={
+      gid:o,
+    }
+    let res = await api.y_use_details.useDetails(parem)
+    if (res.success) {
+      commit(types.INIT_USE_DETAILS, res.data)
+    } else {
+      toast(res.msg, 'warn')
+    }
+  },
+
+}

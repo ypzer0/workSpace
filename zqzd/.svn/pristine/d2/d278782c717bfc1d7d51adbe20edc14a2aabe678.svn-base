@@ -1,0 +1,281 @@
+<template>
+  <div :better-scroll="true" class="coupon-box">
+    <ul class="serve info figure-info" >
+      <li class="coupon-list" v-for="(item,index) in goodsList" :key="index">
+        <P class="coupon-title"><span>券{{index + 1}}</span><i class="iconfont delete-icon" @click="subtract(index)">&#xe696;</i></P>
+        <!-- <p class="coupon-title-img"> <span>上传二维码</span><input class="coupon-title-img-inpt coupon-title-img-inpt-file" :value='item.img' type='file' accept="image/*" placeholder="点击上传" /></p> -->
+        <!-- <p class="coupon-title-img"> <span>上传二维码</span> 
+          <input class="coupon-title-img-inpt coupon-title-img-inpt-file" :value='item.img' type='file' accept="image/*" placeholder="点击上传" />
+        </p> -->
+        <div class="upload-box">
+        <cube-upload
+          ref="upload"
+          v-model="item.files"
+          :action="action"
+          :max=1
+          :format="['jpg', 'jpeg', 'png']"
+          :on-success="handleSuccess"
+          :on-format-error="handleError">
+
+          <div class="clear-fix">
+            <cube-upload-file v-for="(file, i) in item.files" :file="file" :key="i"></cube-upload-file>
+            <cube-upload-btn :multiple="false">
+              <div>
+                <i>＋</i>
+                <p>上传图片</p>
+              </div>
+              <!-- <div class="clear-fix-img">
+                <span class="clear-fix-img-span">＋</span>
+                <p class="clear-fix-img-text">上传图片</p>
+              </div> -->
+            </cube-upload-btn>
+          </div>
+        </cube-upload>
+        </div>
+        <p class="coupon-title-img"> <span>兑换码</span> <input class="coupon-title-img-inpt" v-model="item.code" type="number" placeholder="请输入兑换码"/></p>
+        <div class="coupon-title-img"> <span>有效期（含当天）</span> <input class="coupon-title-img-inpt" @click="setDate(item)" v-model="item.date" placeholder="填错日期，无法回款"/></div>
+      </li>
+      
+  </ul>
+  <div class="add-module" @click="addAffair" v-show="showInsert"><i class="iconfont add-icon">&#xe604;</i>增加新券</div>
+  
+  </div>
+    
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+import {toast} from '@/libs/cube-ui'
+import { debug, debuglog } from 'util';
+import {API_BASE_URL} from '@/config/app'
+
+export default {
+   name: 'App',
+    data() {
+       return {
+        affair : [],
+        names:[],
+        date:'',
+        num: 0,
+        showInsert: true,
+        //date2:'2010-3-2',
+        action: API_BASE_URL + '/img/upload',
+    };
+  },
+
+  computed: {
+    ...mapState('y_update_category', ['goodsList'])
+
+  },
+  components: {
+  },
+  methods:{
+    handleSuccess(res, file){
+      console.log('file:', file);
+    },
+    handleError(){
+      
+      toast('上传文件失败，请选择png或者jpg图片！','warn')
+    },
+    // filesAdded(files) {
+    //   const maxSize = 1 * 1024 * 1024 // 1M
+    //   for (let k in files) {
+    //     const file = files[k]
+    //     if (file.size > maxSize) {
+    //       file.ignore = true
+    //     }
+    //   }
+    // },
+    uploadFile(a,b){
+        //debugger;
+    },
+    // addedHandler() {
+    //   const file = this.files[0]
+    //   file && this.$refs.upload.removeFile(file)
+    //   // debugger;
+    //   // const file = this.files[0]
+    //   // file && this.$refs.upload.removeFile(file)
+    // },
+    // errHandler(file) {
+    //   // const msg = file.response.message
+    //   toast('上传失败！','warn')
+    // },
+
+  addCoupon(){
+    this.hidePhone = false;
+    this.$emit("add-coupon",{ hidePhone: this.hidePhone });
+  },
+
+  // 点减减少模块
+  subtract(index){
+   this.showInsert = true;
+   this.goodsList.splice(index, 1)
+  },
+ 
+  //增加模块
+  addAffair(){
+    this.goodsList.push({
+      date: '',
+      code: '',
+      img: '',
+      files: []
+    });
+    if(this.goodsList.length > 10){
+      this.showInsert = false;
+    }
+
+  },
+
+//日期控件
+     setDate(item){
+       this.$picker.show({
+         type:'datePicker',
+         onOk: (date) =>{
+           item.date = date;
+         }
+       });
+     },
+     detaleList:function(index){
+       this.num = index;
+       console.log('num:',this.num);
+       this.affair.splice(index, 1);
+     }
+
+},
+  created(){
+
+  }
+}
+</script>
+
+<style lang="less" lang="stylus" scoped>
+
+.coupon-box{
+  margin-bottom: 150px;
+  .coupon-list{
+    width: 92%;
+    margin: 0 auto;
+    margin-top: 30px;
+    padding-bottom:30px;
+    border-bottom: 1px solid #e5e5e5; 
+    .coupon-title{
+      display: flex;
+      justify-content: space-between;
+      font-size: 32px;
+      margin-bottom: 10px;
+      .delete-icon{
+        color: #838383;
+        font-size: 30px;
+      }
+    }
+    .coupon-title-img{
+      width: 100%;
+      height: 66px;
+      background: #e9f6ff;
+      border:1px solid #2eacef;
+      border-radius: 6px;
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      .coupon-title-img-inpt{
+        text-align: right;
+        margin-right: 20px;
+        line-height: 66px;
+        background: none;
+      }
+      .coupon-title-img-inpt-file[type=file]{
+        height: 8vw;
+        width: 35%;
+      }
+      span{
+        margin-right: 20px;
+        line-height: 66px;
+      }
+    }
+  }
+  .add-module{
+    width: 350px;
+    height: 66px;
+    background: #e9f6ff;
+    border:1px solid #2eacef;
+    border-radius: 6px;
+    color: #838383;
+    text-align: center;
+    line-height: 66px;
+    font-size: 32px;
+    margin: 0 auto;
+    margin-top: 30px;
+    .add-icon{
+      margin-right: 10px;
+      margin-top: 5px;
+    }
+  }
+  }
+
+
+  // .clear-fix{
+  //   width: 165px;
+  // }
+  // .clear-fix-img{
+  //   width: 160px;
+  //   height: 160px;
+  //   border: 1px solid #e5e5e5;
+  //   background: #f7f7f7;
+  // }
+  // .clear-fix-img-span{
+  //   width: 50px;
+  //   height: 50px;
+  //   border-radius: 50px;
+  //   padding: 20px;
+  //   background: #d2d2d2;
+  //   margin: 0 auto;
+  //   display: block;
+  //   font-size: 50px;
+  //   color: #838383;
+  //   margin-top: 10px;
+  // }
+  // .clear-fix-img-text{
+  //   text-align: center;
+  //   margin-top: 20px;
+  // }
+
+.upload-box{
+  border: 1px solid #e5e5e5;
+}
+
+
+.cube-upload
+  .cube-upload-file, .cube-upload-btn
+    margin: 0
+    height: 200px
+  .cube-upload-file
+    margin: 0
+    + .cube-upload-btn
+      margin-top: -200px
+      opacity: 0
+  /deep/ .cube-upload-file-def
+    width: 100%
+    height: 100%
+    .cubeic-wrong
+      //display: none
+  .cube-upload-btn
+    display: flex
+    align-items: center
+    justify-content: center
+    > div
+      text-align: center
+    i
+      display: inline-flex
+      align-items: center
+      justify-content: center
+      width: 50px
+      height: 50px
+      margin-bottom: 20px
+      font-size: 32px
+      line-height: 1
+      font-style: normal
+      color: #fff
+      background-color: #333
+      border-radius: 50%
+  
+</style>

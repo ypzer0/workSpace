@@ -1,0 +1,304 @@
+package com.platform.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.platform.dao.CouponCategoryDao;
+import com.platform.entity.CouponCategoryEntity;
+import com.platform.entity.SysMenuEntity;
+import com.platform.service.CouponCategoryService;
+import com.platform.service.SysOperLogService;
+import com.platform.utils.R;
+import com.platform.utils.Constant.OperLogFlag;
+import com.platform.utils.DecimalUtil;
+import com.platform.utils.IntegerUtil;
+
+/**
+ * Service实现类
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-22 11:35:38
+ */
+@Service("CouponcategoryService")
+public class CouponCategoryServiceImpl implements CouponCategoryService {
+    @Autowired
+    private CouponCategoryDao CouponcategoryDao;
+    @Autowired
+    private SysOperLogService sysOperLogService;
+
+    @Override
+    public CouponCategoryEntity queryObject(Integer id) {
+        return CouponcategoryDao.queryObject(id);
+    }
+
+    @Override
+    public List<CouponCategoryEntity> queryList(Map<String, Object> map) {
+        return CouponcategoryDao.queryList(map);
+    }
+
+    @Override
+    public int queryTotal(Map<String, Object> map) {
+        return CouponcategoryDao.queryTotal(map);
+    }
+
+    @Override
+    public int save(CouponCategoryEntity Couponcategory) {
+        return CouponcategoryDao.save(Couponcategory);
+    }
+
+    @Override
+    public int update(CouponCategoryEntity Couponcategory) {
+        return CouponcategoryDao.update(Couponcategory);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return CouponcategoryDao.delete(id);
+    }
+
+    @Override
+    public int deleteBatch(Integer[] ids) {
+        return CouponcategoryDao.deleteBatch(ids);
+    }
+
+    @Override
+    public HashMap<String, Object> querySum(Map<String, Object> map) {
+        return CouponcategoryDao.querySum(map);
+    }
+    /**
+     * 修改状态
+     * @param tpid
+     * @param ids
+     * @param operuid
+     * @return
+     */
+
+    @Override
+    public R changeenable(Integer tpid, Integer[] ids, int operuid) {
+    	if(tpid == null || ids == null) {
+    		return R.error("数据异常");
+    	}
+    	Map<String, Object> map = new HashMap<>();
+    	map.put("ids", ids);
+    	List<CouponCategoryEntity> cclist = CouponcategoryDao.queryList(map);
+    	if(cclist.size() != ids.length) {
+    		return R.error("数据异常");
+    	}
+    	
+    	map = new HashMap<>();
+    	map.put("ids", ids);
+    	map.put("showId", tpid == 0 ? 0 : 1);
+    	CouponcategoryDao.changeStatus(map);
+    	
+    	StringBuffer sff = new StringBuffer();
+    	for (CouponCategoryEntity couponCategoryEntity : cclist) {
+    		sff.append(couponCategoryEntity.toChangeStatusLogString());
+		}
+    	sysOperLogService.AddOperLog("修改商品分类状态为:" + (tpid == 0 ? "禁用" : "启用"), "Old:" + sff.toString(), OperLogFlag.Goods, operuid);
+    	
+    	return R.ok();
+    }
+
+    /**
+     * 修改状态
+     * @param ids
+     * @param operuid
+     * @return
+     */
+    public R changeStatus(Integer sid, Integer[] ids, int operuid) {
+
+    	if(ids == null) {
+    		return R.error("数据异常");
+    	}
+    	Map<String, Object> map = new HashMap<>();
+    	map.put("ids", ids);
+    	List<CouponCategoryEntity> cclist = CouponcategoryDao.queryList(map);
+    	if(cclist.size() != ids.length) {
+    		return R.error("数据异常");
+    	}
+    	
+    	map = new HashMap<>();
+    	map.put("ids", ids);
+    	map.put("status", sid);
+    	CouponcategoryDao.changeStatusDelete(map);
+    	
+    	StringBuffer sff = new StringBuffer();
+    	for (CouponCategoryEntity couponCategoryEntity : cclist) {
+    		sff.append(couponCategoryEntity.toChangeStatusLogString());
+		}
+    	sysOperLogService.AddOperLog("删除商品:" + ids.length + "个", "Old:" + sff.toString(), OperLogFlag.Goods, operuid);
+    	
+    	return R.ok();
+    }
+    
+
+    /**
+     * 保存数据
+     * @param para
+     * @return
+     */
+
+    public R saveCategory(CouponCategoryEntity para, Integer operuid) {
+    	
+    	if(para == null) {
+    		return R.error("数据异常");
+    	}
+    	CouponCategoryEntity nowEntity = new CouponCategoryEntity();
+    	
+    	nowEntity.setName(para.getName());
+    	nowEntity.setKeywords(para.getName());
+    	nowEntity.setFrontDesc(para.getName());
+    	
+    	nowEntity.setParentId(para.getParentId());
+    	nowEntity.setSortOrder(para.getSortOrder());
+    	nowEntity.setIsShow(para.getIsShow());
+    	nowEntity.setMarketPrice( DecimalUtil.GetValueOrDefault(para.getMarketPrice()));
+    	nowEntity.setSalePrice(DecimalUtil.GetValueOrDefault(para.getSalePrice()));
+    	nowEntity.setBuyPrice(DecimalUtil.GetValueOrDefault(para.getBuyPrice()));
+    	nowEntity.setProPrice(DecimalUtil.GetValueOrDefault(para.getProPrice()));
+    	nowEntity.setSrc(para.getSrc());
+    	nowEntity.setGoodsDesc(para.getGoodsDesc());
+    	nowEntity.setReminder(para.getReminder());
+    	nowEntity.setService(para.getService());
+    	nowEntity.setUserMsg(para.getUserMsg());
+    	nowEntity.setMaxCount(IntegerUtil.GetValueOrDefault(para.getMaxCount()));
+    	nowEntity.setSaleTimes(para.getSaleTimes());
+    	nowEntity.setPicUrl(para.getPicUrl());
+    	nowEntity.setPicBigUrl(para.getPicBigUrl());
+
+    	nowEntity.setStatus(0);
+    	nowEntity.setAddTime(new Date());
+    	nowEntity.setHandlerId(operuid);
+    	
+    	CouponcategoryDao.save(nowEntity);
+    	sysOperLogService.AddOperLog("添加商品", "New:" + nowEntity.toString(), OperLogFlag.Goods, operuid);
+    	
+    	return R.ok();
+
+    }
+
+    /**
+     * 更新数据
+     * @param para
+     * @return
+     */
+
+    @Override
+    public R updateCategory(CouponCategoryEntity para, Integer operuid) {
+    	
+    	if(para == null || para.getId() == null) {
+    		return R.error("数据异常");
+    	}
+    	CouponCategoryEntity nowEntity = CouponcategoryDao.queryObject(para.getId());
+    	
+    	if(nowEntity == null) {
+    		return R.error("数据异常");
+    	}
+    	
+    	String oldStr = nowEntity.toString();
+    	
+    	nowEntity.setName(para.getName());
+    	
+    	nowEntity.setParentId(para.getParentId());
+    	nowEntity.setSortOrder(para.getSortOrder());
+    	nowEntity.setIsShow(para.getIsShow());
+    	nowEntity.setMarketPrice(DecimalUtil.GetValueOrDefault(para.getMarketPrice()));
+    	nowEntity.setSalePrice(DecimalUtil.GetValueOrDefault(para.getSalePrice()));
+    	nowEntity.setBuyPrice(DecimalUtil.GetValueOrDefault(para.getBuyPrice()));
+    	nowEntity.setProPrice(DecimalUtil.GetValueOrDefault(para.getProPrice()));
+    	nowEntity.setSrc(para.getSrc());
+    	nowEntity.setGoodsDesc(para.getGoodsDesc());
+    	nowEntity.setReminder(para.getReminder());
+    	nowEntity.setService(para.getService());
+    	nowEntity.setUserMsg(para.getUserMsg());
+    	nowEntity.setMaxCount(IntegerUtil.GetValueOrDefault(para.getMaxCount()));
+    	nowEntity.setSaleTimes(para.getSaleTimes());
+    	nowEntity.setPicUrl(para.getPicUrl());
+    	nowEntity.setPicBigUrl(para.getPicBigUrl());
+    	
+    	CouponcategoryDao.update(nowEntity);
+    	sysOperLogService.AddOperLog("修改商品", "Old:" + oldStr + ", New:" + nowEntity.toString(), OperLogFlag.Goods, operuid);
+    	
+    	return R.ok();
+    }
+    
+    /**
+     * 获取上级菜单
+     * @param para
+     * @return
+     */
+    @Override
+    public R selectParentMenu() {
+
+    	Map<String, Object> map = new HashMap<>();
+    	map.put("status", 0);
+    	map.put("parentId", 0);
+    	map.put("offset", null);
+    	map.put("sidx", null);
+        //查询列表数据
+        List<CouponCategoryEntity> cateList = CouponcategoryDao.queryList(map);
+
+        return R.ok().put("cateList", cateList);
+    	
+    	
+    }
+    
+    
+
+    /**
+     * 获取上级菜单 key val
+     * @param para
+     * @return
+     */
+    @Override
+    public R selectParent() {
+    	
+    	Map<String, Object> map = new HashMap<>();
+    	map.put("parentId", 0);
+    	map.put("status", 0);
+        List<CouponCategoryEntity> getList = CouponcategoryDao.queryList(map);
+    	
+        List<Map<String, Object>> rtMap = new ArrayList<>();
+        
+        for (CouponCategoryEntity cce : getList) {
+        	Map<String, Object> dtmap = new HashMap<>();
+        	dtmap.put("key", cce.getId());
+        	dtmap.put("val", cce.getName());
+            rtMap.add(dtmap);
+		}
+    	return R.ok().put("list", rtMap);
+    	
+    }
+
+    /**
+     * 获取上级菜单 key val
+     * @param para
+     * @return
+     */
+    @Override
+    public R selectChild(Integer pid) {
+    	
+    	Map<String, Object> map = new HashMap<>();
+    	map.put("parentId", pid);
+    	map.put("status", 0);
+        List<CouponCategoryEntity> getList = CouponcategoryDao.queryList(map);
+    	
+        List<Map<String, Object>> rtMap = new ArrayList<>();
+        
+        for (CouponCategoryEntity cce : getList) {
+        	Map<String, Object> dtmap = new HashMap<>();
+        	dtmap.put("key", cce.getId());
+        	dtmap.put("val", cce.getName());
+            rtMap.add(dtmap);
+		}
+    	return R.ok().put("list", rtMap);
+    }
+    
+}

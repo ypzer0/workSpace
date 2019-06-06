@@ -1,0 +1,249 @@
+package com.platform.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.platform.dao.CouponUserDao;
+import com.platform.entity.CouponUserEntity;
+import com.platform.service.CouponUserService;
+import com.platform.service.SysOperLogService;
+import com.platform.utils.PageUtils;
+import com.platform.utils.Query;
+import com.platform.utils.R;
+import com.platform.utils.Constant.OperLogFlag;
+
+/**
+ * Service实现类
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-22 11:44:13
+ */
+@Service("CouponuserService")
+public class CouponUserServiceImpl implements CouponUserService {
+    @Autowired
+    private CouponUserDao CouponuserDao;
+    @Autowired
+    protected SysOperLogService sysOperLogService;
+    
+
+    @Override
+    public CouponUserEntity queryObject(Integer id) {
+        return CouponuserDao.queryObject(id);
+    }
+
+    @Override
+    public List<CouponUserEntity> queryList(Map<String, Object> map) {
+        return CouponuserDao.queryList(map);
+    }
+
+    @Override
+    public int queryTotal(Map<String, Object> map) {
+        return CouponuserDao.queryTotal(map);
+    }
+
+    @Override
+    public int save(CouponUserEntity Couponuser) {
+        return CouponuserDao.save(Couponuser);
+    }
+
+    @Override
+    public int update(CouponUserEntity Couponuser) {
+        return CouponuserDao.update(Couponuser);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return CouponuserDao.delete(id);
+    }
+
+    @Override
+    public int deleteBatch(Integer[] ids) {
+        return CouponuserDao.deleteBatch(ids);
+    }
+    
+    /**
+     * 批量修改用户状态 
+     */
+    @Override
+    public int changeUserStatus(Map<String, Object> map) {
+        return CouponuserDao.changeUserStatus(map);
+	}
+    
+    
+    
+    
+    
+    
+    
+    
+    //////////////////////////鼎鑫用户
+    
+    
+
+	/**
+	 * 查询鼎鑫用户信息业务
+	 * @param mapData
+	 * @return
+	 */
+    @Override
+	public R queryDingXinPage(Map<String, Object> mapData) {
+
+        //查询列表数据
+        Query query = new Query(mapData);
+        query.put("plat_type" , 1);
+        query.put("nostatus", 2);
+        List<CouponUserEntity> CouponuserList = CouponuserDao.queryDingXinList(query);
+        int total = CouponuserDao.queryDingXinTotal(query);
+
+        PageUtils pageUtil = new PageUtils(CouponuserList, total, query.getLimit(), query.getPage());
+    	return R.ok().put("page", pageUtil);
+	}
+    
+    
+    
+    //查询鼎鑫用户信息
+    @Override
+    public List<CouponUserEntity> queryDingXinList(Map<String, Object> map) {
+        return CouponuserDao.queryDingXinList(map);
+    }
+
+    @Override
+    public int queryDingXinTotal(Map<String, Object> map) {
+
+        return CouponuserDao.queryDingXinTotal(map);
+    }
+    
+    /**
+     * 删除鼎鑫用户
+     * zy 2019-04-24
+     * @param ids
+     * @param operuid
+     * @return
+     */
+    @Override
+	public R DingXinDeleteUser(Integer[] ids, int operuid) {
+    	
+    	Map<String, Object> map = new HashMap<>();
+    	map.put("ids", ids);
+    	List<CouponUserEntity> ulist = CouponuserDao.queryList(map);
+    	
+    	if(ulist.size() != ids.length) {
+            return R.error("数据异常！");
+    	}
+    	
+    	map = new HashMap<>();
+    	map.put("ids", ids);
+    	map.put("status", 2);
+    	
+    	
+    	//修改状态
+    	CouponuserDao.changeUserStatus(map);
+    	sysOperLogService.AddOperLog("删除鼎鑫用户", ulist, OperLogFlag.User, operuid);
+    	
+    	return R.ok();
+    }
+    
+
+
+    @Override
+	public R DingXinUpdateUser(CouponUserEntity oldUser, int operuid) {
+    	
+
+    	CouponUserEntity cue = CouponuserDao.queryObject(oldUser.getId());
+    	if(cue == null) {
+    		return R.error("数据异常");
+    	}
+    	cue.setMobile(oldUser.getMobile());
+    	cue.setWeixinCode(oldUser.getWeixinCode());
+    	cue.setZhifubao(oldUser.getZhifubao());
+    	cue.setAge(oldUser.getAge());
+    	cue.setStatus(oldUser.getStatus());
+    	
+    	CouponuserDao.update(cue);
+    	sysOperLogService.AddOperLog("修改鼎鑫用户", "Old:" + cue.toString() + " New:" + oldUser.toString(), OperLogFlag.User, operuid);
+    	return R.ok();
+    }
+
+	@Override
+	public R huiYouUpdateUser(CouponUserEntity oldUser, int operuid) {
+		CouponUserEntity couponUser = CouponuserDao.queryObject(oldUser.getId());
+		if (couponUser == null) {
+			return R.error("数据异常");
+		}
+		couponUser.setStatus(oldUser.getStatus());
+		couponUser.setWeixinCode(oldUser.getWeixinCode());
+		couponUser.setZhifubao(oldUser.getZhifubao());
+		couponUser.setMobile(oldUser.getMobile());
+		CouponuserDao.update(couponUser);
+		sysOperLogService.AddOperLog("修改惠友圈用户", "Old:" + couponUser.toString() + " New:" + oldUser.toString(), OperLogFlag.User, operuid);
+		return R.ok();
+	}
+
+	@Override
+	public R huiYouDeleteUser(Integer[] ids, int operuid) {
+		Map<String, Object> map = new HashMap<>();
+    	map.put("ids", ids);
+    	List<CouponUserEntity> ulist = CouponuserDao.queryList(map);
+    	if (ulist.size() != ids.length) {
+			return R.error("数据异常");
+		}
+    	map = new HashMap<>();
+    	map.put("ids", ids);
+    	map.put("status", 2);
+    	CouponuserDao.changeUserStatus(map);
+    	sysOperLogService.AddOperLog("删除惠友圈用户", ulist, OperLogFlag.User, operuid);
+		return R.ok();
+	}
+	
+	@Override
+	public R updateTomanager(Integer[] ids, int operuid) {
+		Map<String, Object> map = new HashMap<>();
+    	map.put("ids", ids);
+    	List<CouponUserEntity> ulist = CouponuserDao.queryList(map);
+    	if (ulist.size() != ids.length) {
+			return R.error("数据异常");
+		}
+    	map = new HashMap<>();
+    	map.put("ids", ids);
+    	map.put("isExtend", 1);
+		CouponuserDao.changeUserIsExtend(map);
+		sysOperLogService.AddOperLog("设为平台推广员", ulist, OperLogFlag.User, operuid);
+		return R.ok();
+	}
+
+	
+    
+    @Override
+	public R DingXinUserMsg(Integer id, int operuid) {
+
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	map.put("ids", new Integer[] { id });
+    	List<CouponUserEntity> cue = CouponuserDao.queryDingXinList(map);
+    	if(cue == null || cue.size() == 0) {
+    		return R.error("数据异常");
+    	}
+    	return R.ok().put("user", cue.get(0));
+    	
+    }
+    
+
+    
+    //////////////////////////鼎鑫用户 end
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+}

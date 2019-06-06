@@ -1,0 +1,7 @@
+new vue({
+	el:"#test",
+	data:{
+		name:"ghost"	
+	}
+});
+

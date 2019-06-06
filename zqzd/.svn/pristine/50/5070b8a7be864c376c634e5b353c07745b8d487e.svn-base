@@ -1,0 +1,17 @@
+export default {
+  //首页检测服务导航
+  goodsCategory:[
+
+  ],
+
+  //首页检测服务商品
+  home:[
+
+  ],
+
+  liststatus:{
+    status: '',
+  }
+
+  
+}

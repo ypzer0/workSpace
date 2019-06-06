@@ -1,0 +1,45 @@
+package com.platform.service;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.platform.dao.ApiZdReportMapper;
+import com.platform.entity.ZdReportVo;
+import com.platform.entity.ZdUserVo;
+import com.platform.utils.Rp;
+import com.platform.utils.StringUtils;
+
+@Service
+public class ApiZdReportService {
+
+	@Autowired
+	private ApiZdReportMapper apiZdReportMapper;
+	
+	public Rp reportList(ZdUserVo nowUser) {
+		if(StringUtils.isNullOrEmpty(nowUser)) {
+			return Rp.error("请重新登录");
+		}
+		List<ZdReportVo> list=apiZdReportMapper.queryReportList(nowUser.getId());
+		if(StringUtils.isNullOrEmpty(list)) {
+			return Rp.error("您还没有检查报告");
+		}
+		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+		for (ZdReportVo report : list) {
+			Map<String, Object> cMap = new HashMap<String, Object>();
+			cMap.put("reportName", report.getReportName());
+			cMap.put("addTime", new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(report.getAddTime()));
+			dataList.add(cMap);
+		}
+		
+		return Rp.ok().putDt("reportList", dataList);
+		
+	}
+	
+	
+}

@@ -1,0 +1,11 @@
+import {z_register} from './z_register'
+import {z_home} from './z_home'
+import {zd_consult} from './zd_consult'
+
+
+
+export const api = {
+  z_register,
+  z_home,
+  zd_consult
+}

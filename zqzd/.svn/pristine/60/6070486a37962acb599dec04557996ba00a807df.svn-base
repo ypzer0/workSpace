@@ -1,0 +1,74 @@
+package com.platform.dao;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.platform.entity.CouponCategoryVo;
+import com.platform.entity.CouponGoodsVo;
+
+/**
+ * Dao
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-22 16:02:53
+ */
+public interface ApiGoodsMapper extends BaseDao<CouponGoodsVo> {
+
+	/**
+	 * 批量修改删除状态
+	 * @param map
+	 * @return
+	 */
+	int updateIsDelBatch(Map<String, Object> map);
+	
+	List<CouponGoodsVo> queryGoodsObject(Integer cid);
+	
+	List<CouponGoodsVo> queryByCCId(Map<String, Object> map);
+	
+	CouponGoodsVo payqueryObject(Integer oid);
+	
+	HashMap<String, Object> queryObjectByCid(Integer cid);
+	
+	HashMap<String, Object> payqueryObjectExt(Integer oid);
+	
+	HashMap<String, Object> payquerySuccess(Integer oid);
+	/**
+	 * 查询订单绑定的商品信息
+	 * @param oid
+	 * @return
+	 */
+	List<CouponGoodsVo> queryGoodsByOId(@Param(value = "oid") Integer oid, @Param(value = "uid") Integer uid);
+
+	/**
+	 * 查询前几条没有过期的商品
+	 * @param count
+	 * @return
+	 */
+	List<CouponGoodsVo> queryTopNoEff(@Param(value = "count") Integer count
+			, @Param(value = "cid") Integer cid);
+	
+	List<CouponGoodsVo> queryByGid(Integer[] ids);
+	
+	/**
+	 * 批量修改商品是否在售状态
+	 * @param isOnSale
+	 * @param ids
+	 * @return
+	 */
+	int updateGoodsToSale(@Param(value = "isOnSale") Integer isOnSale,
+			@Param(value = "ids") Integer[] ids);
+	
+	/**
+	 * 查询购买的商品
+	 * @param id
+	 * @return
+	 */
+	CouponGoodsVo queryBuyGoodsObj(@Param(value = "id") Integer id);
+	
+	int querySum(Integer uid);
+	
+}

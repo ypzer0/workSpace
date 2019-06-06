@@ -1,0 +1,326 @@
+package com.platform.service;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.shiro.crypto.hash.Hash;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.platform.dao.ApiCategoryMapper;
+import com.platform.dao.ApiCollectMapper;
+import com.platform.dao.ApiGoodsMapper;
+import com.platform.dao.ApiOrderMapper;
+import com.platform.dto.IdsDto;
+import com.platform.entity.CouponCategoryVo;
+import com.platform.entity.CouponCollectVo;
+import com.platform.entity.CouponGoodsVo;
+import com.platform.entity.CouponOrderVo;
+import com.platform.entity.UserVo;
+import com.platform.utils.DecimalUtil;
+import com.platform.utils.MapUtils;
+import com.platform.utils.Rp;
+import com.platform.utils.Constant.OperLogFlag;
+import com.platform.utils.StringUtils;
+
+@Service
+public class ApiGoodsService {
+	@Autowired 
+	private ApiGoodsMapper mapper;
+	@Autowired 
+	private ApiOrderMapper Omapper;
+	@Autowired
+	private SysOperLogService sysOperLogService;
+	@Autowired 
+	private ApiCollectMapper cmapper;
+
+	public Map<String, Object> list(Map<String, Object> map) {
+		List<CouponGoodsVo> List = mapper.queryList(map);
+		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+		for (CouponGoodsVo Goods : List) {
+			BigDecimal marketPrice = Goods.getMarketPrice();
+			BigDecimal price = Goods.getSalePrice();
+			BigDecimal preferentialPrice = DecimalUtil.GetValueOrDefault(marketPrice).subtract(DecimalUtil.GetValueOrDefault(price));
+			Map<String, Object> cMap = new HashMap<String, Object>();
+			cMap.put("gcode",Goods.getGoodsSn());
+			cMap.put("gid", Goods.getId());
+			cMap.put("cid", Goods.getcId());
+			cMap.put("gimg", Goods.getPicUrl());
+			cMap.put("name", Goods.getParentCname() + "|" + Goods.getcName());
+			cMap.put("count", Goods.getGoodsNumber());
+			cMap.put("price", price);
+			cMap.put("marketPrice", marketPrice);
+			cMap.put("preferentialPrice",preferentialPrice );
+			dataList.add(cMap);
+		}
+
+		Map<String, Object> rtMap = new HashMap<String, Object>();
+		rtMap.put("goodsClasslist", dataList);
+		return rtMap;
+	}
+
+	public Map<String, Object> listid(Integer cid) {
+		List<CouponGoodsVo> List = mapper.queryGoodsObject(cid);
+		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+		for (CouponGoodsVo Goods : List) {
+			Map<String, Object> cMap = new HashMap<String, Object>();
+			BigDecimal marketPrice = Goods.getMarketPrice();
+			BigDecimal price = Goods.getSalePrice();
+			BigDecimal preferentialPrice = DecimalUtil.GetValueOrDefault(marketPrice).subtract(DecimalUtil.GetValueOrDefault(price));
+			cMap.put("gcode",Goods.getGoodsSn());
+			cMap.put("gid", Goods.getId());
+			cMap.put("cid", Goods.getcId());
+			cMap.put("gimg", Goods.getPicUrl());
+			cMap.put("name", Goods.getParentCname() + "|" + Goods.getcName());
+			cMap.put("count", Goods.getGoodsNumber());
+			cMap.put("price", Goods.getSalePrice());
+			cMap.put("marketPrice", marketPrice);
+			cMap.put("preferentialPrice",preferentialPrice );
+			dataList.add(cMap);
+		}
+
+		Map<String, Object> rtMap = new HashMap<String, Object>();
+		rtMap.put("titleName", "推荐");
+		rtMap.put("goodsClasslist", dataList);
+		return rtMap;
+	}
+
+	public Map<String, Object> success(Integer oid) {
+		HashMap<String, Object> Goods = mapper.payquerySuccess(oid);
+		Map<String, Object> cMap = new HashMap<String, Object>();
+		cMap.put("goodsCode",MapUtils.getString("goods_sn", Goods));
+		cMap.put("gimg", MapUtils.getString("pic_url", Goods));
+		cMap.put("cid", MapUtils.getString("c_id", Goods));
+		cMap.put("gname", MapUtils.getString("parent_cname", Goods) + "|" +  MapUtils.getString("c_name", Goods));
+		cMap.put("price", MapUtils.getString("order_price", Goods));
+		return cMap;
+	}
+
+	public Map<String, Object> detail(UserVo loginUser, Integer id) {
+		CouponGoodsVo Goods = mapper.queryObject(id);
+		
+		Boolean type = new Boolean(false);
+		
+		if(loginUser != null) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("cid", Goods.getcId());
+			map.put("uid", loginUser.getId());
+			CouponCollectVo collectVo = cmapper.queryByCid(map);
+			if (collectVo != null) {
+				type = true;
+			}
+		}
+		
+		Map<String, Object> cMap = new HashMap<String, Object>();
+		BigDecimal marketPrice = Goods.getMarketPrice();
+		BigDecimal price = Goods.getSalePrice();
+		BigDecimal preferentialPrice = DecimalUtil.GetValueOrDefault(marketPrice).subtract(DecimalUtil.GetValueOrDefault(price));
+		cMap.put("gid", Goods.getId());
+		cMap.put("cid", Goods.getcId());
+		cMap.put("gimg", Goods.getPicBigUrl());
+		cMap.put("gname", Goods.getParentCname() + "|" + Goods.getcName());
+		cMap.put("msg", Goods.getReminder());
+		cMap.put("count", Goods.getGoodsNumber());
+		cMap.put("price", Goods.getSalePrice());
+		cMap.put("goodsCode",Goods.getGoodsSn());
+		cMap.put("detail", Goods.getGoodsBrief());
+		cMap.put("isCollect", type);
+		cMap.put("marketPrice", marketPrice);
+		cMap.put("preferentialPrice",preferentialPrice );
+		return cMap;
+	}
+	
+	/**
+	 * 通过分类id 获取商品详情
+	 * @param loginUser
+	 * @param id
+	 * @return
+	 */
+	public Map<String, Object> detailC(UserVo loginUser, Integer id) {
+		// TODO Auto-generated method stub
+
+		Boolean type = new Boolean(false);
+		
+		if(loginUser != null) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("cid", id);
+			map.put("uid", loginUser.getId());
+			CouponCollectVo collectVo = cmapper.queryByCid(map);
+			if (collectVo != null) {
+				type = true;
+			}
+		}
+
+		HashMap<String, Object> Goods = mapper.queryObjectByCid(id);
+		
+		Map<String, Object> cMap = new HashMap<String, Object>();
+		cMap.put("gid", 0);
+		cMap.put("cid", id);
+		cMap.put("gimg", MapUtils.getString("pic_big_url", Goods));
+		cMap.put("gname", MapUtils.getString("pname", Goods) + "|" + MapUtils.getString("name", Goods));
+		cMap.put("msg", MapUtils.getString("reminder", Goods));
+		cMap.put("count", MapUtils.getString("goods_number", Goods));
+		cMap.put("price", MapUtils.getString("sale_price", Goods));
+		cMap.put("goodsCode","");
+		cMap.put("detail", MapUtils.getString("goods_desc", Goods));
+		cMap.put("isCollect", type);
+		return cMap;
+		
+	}
+
+	public Map<String, Object> pay(Integer oid) {
+
+
+		HashMap<String, Object> Goods = mapper.payqueryObjectExt(oid);
+		Map<String, Object> cMap = new HashMap<String, Object>();
+		cMap.put("endPayTime", Goods.get("eff_time"));
+		cMap.put("goodsCategory", Goods.get("parent_cname") + "|" + Goods.get("c_name"));
+		cMap.put("cid", Goods.get("c_id"));
+		cMap.put("quantity", Goods.get("buy_count"));
+		cMap.put("price", Goods.get("buy_price"));
+		cMap.put("allPrice", Goods.get("order_price"));
+		cMap.put("goodsCode", Goods.get("goods_sn"));
+		cMap.put("goodsDetails", Goods.get("goods_brief"));
+		return cMap;
+	}
+
+	public Rp mygoodsUpper(UserVo loginUser,List<IdsDto> IdsDto) {
+		if(IdsDto == null || IdsDto.size()==0) {
+			return Rp.error("未选择商品，请您选择商品！");
+		}
+		Integer[] ids = new Integer[IdsDto.size()]; 
+
+		for (int i = 0; i < IdsDto.size(); i++) {
+			ids[i] = IdsDto.get(i).getId();
+		}
+		System.err.println("接受的id数组为："+ids[0]);
+		List<CouponGoodsVo> gList=mapper.queryByGid(ids);
+		if(gList.size()!=ids.length) {
+			return Rp.error("数据异常");
+		}
+		StringBuffer params=new StringBuffer();
+
+		mapper.updateGoodsToSale(1, ids);
+		for (CouponGoodsVo goods : gList) {
+			params.append("商品id:").append(goods.getId()).append("是否在销售：之前：").append(goods.getIsOnSale()).append(" 现在：").append(1);
+		}
+		sysOperLogService.AddOperLog("商品上架", params, OperLogFlag.Goods, loginUser.getId());
+		return Rp.ok("成功");
+	}
+
+	public Rp mygoodsDown(UserVo loginUser,List<IdsDto> IdsDto) {
+		if(IdsDto ==null||IdsDto.size()==0) {
+			return Rp.error("未选择商品，请您选择商品！");
+		}
+		Integer[] ids = new Integer[IdsDto.size()]; 
+
+		for (int i = 0; i < IdsDto.size(); i++) {
+			ids[i] = IdsDto.get(i).getId();
+		}
+
+		List<CouponGoodsVo> gList=mapper.queryByGid(ids);
+		if(gList.size()!=ids.length) {
+			return Rp.error("数据异常");
+		}
+		StringBuffer params=new StringBuffer();
+
+		mapper.updateGoodsToSale(0, ids);
+		for (CouponGoodsVo goods : gList) {
+			params.append("商品id:").append(goods.getId()).append("是否在销售：之前：").append(goods.getIsOnSale()).append(" 现在：").append(0);
+		}
+		sysOperLogService.AddOperLog("商品下架", params, OperLogFlag.Goods, loginUser.getId());
+		return Rp.ok("成功");
+	}
+
+	public Rp mygoodsDel(UserVo loginUser,List<IdsDto> IdsDto) {
+		if(IdsDto ==null||IdsDto.size()==0) {
+			return Rp.error("未选择商品，请您选择商品！");
+		}
+		Integer[] ids = new Integer[IdsDto.size()]; 
+
+		for (int i = 0; i < IdsDto.size(); i++) {
+			ids[i] = IdsDto.get(i).getId();
+		}
+
+		Map<String, Object> map = new HashMap<>();
+
+		List<CouponGoodsVo> gList=mapper.queryByGid(ids);
+		if(gList.size()!=ids.length) {
+			return Rp.error("数据异常");
+		}
+		StringBuffer params=new StringBuffer();
+
+		map.put("ids", ids);
+		map.put("isDelete", 1);
+		mapper.updateIsDelBatch(map);
+		for (CouponGoodsVo goods : gList) {
+			params.append("商品id:").append(goods.getId()).append("是否删除：之前：").append(goods.getIsDelete()).append(" 现在：").append(1);
+		}
+		sysOperLogService.AddOperLog("商品删除", params, OperLogFlag.Goods, loginUser.getId());
+		return Rp.ok("成功");
+	}
+
+	public Rp haveSell(UserVo loginUser,Integer status) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("ccid", loginUser.getId());
+		map.put("status", status);
+		
+		List<CouponGoodsVo> List = mapper.queryByCCId(map);
+		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+		for (CouponGoodsVo Goods : List) {
+			Map<String, Object> cMap = new HashMap<String, Object>();
+			cMap.put("sellid",Goods.getId());
+			cMap.put("cid", Goods.getcId());
+			cMap.put("img", Goods.getImgPath());
+			cMap.put("goodsName", Goods.getParentCname()+"|"+Goods.getcName());
+			cMap.put("sellPrice", Goods.getSalePrice());
+			cMap.put("putawayTime", Goods.getAddTime());
+			dataList.add(cMap);
+		}
+		return Rp.ok().putDt("couponSell", dataList);
+	}
+
+	public Rp haveBuy(UserVo loginUser,Integer status) {
+		switch (status) {
+		case 0:
+			//付款成功，未使用
+			status = 1;
+			break;
+		case 1:
+			//付款成功,以使用
+			status = 4;
+			break;
+		case 2:
+			//申请纠纷
+			status = 3;
+			break;
+		}
+		
+		List<CouponOrderVo> List = Omapper.queryGoodsByUserId(loginUser.getId(),status);
+		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+		for (CouponOrderVo Order : List) {
+			Map<String, Object> cMap = new HashMap<String, Object>();
+			cMap.put("oid", Order.getId());
+			cMap.put("buyid",Order.getUserId());
+			cMap.put("gid",Order.getGoodsId());
+			cMap.put("goodsName", Order.getName());
+			cMap.put("sellSate", Order.getOrderStatus());
+			cMap.put("expireTime", Order.getEffTime());
+			
+			cMap.put("showIssue", false);
+			switch (Order.getOrderStatus()) {
+			case 3:
+				cMap.put("showIssue", true);
+				cMap.put("statusStr", "纠纷中");
+				break;
+			}
+			dataList.add(cMap);
+		}
+		return Rp.ok().putDt("couponBuy", dataList);
+	}
+
+}

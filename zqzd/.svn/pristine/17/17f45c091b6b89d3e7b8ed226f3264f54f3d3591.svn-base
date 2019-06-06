@@ -1,0 +1,180 @@
+<template>
+    <div class="favoritea-box">
+        <ul class="favoritea-list">
+            <li class="favoritea-list-li" :key="index" v-for="(item, index) in favorites">
+                <!-- <input type='checkbox' name='checkboxinput' class='input-checkbox' @click="checkboxList(item ,index)"> -->
+                <i class="iconfont icon-checkbox-uncheck" v-show="item.checkboxItem == false" @click="checkboxSelected(index,item)">&#xe60e;</i>
+                <i class="iconfont icon-checkbox-selected" v-show="item.checkboxItem == true" @click="checkboxUncheck(index,item)">&#xe681;</i>
+                <div class="favoritea_goods_li" @click="jumpDetails(item)">
+                    <div class="favoritea_goods_img"><img :src="item.img" /></div>
+                    <div class="favoritea_goods_introduce">
+                    <p class="favoritea_goods_introduce_title_name">{{item.name}}</p>
+                    <p class="favoritea_goods_introduce_number"><span>￥{{item.price}}</span></p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default {
+  
+  props:['favorites'],
+
+  data(){
+    return{
+      //checkboxItem: false,
+    }
+  },
+
+  computed:{
+    ...mapState('y_favorites', ['checkbox','checkedAll'])
+  },
+
+  methods: {
+    ...mapActions('y_favorites', ['checkboxSelected']),
+    //选中事件
+    checkboxSelected(index,item){
+      item.checkboxItem = true;
+      console.log("index:",index);
+      console.log("checkboxItem:",item.checkboxItem);
+      console.log("item",item);
+      console.log("favorites",this.favorites);
+      console.log("this.favorites.length",this.favorites.length);
+      var xuanzhe = this.favorites.filter(function(i) {
+        return i.checkboxItem == true;
+      });
+      xuanzhe.length == this.favorites.length ? this.checkbox.checkedAll = true : this.checkbox.checkedAll = false
+    },
+
+    //未选中事件
+    checkboxUncheck(index,item){
+      item.checkboxItem = false;
+      console.log("index:",index);
+      console.log("checkboxItem:",item.checkboxItem);
+      var xuanzhe = this.favorites.filter(function(i) {
+        return i.checkboxItem == true;
+      });
+      xuanzhe.length != this.favorites.length ? this.checkbox.checkedAll = false : this.checkbox.checkedAll = true
+    },
+
+    jumpDetails(item){
+      console.log("item:",item)
+      this.$router.push({path:`/y-details/0/?cid=${item.cid}`})
+    },
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.favoritea-list{
+    width: 100%;
+    margin: 0 auto;
+}
+.favoritea-list-li{
+    width: 92%;
+    margin: 0 auto;
+    margin-top: 30px;
+    display: flex; 
+}
+.favoritea_goods_li{
+    display: flex;
+    margin-left: 30px;
+    // padding-bottom: 20px;
+    // border-bottom: 1px solid #e5e5e5;
+    //width: 92%;
+  }
+  .favoritea_goods_img{
+    width: 130px;
+    height: 130px;
+    background: #333333;
+    margin-right: 2.7vw;
+    border-radius: 2vw;
+  }
+  .favoritea_goods_img img{
+    width: 100%;
+    height: 100%;
+    //border-radius: 2vw;
+  }
+
+  .favoritea_goods_introduce_title_name{
+    margin-bottom: 30px;
+  }
+  .favoritea_goods_introduce_number{
+    margin-top: 70px;
+    color: #ff4539;
+    font-size: 36px;
+    // display: flex;
+    // justify-content: space-between;
+  }
+  .favoritea_goods_introduce_time{
+    display: flex;
+    justify-content: space-between;
+  }
+  .favoritea_goods_introduce{
+
+  }
+  .favoritea_goods_introduce_title_name{
+    font-size: 28px;
+    color: #333333;
+  }
+
+
+
+//选择框
+.icon-checkbox-uncheck{
+  font-size: 60px;
+  line-height: 130px;
+  color: #838383;
+}
+.icon-checkbox-selected{
+  font-size: 60px;
+  color: #1673ff;
+  line-height: 130px;
+}
+
+
+  //checkbox优化
+.input-checkbox:checked {
+	background:#1673ff
+}
+.input-checkbox {
+	width:50px;
+	height:50px;
+	background-color:#ffffff;
+	border:solid 1px #838383;
+	-webkit-border-radius:50%;
+	border-radius:50%;
+	font-size:20px;
+	margin:5.533vw 0;
+	padding:0;
+	position:relative;
+	display:inline-block;
+	vertical-align:top;
+	cursor:default;
+	-webkit-appearance:none;
+	-webkit-user-select:none;
+	user-select:none;
+	-webkit-transition:background-color ease 0.1s;
+	transition:background-color ease 0.1s;
+}
+.input-checkbox:checked::after {
+	content:'';
+	top:10px;
+	left:10px;
+	position:absolute;
+	background:transparent;
+	border:#fff solid 4px;
+	border-top:none;
+	border-right:none;
+	height:10px;
+	width:20px;
+	-moz-transform:rotate(-45deg);
+	-ms-transform:rotate(-45deg);
+	-webkit-transform:rotate(-45deg);
+    transform:rotate(-45deg);
+}
+  
+</style>

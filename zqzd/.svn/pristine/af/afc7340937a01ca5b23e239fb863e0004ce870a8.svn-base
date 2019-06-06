@@ -1,0 +1,139 @@
+$(function () {
+    $('#aboutCompom').editable({
+        inlineMode: false,
+        alwaysBlank: true,
+        height: '500px', //高度
+        minHeight: '200px',
+        language: "zh_cn",
+        spellcheck: false,
+        plainPaste: true,
+        enableScript: false,
+        imageButtons: ["floatImageLeft", "floatImageNone", "floatImageRight", "linkImage", "replaceImage", "removeImage"],
+        allowedImageTypes: ["jpeg", "jpg", "png", "gif"],
+        imageUploadURL: '../sys/oss/upload',
+        imageUploadParams: {id: "edit"},
+        imagesLoadURL: '../sys/oss/queryAll'
+    })
+});
+
+var vm = new Vue({
+    el: '#rrapp',
+    data: {
+    	title: "系统配置",
+    	showList: false,
+    	configDt:{
+    		//信用分配置
+    		credit:{
+    			low: 0,
+    			hight: 0,
+    			change: 0,
+    			chgoods: 0
+    		},
+    		//提佣等级
+    		con:{
+    			val1: 80,
+    			val2: 20
+    		},
+    		//联系方式
+    		contact:{
+    			qq: '',
+    			wechart: '',
+    			phone: ''
+    		}
+    	},
+        ruleValidate: {
+            name: [
+                {required: true, message: '名称不能为空', trigger: 'blur'}
+            ]
+        },
+    },
+    methods: {
+    	
+        /**
+         * 加载配置文件数据
+         */
+        loadConfig: function () {
+        	
+            Ajax.request({
+                url: "../coupon/config/load",
+                async: true,
+                successCallback: function (r) {
+                	if(r.code == 0){
+                		var dt = r;
+                		vm.configDt.credit.low = dt.credit.low;
+                		vm.configDt.credit.hight = dt.credit.hight;
+                		vm.configDt.credit.change = dt.credit.change;
+                		vm.configDt.credit.chgoods = dt.credit.chgoods;
+                		
+                		vm.configDt.con.val1 = dt.con.val1;
+                		vm.configDt.con.val2 = dt.con.val2;
+                		
+                		vm.configDt.contact.qq = dt.contact.qq;
+                		vm.configDt.contact.wechart = dt.contact.wechart;
+                		vm.configDt.contact.phone = dt.contact.phone;
+                		
+                        $('#aboutCompom').editable('setHTML', dt.about);
+                	}
+                	else{
+                        alert('获取配置失败', function (index) {
+                            
+                        });
+                	}
+                }
+            });
+        },
+
+        handleSubmit: function (name) {
+            handleSubmitValidate(this, name, function () {
+                vm.saveOrUpdate()
+            });
+        },
+        saveOrUpdate: function (event) {
+            var url = "../coupon/config/update";
+            
+//            let params = [];
+//            
+//            params.push({
+//            	key: 'credit',
+//            	val: JSON.stringify(vm.configDt.credit)
+//            })
+//            
+//            params.push({
+//            	key: 'con',
+//            	val: JSON.stringify(vm.configDt.con)
+//            })
+//            
+//            params.push({
+//            	key: 'contact',
+//            	val: JSON.stringify(vm.configDt.contact)
+//            })
+//            params.push({
+//            	key: 'about',
+//            	val: $('#aboutCompom').editable('getHTML')
+//            });
+            
+            let params = {
+            		credit: vm.configDt.credit,
+            		con: vm.configDt.con,
+            		contact: vm.configDt.contact,
+            		about: $('#aboutCompom').editable('getHTML')
+            }
+            Ajax.request({
+                type: "POST",
+                url: url,
+                contentType: "application/json",
+                params: JSON.stringify(params),
+                successCallback: function (r) {
+                    alert('保存成功', function (index) {
+                    	vm.loadConfig();
+                    });
+                }
+            });
+        },
+        
+        
+    },
+    created(){
+    	this.loadConfig();
+    }
+});

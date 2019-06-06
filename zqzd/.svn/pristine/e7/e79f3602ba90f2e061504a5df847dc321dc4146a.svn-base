@@ -1,0 +1,206 @@
+<template>
+    <div class="details-buy-alert" style="display: none;">
+       <div class="details-buy-alert-bg"></div>
+       <div class="details-buy-alert-box">
+         <div class="details-buy-alert-box-title">温馨提示：</div>
+         <div class="details-buy-alert-box-notice">1：成功出售一张卡券获得1信用分"信用分上限为200"<br/>2：<=110信用分，卡券上传<=11张<=120信用分，卡券上传<=12张.....每增加10积分，可以多上传1张卡券，以此内推。
+</div>
+         
+         <div class="details-buy-alert-btn">
+            <div class="details-buy-alert-btn-confirm buy-btn credit-btn" @click="alertCommitHide">确定</div>
+         </div>
+       </div>
+    </div>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default{
+  data () {
+    return {
+    }
+  },
+
+  computed: {
+    ...mapState('y_my', ['testLoginDt']),
+  },
+  methods: {
+     ...mapActions('y_my', ['alertCommitHide']),
+   //   alertCommit(testLoginDt){
+   //      this.testLoginDt.alertCommit = false;
+   //      this.$emit('click-alert', {item: testLoginDt });
+   //   }
+  },
+  created(){
+    
+  }
+}
+
+
+
+//获取地址栏参数
+function UrlSearch() 
+{
+   var name,value; 
+   var str=location.href; //取得整个地址栏
+   var num=str.indexOf("?") 
+   str=str.substr(num+1); //取得所有参数   stringvar.substr(start [, length ]
+
+   var arr=str.split("&"); //各个参数放到数组里
+   for(var i=0;i < arr.length;i++){ 
+    num=arr[i].indexOf("="); 
+    if(num>0){ 
+     name=arr[i].substring(0,num);
+     value=arr[i].substr(num+1);
+     this[name]=value;
+     } 
+    } 
+} 
+var Request=new UrlSearch(); //实例化
+console.log(Request.goodsCode);
+</script>
+
+<style lang="less" scoped>
+  .details-buy-alert{
+     width: 100%;
+     height: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 99;
+     .details-buy-alert-bg{
+        background: #333333;
+        width: 100%;
+        height: 100%;
+        background-size: 100%;
+        opacity: 0.4;
+        position: relative;
+     }
+     .details-buy-alert-box{
+         width: 550px;
+         height: 550px;
+         background: #ffffff;
+         position: absolute;
+         top: 30%;
+         left: 12%;
+         border-radius: 6px;
+         .details-buy-alert-box-title{
+            width: 92%;
+            margin: 0 auto;
+            font-size: 36px;
+            color: #333333;
+            padding-top: 30px;
+            text-align: center;
+         }
+         .details-buy-alert-box-notice{
+            width: 92%;
+            margin: 0 auto;
+            font-size: 28px;
+            color: #333333;
+            padding-top: 55px;
+            line-height: 35px;
+            //text-align: center;
+         }
+         .details-buy-alert-box-content1{
+            width: 92%;
+            margin: 0 auto;
+            font-size: 28px;
+            color: #2eacef;
+            padding-top: 50px;
+            line-height: 35px;
+            overflow: hidden;
+            //text-align: center;
+            .details-buy-alert-checkbox{
+               float: left;
+               margin-right: 20px;
+            }
+         }
+         .details-buy-alert-box-content2{
+            width: 92%;
+            margin: 0 auto;
+            font-size: 28px;
+            color: #838383;
+            padding-top: 50px;
+            line-height: 35px;
+            overflow: hidden;
+            .details-buy-alert-checkbox{
+               float: left;
+               margin-right: 20px;
+            }
+            .details-buy-alert-box-content2-text{
+               line-height: 50px;
+               span{
+                  color: #2eacef;
+               }
+            }
+         }
+         .details-buy-alert-btn{
+            display: flex;
+            margin: 50px auto;
+            width: 63%;
+            position: relative;
+            top: 50px;
+            .buy-btn{
+               width: 180px;
+               height: 60px;
+               border-radius: 6px;
+               font-size: 28px;
+               text-align: center;
+               line-height: 60px;
+               margin: 0 auto;
+            }
+            .details-buy-alert-btn-cancel{
+               background: #e5e5e5;
+               color: #333333;
+               margin-right: 60px;
+            }
+            .details-buy-alert-btn-confirm{
+               background: #2eacef;
+               color: #fff;
+            }
+         }
+     }
+  }
+
+
+  //checkbox优化
+.input-checkbox:checked {
+	background:#1673ff
+}
+.input-checkbox {
+	width:50px;
+	height:50px;
+	background-color:#ffffff;
+	border:solid 1px #838383;
+	-webkit-border-radius:50%;
+	border-radius:50%;
+	font-size:20px;
+	//margin:22px 0;
+	padding:0;
+	position:relative;
+	display:inline-block;
+	vertical-align:top;
+	cursor:default;
+	-webkit-appearance:none;
+	-webkit-user-select:none;
+	user-select:none;
+	-webkit-transition:background-color ease 0.1s;
+	transition:background-color ease 0.1s;
+}
+.input-checkbox:checked::after {
+	content:'';
+	top:10px;
+	left:10px;
+	position:absolute;
+	background:transparent;
+	border:#fff solid 4px;
+	border-top:none;
+	border-right:none;
+	height:10px;
+	width:20px;
+	-moz-transform:rotate(-45deg);
+	-ms-transform:rotate(-45deg);
+	-webkit-transform:rotate(-45deg);
+    transform:rotate(-45deg);
+}
+    
+</style>

@@ -1,0 +1,19 @@
+import * as types from './mutation-types'
+import { api } from '@/service/api'
+import {toast} from '@/libs/cube-ui'
+
+export const actions = {
+  //个人中心
+  async getUrse ({dispatch, commit, state}, o) {
+    //debugger;
+    let res = await api.z_urse.urse(o)
+    //debugger;
+    if (res.success) {
+      commit(types.INIT_URSE, res.data)
+    } else {
+      toast(res.msg, 'warn')
+    }
+  return res;
+},
+  
+}

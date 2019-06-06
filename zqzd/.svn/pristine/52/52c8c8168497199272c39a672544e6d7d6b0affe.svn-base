@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ZdGoodsInfoDao">
+
+    <resultMap type="com.platform.entity.ZdGoodsInfoEntity" id="ZdgoodsInfoMap">
+        <result property="id" column="id"/>
+        <result property="cId" column="c_id"/>
+        <result property="goodsName" column="goods_name"/>
+        <result property="goodsSn" column="goods_sn"/>
+        <result property="status" column="status"/>
+        <result property="price" column="price"/>
+        <result property="goodsNumber" column="goods_number"/>
+        <result property="smallImgPath" column="small_img_path"/>
+        <result property="bigImgPath" column="big_img_path"/>
+        <result property="goodsDesc" column="goods_desc"/>
+         <result property="addTime" column="add_time"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.platform.entity.ZdGoodsInfoEntity">
+		select
+			`id`,
+			`c_id`,
+			`goods_name`,
+			`goods_sn`,
+			`status`,
+			`price`,
+			`goods_number`,
+			`small_img_path`,
+			`goods_desc`,
+			`big_img_path`,
+			`add_time`
+		from zd_goods_info
+		where id = #{id}
+	</select>
+	
+	<update id="updateStatus">
+		update zd_goods_info set status = #{status} where id in 
+		<foreach item="id" collection="ids" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+
+	<select id="queryList" resultType="com.platform.entity.ZdGoodsInfoEntity">
+		select
+    		t1.`id`,
+    		t1.`c_id`,
+    		t1.`goods_name`,
+    		t1.`goods_sn`,
+    		t1.`status`,
+    		t1.`price`,
+    		t1.`goods_number`,
+    		t1.`small_img_path`,
+    		t1.`big_img_path`,
+    		t1.`goods_desc`,
+    		t1.`add_time`,
+				t2.`name` category_name 
+		from zd_goods_info t1 JOIN zd_category t2
+		ON t1.c_id=t2.id 
+		<if test="goodsSn != null and goodsSn.trim() != ''">
+			AND t1.`goods_sn` LIKE concat('%',#{goodsSn},'%')
+		</if>
+		<if test="goodsName != null and goodsName.trim() != ''">
+			AND t1.`goods_name` LIKE concat('%',#{goodsName},'%')
+		</if>
+		<if test="status != null and status.trim() != ''">
+			AND t1.status=#{status}
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from zd_goods_info t1 LEFT JOIN zd_category t2
+		ON t1.c_id=t2.id 
+        <if test="goodsSn != null and goodsSn.trim() != ''">
+			AND t1.`goods_sn` LIKE concat('%',#{goodsSn},'%')
+		</if>
+		<if test="goodsName != null and goodsName.trim() != ''">
+			AND t1.`goods_name` LIKE concat('%',#{goodsName},'%')
+		</if>
+		<if test="status != null and status.trim() != ''">
+			AND t1.status=#{status}
+		</if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.ZdGoodsInfoEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into zd_goods_info(
+			`c_id`,
+			`goods_name`,
+			`goods_sn`,
+			`status`,
+			`price`,
+			`goods_number`,
+			`small_img_path`,
+			`goods_desc`,
+			`big_img_path`,
+			`add_time`)
+		values(
+			#{cId},
+			#{goodsName},
+			#{goodsSn},
+			#{status},
+			#{price},
+			#{goodsNumber},
+			#{smallImgPath},
+			#{goodsDesc},
+			#{bigImgPath},
+			#{addTime})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.ZdGoodsInfoEntity">
+		update zd_goods_info 
+		<set>
+			<if test="cId != null">`c_id` = #{cId}, </if>
+			<if test="goodsName != null">`goods_name` = #{goodsName}, </if>
+			<if test="goodsSn != null">`goods_sn` = #{goodsSn}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="price != null">`price` = #{price}, </if>
+			<if test="goodsNumber != null">`goods_number` = #{goodsNumber}, </if>
+			<if test="smallImgPath != null">`small_img_path` = #{smallImgPath}, </if>
+			<if test="bigImgPath != null">`big_img_path` = #{bigImgPath},</if>
+			<if test="goodsDesc != null">`goods_desc` = #{goodsDesc}</if>
+			<if test="addTime != null">`add_time` = #{addTime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from zd_goods_info where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from zd_goods_info where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

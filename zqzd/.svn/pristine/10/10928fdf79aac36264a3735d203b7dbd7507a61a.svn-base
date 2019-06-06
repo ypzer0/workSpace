@@ -1,0 +1,72 @@
+<template>
+  <div class="urse-top-box">
+    <div class="urse-top-portrait"><img src="../../static/images/head-portrait.png"/></div>
+    <p class="urse-top-name">用户昵称</p>
+    <p class="urse-top-register">获取更好的服务，请先<span @click="$go('/z-register')">注册</span></p>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import Vue from 'vue'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
+export default {
+  computed: {
+    
+  },
+  components: {
+    
+  },
+  methods: {
+    
+  },
+  created() {
+
+  },
+  activated(){
+
+  },
+  
+}
+</script>
+
+<style lang="less" scoped>
+.urse-top-box{
+  width: 100%;
+  height: 370px;
+  margin: 0 auto;
+  background-image: url(../../static/images/urse-bg.png);
+  background-size: 100%;
+  .urse-top-portrait{
+    width: 142px;
+    height: 142px;
+    margin: 0 auto;
+    padding-top: 60px;
+    img{
+      width: 100%;
+      height:100%;
+    }
+  }
+  .urse-top-name{
+    font-size: 30px;
+    color: #ffffff;
+    text-align: center;
+    margin-top: 20px;
+  }
+  .urse-top-register{
+    width: 330px;
+    height: 40px;
+    background: #ffffff;
+    margin: 0 auto;
+    margin-top: 16px;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 20px;
+    font-size: 24px;
+    color: #8e8e93;
+    span{
+      color: #f58d25;
+    }
+  }
+}
+</style>

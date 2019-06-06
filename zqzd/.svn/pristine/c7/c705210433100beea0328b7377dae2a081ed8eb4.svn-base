@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.CouponWalletInfoDao">
+
+    <resultMap type="com.platform.entity.CouponWalletInfoEntity" id="CouponwalletInfoMap">
+        <result property="id" column="id"/>
+        <result property="uid" column="uid"/>
+        <result property="money" column="money"/>
+        <result property="preMoney" column="pre_money"/>
+        <result property="endMoney" column="end_money"/>
+        <result property="wtype1" column="wtype1"/>
+        <result property="wtype2" column="wtype2"/>
+        <result property="orderSn" column="order_sn"/>
+        <result property="transactionId" column="transaction_id"/>
+        <result property="outTradeNo" column="out_trade_no"/>
+        <result property="fMoney" column="f_money"/>
+        <result property="fStatus" column="f_status"/>
+        <result property="remark" column="remark"/>
+        <result property="ctime" column="ctime"/>
+        <result property="nickname" column="nickname"/>
+        <result property="uCode" column="u_code"/>
+        <result property="platType" column="plat_type"/>
+        <result property="orderPrice" column="order_price"/>
+        <result property="payTime" column="pay_time"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.platform.entity.CouponWalletInfoEntity">
+		select
+			`id`,
+			`uid`,
+			`money`,
+			`pre_money`,
+			`end_money`,
+			`wtype1`,
+			`wtype2`,
+			`order_sn`,
+			`transaction_id`,
+			`out_trade_no`,
+			`f_money`,
+			`f_status`,
+			`remark`,
+			`ctime`
+		from coupon_wallet_info
+		where id = #{id}
+	</select>
+
+	<select id="queryList" resultType="com.platform.entity.CouponWalletInfoEntity">
+		select
+    		wi.`id`,
+    		wi.`uid`,
+    		wi.`money`,
+    		wi.`pre_money`,
+    		wi.`end_money`,
+    		wi.`wtype1`,
+    		wi.`wtype2`,
+    		wi.`order_sn`,
+    		wi.`transaction_id`,
+    		wi.`out_trade_no`,
+    		wi.`f_money`,
+    		wi.`f_status`,
+    		wi.`remark`,
+    		wi.`ctime`,
+			u.nickname,
+			ub.u_code,
+			u.plat_type
+		from coupon_wallet_info wi
+		left join coupon_user u on wi.uid = u.id
+		left join coupon_user_code_bom ub on u.id = ub.u_id
+		WHERE 1=1
+		
+		<if test="name != null and name.trim() != ''">
+			AND (ub.u_code LIKE concat('%',#{name},'%') OR u.nickname LIKE concat('%',#{name},'%'))
+		</if>
+		
+		<if test="inOut != null and inOut.trim() != ''">
+			AND wi.`wtype1` = #{inOut}
+		</if>
+		
+		<if test="fstatus != null and fstatus.trim() != ''">
+			AND wi.`f_status` = #{fstatus}
+		</if>
+		
+		<if test="payTimeBegin != null and payTimeBegin.trim() != ''">
+			AND wi.`ctime` &gt;= #{payTimeBegin}
+		</if>
+		
+		<if test="payTimeEnd != null and payTimeEnd.trim() != ''">
+			AND wi.`ctime` &lt;= #{payTimeEnd}
+		</if>
+		
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by wi.`id` desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) 
+		from coupon_wallet_info wi
+		left join coupon_user u on wi.uid = u.id
+		left join coupon_user_code_bom ub on u.id = ub.u_id
+		WHERE 1=1
+		
+		<if test="name != null and name.trim() != ''">
+			AND (ub.u_code LIKE concat('%',#{name},'%') OR u.nickname LIKE concat('%',#{name},'%'))
+		</if>
+		
+		<if test="inOut != null and inOut.trim() != ''">
+			AND wi.`wtype1` = #{inOut}
+		</if>
+		
+		<if test="fstatus != null and fstatus.trim() != ''">
+			AND wi.`f_status` = #{fstatus}
+		</if>
+		
+		<if test="payTimeBegin != null and payTimeBegin.trim() != ''">
+			AND wi.`ctime` &gt;= #{payTimeBegin}
+		</if>
+		
+		<if test="payTimeEnd != null and payTimeEnd.trim() != ''">
+			AND wi.`ctime` &lt;= #{payTimeEnd}
+		</if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.CouponWalletInfoEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into coupon_wallet_info(
+			`uid`,
+			`money`,
+			`pre_money`,
+			`end_money`,
+			`wtype1`,
+			`wtype2`,
+			`order_sn`,
+			`transaction_id`,
+			`out_trade_no`,
+			`f_money`,
+			`f_status`,
+			`remark`,
+			`ctime`)
+		values(
+			#{uid},
+			#{money},
+			#{preMoney},
+			#{endMoney},
+			#{wtype1},
+			#{wtype2},
+			#{orderSn},
+			#{transactionId},
+			#{outTradeNo},
+			#{fMoney},
+			#{fStatus},
+			#{remark},
+			#{ctime})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.CouponWalletInfoEntity">
+		update coupon_wallet_info 
+		<set>
+			<if test="uid != null">`uid` = #{uid}, </if>
+			<if test="money != null">`money` = #{money}, </if>
+			<if test="preMoney != null">`pre_money` = #{preMoney}, </if>
+			<if test="endMoney != null">`end_money` = #{endMoney}, </if>
+			<if test="wtype1 != null">`wtype1` = #{wtype1}, </if>
+			<if test="wtype2 != null">`wtype2` = #{wtype2}, </if>
+			<if test="orderSn != null">`order_sn` = #{orderSn}, </if>
+			<if test="transactionId != null">`transaction_id` = #{transactionId}, </if>
+			<if test="outTradeNo != null">`out_trade_no` = #{outTradeNo}, </if>
+			<if test="fMoney != null">`f_money` = #{fMoney}, </if>
+			<if test="fStatus != null">`f_status` = #{fStatus}, </if>
+			<if test="remark != null">`remark` = #{remark}, </if>
+			<if test="ctime != null">`ctime` = #{ctime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from coupon_wallet_info where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from coupon_wallet_info where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<!-- 佣金 -->
+	<select id="queryCommissionObject" resultType="com.platform.entity.CouponWalletInfoEntity">
+		select
+			`id`,
+			`uid`,
+			`money`,
+			`pre_money`,
+			`end_money`,
+			`wtype1`,
+			`wtype2`,
+			`order_sn`,
+			`transaction_id`,
+			`out_trade_no`,
+			`f_money`,
+			`f_status`,
+			`remark`,
+			`ctime`
+		from coupon_wallet_info
+		where id = #{id}
+	</select>
+	
+	<select id="queryCommissionList" resultType="com.platform.entity.CouponWalletInfoEntity">
+		select
+    		m.`id`,
+    		m.`uid`,
+    		m.`money`,
+    		m.`pre_money`,
+    		m.`end_money`,
+    		m.`wtype1`,
+    		m.`wtype2`,
+    		m.`order_sn`,
+    		m.`transaction_id`,
+    		m.`out_trade_no`,
+    		m.`f_money`,
+    		m.`f_status`,
+    		m.`remark`,
+    		m.`ctime`,
+			u.nickname,
+			ub.u_code,
+			u.plat_type,
+			o.order_price,
+			o.pay_time,
+			uf.nickname as fnickname,
+			ubf.u_code as fu_cose
+		from coupon_wallet_info m
+		left join coupon_user u on m.uid = u.id
+		left join coupon_user_code_bom ub on u.id = ub.u_id
+		left join coupon_order o on m.`order_sn` = o.`order_sn`
+		left join coupon_user uf on o.user_id = uf.id
+		left join coupon_user_code_bom ubf on uf.id = ubf.u_id
+		WHERE 1=1 AND m.wtype2 = 5 and m.f_status = 0
+		<if test="name != null and name.trim() != ''">
+			AND u.nickname LIKE concat('%',#{name},'%')
+		</if>
+		<if test="uCode != null and uCode.trim() != ''">
+			AND ub.u_code LIKE concat('%',#{uCode},'%') 
+		</if>
+		<if test="inOut != null and inOut.trim() != ''">
+			AND m.`wtype1` = #{inOut}
+		</if>
+		
+		<if test="fstatus != null and fstatus.trim() != ''">
+			AND m.`f_status` = #{fstatus}
+		</if>
+		
+		<if test="payTimeBegin != null and payTimeBegin.trim() != ''">
+			AND m.`ctime` &gt;= #{payTimeBegin}
+		</if>
+		
+		<if test="payTimeEnd != null and payTimeEnd.trim() != ''">
+			AND m.`ctime` &lt;= #{payTimeEnd}
+		</if>
+		
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	<select id="queryCommissionTotal" resultType="int">
+		select count(*) 
+		from coupon_wallet_info m
+		left join coupon_user u on m.uid = u.id
+		left join coupon_user_code_bom ub on u.id = ub.u_id
+		left join coupon_order o on m.`order_sn` = o.`order_sn`
+		left join coupon_user uf on o.user_id = uf.id
+		left join coupon_user_code_bom ubf on uf.id = ubf.u_id
+		WHERE 1=1  AND m.wtype2 = 5 and m.f_status = 0
+		
+		<if test="name != null and name.trim() != ''">
+			AND (ub.u_code LIKE concat('%',#{name},'%') OR u.nickname LIKE concat('%',#{name},'%'))
+		</if>
+		
+		<if test="inOut != null and inOut.trim() != ''">
+			AND m.`wtype1` = #{inOut}
+		</if>
+		
+		<if test="fstatus != null and fstatus.trim() != ''">
+			AND m.`f_status` = #{fstatus}
+		</if>
+		
+		<if test="payTimeBegin != null and payTimeBegin.trim() != ''">
+			AND m.`ctime` &gt;= #{payTimeBegin}
+		</if>
+		
+		<if test="payTimeEnd != null and payTimeEnd.trim() != ''">
+			AND m.`ctime` &lt;= #{payTimeEnd}
+		</if>
+	</select>
+	
+	<select id="rptQueryWalletCountSum" resultType="java.util.HashMap">
+		select 
+		sum(case when m.wtype1 = 2 then -m.money else m.money end ) as money
+		from coupon_wallet_info m
+		left join coupon_user u on m.uid = u.id
+		left join coupon_user_code_bom ub on u.id = ub.u_id
+		left join coupon_order o on m.`order_sn` = o.`order_sn`
+		left join coupon_user uf on o.user_id = uf.id
+		left join coupon_user_code_bom ubf on uf.id = ubf.u_id
+		WHERE 1=1 AND m.wtype2 = 5 and m.f_status = 0
+		
+		<if test="name != null and name.trim() != ''">
+			AND u.nickname LIKE concat('%',#{name},'%')
+		</if>
+		<if test="uCode != null and uCode.trim() != ''">
+			AND ub.u_code LIKE concat('%',#{uCode},'%') 
+		</if>
+		<if test="inOut != null and inOut.trim() != ''">
+			AND m.`wtype1` = #{inOut}
+		</if>
+		
+		<if test="fstatus != null and fstatus.trim() != ''">
+			AND m.`f_status` = #{fstatus}
+		</if>
+		
+		<if test="payTimeBegin != null and payTimeBegin.trim() != ''">
+			AND m.`ctime` &gt;= #{payTimeBegin}
+		</if>
+		
+		<if test="payTimeEnd != null and payTimeEnd.trim() != ''">
+			AND m.`ctime` &lt;= #{payTimeEnd}
+		</if>
+	</select>
+	
+	<select id="QueryWalletCount" resultType="com.platform.dto.CouponWalletInfoDto">
+		select
+    		wi.`id`,
+    		wi.`uid`,
+    		wi.`money`,
+    		wi.`pre_money`,
+    		wi.`end_money`,
+    		wi.`wtype1`,
+    		wi.`wtype2`,
+    		wi.`order_sn`,
+    		wi.`transaction_id`,
+    		wi.`out_trade_no`,
+    		wi.`f_money`,
+    		wi.`f_status`,
+    		wi.`remark`,
+    		wi.`ctime`,
+			u.nickname,
+			ub.u_code,
+			u.plat_type
+		from coupon_wallet_info wi
+		left join coupon_user u on wi.uid = u.id
+		left join coupon_user_code_bom ub on u.id = ub.u_id
+		WHERE 1=1
+		
+		<if test="name != null and name.trim() != ''">
+			AND (ub.u_code LIKE concat('%',#{name},'%') OR u.nickname LIKE concat('%',#{name},'%'))
+		</if>
+		
+		<if test="inOut != null and inOut.trim() != ''">
+			AND wi.`wtype1` = #{inOut}
+		</if>
+		
+		<if test="fstatus != null and fstatus.trim() != ''">
+			AND wi.`f_status` = #{fstatus}
+		</if>
+		
+		<if test="payTimeBegin != null and payTimeBegin.trim() != ''">
+			AND wi.`ctime` &gt;= #{payTimeBegin}
+		</if>
+		
+		<if test="payTimeEnd != null and payTimeEnd.trim() != ''">
+			AND wi.`ctime` &lt;= #{payTimeEnd}
+		</if>
+		
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by wi.`id` desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	<select id="QueryCommissionCount" resultType="com.platform.dto.CouponCommissionInfoDto">
+		select
+    		m.`id`,
+    		m.`uid`,
+    		m.`money`,
+    		m.`pre_money`,
+    		m.`end_money`,
+    		m.`wtype1`,
+    		m.`wtype2`,
+    		m.`order_sn`,
+    		m.`transaction_id`,
+    		m.`out_trade_no`,
+    		m.`f_money`,
+    		m.`f_status`,
+    		m.`remark`,
+    		m.`ctime`,
+			u.nickname,
+			ub.u_code,
+			u.plat_type,
+			o.order_price,
+			o.pay_time,
+			uf.nickname as fnickname,
+			ubf.u_code as fu_cose,
+			sum(case when m.wtype1 = 1 then -m.money else m.money end ) as totalMoney
+		from coupon_wallet_info m
+		left join coupon_user u on m.uid = u.id
+		left join coupon_user_code_bom ub on u.id = ub.u_id
+		left join coupon_order o on m.`order_sn` = o.`order_sn`
+		left join coupon_user uf on o.user_id = uf.id
+		left join coupon_user_code_bom ubf on uf.id = ubf.u_id
+		WHERE 1=1 AND m.wtype2 = 5 and m.f_status = 0
+		<if test="name != null and name.trim() != ''">
+			AND u.nickname LIKE concat('%',#{name},'%')
+		</if>
+		<if test="uCode != null and uCode.trim() != ''">
+			AND ub.u_code LIKE concat('%',#{uCode},'%') 
+		</if>
+		<if test="inOut != null and inOut.trim() != ''">
+			AND m.`wtype1` = #{inOut}
+		</if>
+		
+		<if test="fstatus != null and fstatus.trim() != ''">
+			AND m.`f_status` = #{fstatus}
+		</if>
+		
+		<if test="payTimeBegin != null and payTimeBegin.trim() != ''">
+			AND m.`ctime` &gt;= #{payTimeBegin}
+		</if>
+		
+		<if test="payTimeEnd != null and payTimeEnd.trim() != ''">
+			AND m.`ctime` &lt;= #{payTimeEnd}
+		</if>
+		group by m.`id`
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by m.`id` desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+</mapper>

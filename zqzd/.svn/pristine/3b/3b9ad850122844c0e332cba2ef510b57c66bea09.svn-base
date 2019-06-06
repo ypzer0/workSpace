@@ -1,0 +1,21 @@
+export const getters = {
+  navList: state => {
+    // debugger;
+    let arr = [
+      {
+        id: 0,
+        tag: 'recommend',
+        name: '推荐'
+      }
+    ]
+    for (let i = 0; i < state.home.section.length; i++) {
+      let item = {
+        id: state.home.section[i].id,
+        tag: state.home.section[i].tag,
+        name: state.home.section[i].title
+      }
+      arr.push(item)
+    }
+    return arr
+  }
+}

@@ -1,0 +1,144 @@
+package com.platform.entity;
+
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * 实体
+ * 表名 fx_user
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-24 10:23:35
+ */
+public class CouponFxUserEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    //
+    private Integer id;
+    //用户ID
+    private Integer uId;
+    //上级用户ID
+    private Integer puid;
+    //添加时间
+    private Date addTime;
+    //来至哪里
+    private Integer fromType;
+    //用户昵称
+    private String nickname;
+    //用户code
+    private Integer uCode;
+    //上级昵称
+    private String pnickname;
+    //上级code
+    private Integer puCode;
+  
+    private String platType;
+    
+    
+    public String getPlatType() {
+		return platType;
+	}
+
+	public void setPlatType(String platType) {
+		this.platType = platType;
+	}
+
+	public String getPnickname() {
+		return pnickname;
+	}
+
+	public void setPnickname(String pnickname) {
+		this.pnickname = pnickname;
+	}
+
+	public Integer getPuCode() {
+		return puCode;
+	}
+
+	public void setPuCode(Integer puCode) {
+		this.puCode = puCode;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public Integer getuCode() {
+		return uCode;
+	}
+
+	public void setuCode(Integer uCode) {
+		this.uCode = uCode;
+	}
+
+	/**
+     * 设置：
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * 获取：
+     */
+    public Integer getId() {
+        return id;
+    }
+    /**
+     * 设置：用户ID
+     */
+    public void setUId(Integer uId) {
+        this.uId = uId;
+    }
+
+    /**
+     * 获取：用户ID
+     */
+    public Integer getUId() {
+        return uId;
+    }
+    /**
+     * 设置：上级用户ID
+     */
+    public void setPuid(Integer puid) {
+        this.puid = puid;
+    }
+
+    /**
+     * 获取：上级用户ID
+     */
+    public Integer getPuid() {
+        return puid;
+    }
+    /**
+     * 设置：添加时间
+     */
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+    /**
+     * 获取：添加时间
+     */
+    public Date getAddTime() {
+        return addTime;
+    }
+    /**
+     * 设置：来至哪里
+     */
+    public void setFromType(Integer fromType) {
+        this.fromType = fromType;
+    }
+
+    /**
+     * 获取：来至哪里
+     */
+    public Integer getFromType() {
+        return fromType;
+    }
+}

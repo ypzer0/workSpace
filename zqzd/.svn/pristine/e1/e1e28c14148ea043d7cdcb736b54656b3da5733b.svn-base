@@ -1,0 +1,57 @@
+<template>
+  <div data-tag="recommend" class="home-banner">
+    <cube-slide :data="banner.list">
+      <cube-slide-item v-for="(item, index) in banner.list" :key="index">
+        <div style="height: 5.3333rem">
+          <img @click="binderClick(item)" :src="item.image_url" alt="">
+        </div>
+
+      </cube-slide-item>
+    </cube-slide>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import {mapState, mapGetters, mapActions} from 'vuex'
+
+  export default {
+    // data() {
+    //   return {
+    //     banner:{
+    //       list:[]
+    //     }
+    //   }
+    // },
+    props: ['list'],
+    computed:{
+      ...mapState('home', ['banner'])
+     
+    },
+    methods: {
+      ...mapActions('home', ['getBanner']),
+      binderClick(d){
+        this.$emit('binder-click', d);
+      }
+
+      //   getBanner() {
+      //   this.request(this.api.IndexUrlBrand).then(res => {
+      //     debugger;
+      //     if (res.errno == 0) {
+      //       this.banner.list = res.data.brandList
+      //     }
+      //   })
+      // }
+    },
+    created() {
+
+      this.getBanner()
+    }
+  }
+</script>
+
+<style lang="less" scoped>
+  .home-banner {
+    margin-bottom: 20px;
+    background: white;
+  }
+</style>

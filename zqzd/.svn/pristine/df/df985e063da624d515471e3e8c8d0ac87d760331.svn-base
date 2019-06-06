@@ -1,0 +1,22 @@
+import * as types from './mutation-types'
+
+export const mutations = {
+  [types.INIT_Have_Buy] (state, o) {
+     state.haveBuy = o.couponBuy;
+  },
+
+  //购买-未使用
+  [types.INIT_UNUSED] (state, o) {
+    state.unusedBuy = o.couponBuy;
+ },
+
+ //购买-已完成
+ [types.INIT_COMPLETE] (state, o) {
+  state.completeBuy = o.couponBuy;
+},
+
+//购买-未处理中
+[types.INIT_PROCESSING] (state, o) {
+  state.processingBuy = o.couponBuy;
+},
+}

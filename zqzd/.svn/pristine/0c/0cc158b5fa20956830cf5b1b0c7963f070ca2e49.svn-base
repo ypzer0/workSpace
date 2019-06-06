@@ -1,0 +1,15 @@
+import Vue from 'vue'
+import Vuex from 'vuex'
+import z_registerModule from './z_register/index'
+
+
+
+
+Vue.use(Vuex)
+
+export default new Vuex.Store({
+  modules: {
+    z_register: z_registerModule,
+    
+  }
+})

@@ -1,0 +1,41 @@
+<template>
+  <page :better-scroll="true">
+    <coupon-header slot="top"></coupon-header>
+    <coupon-content ></coupon-content>
+    
+  </page>
+</template>
+
+<script type="text/ecmascript-6">
+import couponHeader from './coupon-header'
+import couponContent from './coupon-content'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {toast} from '@/libs/cube-ui'
+
+export default {
+    
+  data(){
+      return{
+        
+      }
+  },
+  computed: {
+
+  },
+  components: {
+    couponHeader
+    , couponContent
+  },
+  methods:{
+    ...mapActions('coupon', ['loadList']),
+  },
+  created(){
+    this.loadList();
+  }
+}
+</script>
+
+<style lang="less" scoped>
+
+
+</style>

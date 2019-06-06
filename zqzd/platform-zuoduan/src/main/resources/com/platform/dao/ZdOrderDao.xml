@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ZdOrderDao">
+
+    <resultMap type="com.platform.entity.ZdOrderEntity" id="ZdorderMap">
+        <result property="id" column="id"/>
+        <result property="goodsId" column="goods_id"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="payStatus" column="pay_status"/>
+        <result property="userId" column="user_id"/>
+        <result property="orderNumber" column="order_number"/>
+        <result property="orderSn" column="order_sn"/>
+        <result property="hospitalId" column="hospital_id"/>
+        <result property="departmentId" column="department_id"/>
+        <result property="doctorId" column="doctor_id"/>
+        <result property="confirmTime" column="confirm_time"/>
+        <result property="payTime" column="pay_time"/>
+        <result property="orderPrice" column="order_price"/>
+    </resultMap>
+    
+    
+
+	<select id="queryObject" resultType="com.platform.entity.ZdOrderEntity">
+		select
+			`id`,
+			`goods_id`,
+			`order_status`,
+			`pay_status`,
+			`user_id`,
+			`order_number`,
+			`order_sn`,
+			`hospital_id`,
+			`department_id`,
+			`doctor_id`,
+			`order_price`,
+			`confirm_time`,
+			`pay_time`
+		from zd_order
+		where id = #{id}
+	</select>
+	
+	<select id="orderClose24h" resultType="int">
+		{CALL zd_order_close_24h()}
+	</select>
+
+	<select id="querySumOrderPrice" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+		select
+    		sum(order_price) as orderPrice
+		from zd_order
+		where 1=1
+		<if test="_parameter != null">
+			AND order_status=#{orderStatus}
+		</if>
+	</select>
+
+	<select id="queryList" resultType="com.platform.entity.ZdOrderEntity">
+		select
+    		t1.`id`,
+    		t1.`goods_id`,
+    		t1.`order_status`,
+    		t1.`pay_status`,
+    		t1.`user_id`,
+    		t1.`order_number`,
+    		t1.`order_sn`,
+    		t1.`hospital_id`,
+    		t1.`department_id`,
+    		t1.`doctor_id`,
+    		t1.`order_price`,
+    		t1.`confirm_time`,
+    		t1.`pay_time`,
+				t2.goods_name,
+				t3.nickname  
+		from zd_order t1 
+		join zd_goods_info t2 on t1.goods_id=t2.id 
+		left join zd_user t3 on t1.user_id=t3.id  
+		where 1=1
+		<if test="goodsName != null and goodsName.trim() != ''">
+			AND t2.goods_name LIKE concat('%',#{goodsName},'%')
+		</if>
+		<if test="orderSn != null and orderSn.trim() != ''">
+			AND t1.order_sn LIKE concat('%',#{orderSn},'%')
+		</if>
+		<if test="orderStatus != null and orderStatus.trim() != ''">
+			AND t1.order_status=#{orderStatus}
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by t1.`confirm_time` desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from zd_order t1 join zd_goods_info t2
+		on t1.goods_id=t2.id 
+		left join zd_user t3 
+		on t1.user_id=t3.id  
+		where 1=1
+		<if test="goodsName != null and goodsName.trim() != ''">
+			AND t2.goods_name LIKE concat('%',#{goodsName},'%')
+		</if>
+		<if test="orderSn != null and orderSn.trim() != ''">
+			AND t1.order_sn LIKE concat('%',#{orderSn},'%')
+		</if>
+		<if test="payStatus != null and payStatus.trim() != ''">
+			AND t1.pay_status=#{payStatus}
+		</if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.ZdOrderEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into zd_order(
+			`goods_id`,
+			`order_price`,
+			`order_status`,
+			`pay_status`,
+			`user_id`,
+			`order_number`,
+			`order_sn`,
+			`hospital_id`,
+			`department_id`,
+			`doctor_id`,
+			`confirm_time`,
+			`pay_time`)
+		values(
+			#{goodsId},
+			#{orderPrice},
+			#{orderStatus},
+			#{payStatus},
+			#{userId},
+			#{orderNumber},
+			#{orderSn},
+			#{hospitalId},
+			#{departmentId},
+			#{doctorId},
+			#{confirmTime},
+			#{payTime})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.ZdOrderEntity">
+		update zd_order 
+		<set>
+			<if test="goodsId != null">`goods_id` = #{goodsId}, </if>
+			<if test="orderStatus != null">`order_status` = #{orderStatus}, </if>
+			<if test="orderPrice != null">`order_price` = #{orderPrice}, </if>
+			<if test="payStatus != null">`pay_status` = #{payStatus}, </if>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="orderNumber != null">`order_number` = #{orderNumber}, </if>
+			<if test="orderSn != null">`order_sn` = #{orderSn}, </if>
+			<if test="hospitalId != null">`hospital_id` = #{hospitalId}, </if>
+			<if test="departmentId != null">`department_id` = #{departmentId}, </if>
+			<if test="doctorId != null">`doctor_id` = #{doctorId}, </if>
+			<if test="confirmTime != null">`confirm_time` = #{confirmTime}, </if>
+			<if test="payTime != null">`pay_time` = #{payTime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from zd_order where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from zd_order where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

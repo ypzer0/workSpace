@@ -1,0 +1,25 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api.js'
+export const y_user_info = {
+    
+  //加载页面数据
+  userInfo: (params) => {
+    
+    return axios.request({
+      url: api.Y_UserLoad,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  
+  userUpload: (params) => {
+    
+    return axios.request({
+      url: api.Y_UserUpload,
+      data: params,
+      method: 'post'
+    })
+  },
+
+}

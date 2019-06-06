@@ -1,0 +1,116 @@
+<template>
+<div class="border-1px-bottom">
+    <div class="address-item "
+          :key="key"
+          v-for="(item, key) in addrs" @click="checkChange(item)" >
+      <div class="item-select" v-if="model == 0">
+        <i class="iconfont" v-html="item.isCheck ? '&#xe65f;' : '&#58976;'"></i>
+      </div>
+      <div class="item-main">
+        <div class="main-top">
+          <span>{{item.userName}}</span>
+          <span>{{item.telNumber}}</span>
+        </div>
+        <div class="main-bottom">
+          <span :style="{ display: item.is_default == 1 ? '' : 'none' }">{{item.is_default == 1 ? "默认" : ""}}</span>
+          <p>{{item.provinceName}} {{item.cityName}} {{item.countyName}} {{item.detailInfo}} </p>
+        </div>
+      </div>
+      <div class="item-update" @click="update(item)">
+        <i class="iconfont">&#xe62c;</i>
+      </div>
+    </div>
+</div>
+</template>
+
+<script type="text/ecmascript-6">
+export default {
+  data(){
+    return{
+      //check:&#xe65f; uncheck:&#58976;
+      // CheckStyle:'&#58976;'
+
+    }
+  },
+  props:['addrs', 'model'],
+  methods: {
+    update (addr) {
+      this.$emit('update',{ id: addr.id })
+    },
+    checkChange(addr){
+      if(this.addrs == null || this.addrs.length == 0) return;
+      
+      for (let i = 0; i < this.addrs.length; i++) {
+        const ele = this.addrs[i];
+        ele.isCheck = false;
+      }
+
+      var nowObj = this.$getGlobal();
+      nowObj.SedAddrId = addr.id;
+      this.$setGlobal(nowObj);
+
+      addr.isCheck = true;
+    }
+  },
+
+}
+</script>
+
+<style lang="less" scoped>
+  .address-item{
+    display: flex;
+    height: 210px;
+    padding:0 27px;
+    background: white;
+    .item-select{
+      display: flex;
+      align-items: center;
+      flex-grow: 0;
+      i{
+        color:#d74945;
+      }
+    }
+    .item-main{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex:1;
+      padding:0 24px 0 40px;
+      .main-top{
+        display: flex;
+        justify-content: space-between;
+        span{
+          font-weight: 600;
+          font-size: 28px;
+          color:#333;
+        }
+      }
+      .main-bottom{
+        display: flex;
+        padding-top:27px;
+        span{
+          display: inline-block;
+          height: 36px;
+          box-sizing: border-box;
+          padding:0 10px;
+          margin-right:10px;
+          line-height: 34px;
+          border:1px solid #d74945;
+          white-space: nowrap;
+          color:#d74945;
+        }
+        p{
+          color:#666;
+        }
+      }
+    }
+    .item-update{
+      display: flex;
+      align-items: center;
+      flex-grow: 0;
+      i{
+        color:#666;
+      }
+    }
+  }
+</style>

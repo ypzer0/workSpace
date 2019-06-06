@@ -1,0 +1,34 @@
+<template>
+    <div>
+        {{testVar}}
+        
+        <div>{{testObj.name}}</div>
+      <button @click="testBtn">測試點擊</button>
+
+    </div>
+</template>
+      
+<script type="text/ecmascript-6">
+export default {
+  data(){
+    return {
+    }
+  },
+  props: ['testVar', 'testObj'],
+  computed:{
+
+  },
+  components: {
+  },
+  methods:{
+    testBtn(){
+      this.$emit('btn-click');
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+
+
+</style>

@@ -1,0 +1,10 @@
+export default {
+  //商品信息
+  goodsSuccess:{
+    // "gid": 123,
+    // "img": "lllllll",
+    // "gname": "玛呖德 糕点 紫米面包1100g",
+    // "price": 12.33
+  }
+
+}

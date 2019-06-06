@@ -1,0 +1,199 @@
+$(function () {
+    $("#jqGrid").Grid({
+        url: '../Zdreport/list',
+        colModel: [
+			{label: 'id', name: 'id', index: 'id', key: true, hidden: true },
+			{label: '用户昵称', name: 'nickname', index: 'nickname', width: 80, align: 'center', sortable: false },
+			{label: '用户姓名', name: 'username', index: 'username', width: 80, align: 'center', sortable: false },
+			{label: '年龄', name: 'age', index: 'age', width: 80, align: 'center', sortable: false },
+			{label: '性别', name: 'gender', index: 'gender', width: 80, sortable: false,
+				align: 'center',
+				formatter: function (value) {
+                	var rt = "";
+                	if (value == '0') {
+                    	rt =  '女';
+                    } 
+                	if (value == '1') {
+                    	rt =  '男';
+                    }
+                	
+                	return '<span>' + rt + '</span>';
+                }	
+			},
+			{label: '联系方式', name: 'mobile', index: 'mobile', width: 80, align: 'center', sortable: false },
+			{label: '报表名称', name: 'reportName', index: 'report_name', width: 80, align: 'center', sortable: false },
+			{label: '检查状态', name: 'checkStatus', index: 'check_status', width: 80, sortable: false,
+				align: 'center',
+				formatter: function (value) {
+                	var rt = "";
+                	var cls = 'info';
+                	
+                	if (value == '1') {
+                    	rt =  '已检查';
+                    }else{
+                    	rt =  '未检查';
+                    	cls = 'warning'
+                    }
+                	
+                	return '<span class="label label-'+ cls +'">' + rt + '</span>';
+                }	
+			},
+			{label: '上传状态', name: 'uploadStatus', index: 'upload_status', width: 80, sortable: false,
+				align: 'center',
+				formatter: function (value) {
+                	var rt = "";
+                	var cls = 'info'; 
+                	if (value == '1') {
+                    	rt =  '已上传';
+                    }else{
+                    	cls = 'warning';
+                    	rt='未上传';
+                    }
+                	
+                	return '<span class="label label-'+ cls +'">' + rt + '</span>';
+                }	
+			},
+		]
+    });
+});
+
+let vm = new Vue({
+	el: '#rrapp',
+	data: {
+        showList: true,
+        title: null,
+		Zdreport: {},
+		ruleValidate: {
+			name: [
+				{required: true, message: '名称不能为空', trigger: 'blur'}
+			]
+		},
+		q: {
+		    name: ''
+		}
+	},
+	methods: {
+		handleMaxSize: function (file) {
+            this.$Notice.warning({
+                title: '超出文件大小限制',
+                desc: '文件 ' + file.name + ' 太大，不能超过 2M。'
+            });
+        },
+		handleSuccess: function (res, file) {
+            vm.Zdreport.uploadStatus = "1";
+            vm.Zdreport.reportPath=file.response.url;
+            this.$Notice.warning({
+                title: '文件上传成功',
+                desc: '请勿忘提交'
+            });
+        },
+        handleFormatError: function (file) {
+            this.$Notice.warning({
+                title: '文件上传失败',
+                desc: '文件 ' + file.name + '格式不正确'
+            });
+        },
+		query: function () {
+			vm.reload();
+		},
+		add: function () {
+			let id = getSelectedRow("#jqGrid");
+			if (id == null) {
+				return;
+			}
+			vm.showList = false;
+			
+			vm.showAdd = true;
+			vm.showBitchAdd = false;
+			
+			vm.title = "为用户添加报告";
+			vm.Zdreport = { 
+					uId : '',
+					reportName:'',
+					checkStatus:'',
+					reportPath:'',
+					addTime:new Date(),
+					};
+		},
+		update: function (event) {
+			let id = getSelectedRow("#jqGrid");
+			if (id == null) {
+				return;
+			}
+			vm.showList = false;
+			vm.showAdd = true;
+			vm.showBitchAdd = false;
+            vm.title = "修改";
+
+            vm.getInfo(id)
+		},
+		saveOrUpdate: function (event) {
+			let url = vm.Zdreport.id == null ? "../Zdreport/save" : "../Zdreport/update";
+            Ajax.request({
+			    url: url,
+                params: JSON.stringify(vm.Zdreport),
+                type: "POST",
+			    contentType: "application/json",
+                successCallback: function (r) {
+                    alert('操作成功', function (index) {
+                        vm.reload();
+                    });
+                }
+			});
+		},
+		del: function (event) {
+            let ids = getSelectedRows("#jqGrid");
+			if (ids == null){
+				return;
+			}
+
+			confirm('确定要删除选中的记录？', function () {
+                Ajax.request({
+				    url: "../Zdreport/delete",
+                    params: JSON.stringify(ids),
+                    type: "POST",
+				    contentType: "application/json",
+                    successCallback: function () {
+                        alert('操作成功', function (index) {
+                            vm.reload();
+                        });
+					}
+				});
+			});
+		},
+		getInfo: function(id, sucCallback){
+            Ajax.request({
+                url: "../Zdreport/info/"+id,
+                async: true,
+                successCallback: function (r) {
+                    vm.Zdreport = r.Zdreport;
+                    if(sucCallback){
+                    	sucCallback(r);
+                    }
+                }
+            });
+		},
+		reload: function (event) {
+			vm.showList = true;
+            let page = $("#jqGrid").jqGrid('getGridParam', 'page');
+			$("#jqGrid").jqGrid('setGridParam', {
+                postData: {
+                	"nickname": vm.q.nickname,
+                	"uploadStatus":vm.q.uploadStatus,
+                },
+                page: page
+            }).trigger("reloadGrid");
+		},
+        reloadSearch: function() {
+            vm.q = {
+                name: ''
+            }
+            vm.reload();
+        },
+        handleSubmit: function (name) {
+            handleSubmitValidate(this, name, function () {
+                vm.saveOrUpdate()
+            });
+        }
+	}
+});

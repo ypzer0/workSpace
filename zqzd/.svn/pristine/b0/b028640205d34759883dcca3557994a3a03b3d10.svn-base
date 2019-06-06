@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    #parse("sys/header.html")
+	<style type="text/css">
+   		.cc-img{
+   			width:60px;
+   			height:60px;
+   		} 
+   		.upload-parent{
+			height: 422px;
+    		overflow: scroll;
+		    border: 1px solid #e9eaec;
+		    padding: 15px;
+   		}
+        .upload-list {
+		    display: inline-block;
+		    width: 160px;
+		    height: 155px;
+		    padding: 5px;
+		    text-align: center;
+		    line-height: 60px;
+		    border: 1px solid transparent;
+		    border-radius: 4px;
+		    overflow: hidden;
+		    background: #fff;
+		    position: relative;
+		    box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+		    margin-right: 4px;
+        }
+
+        .upload-list img {
+		    width: 100%;
+		    height: 91px;
+        }
+
+        .upload-list-cover {
+			 display: none; 
+            position: absolute;
+            top: 0;
+            bottom: 47px;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, .6);
+        }
+
+        .upload-list:hover .upload-list-cover {
+            display: block;
+        }
+
+        .upload-list-cover i {
+			color: #fff;
+		    font-size: 20px;
+		    cursor: pointer;
+		    margin: 0 15px;
+		    text-align: center;
+		    position: relative;
+	        top: 23px;
+        }
+        .def-border-red{
+        
+        }
+        .def-border-red input{
+        	border-color:red;
+        }
+    </style>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+        <Row :gutter="16">
+            <div class="search-group">
+            
+                <i-col span="4">
+	                <i-select v-model="q.pcateg" filterable @on-change="getChildCate">
+	                    <i-option v-for="c in parentCategory" :value="c.key" :key="c.key">{{c.val}}</i-option>
+	                </i-select>
+                </i-col>
+                <i-col span="4">
+	                <i-select v-model="q.categ" filterable @on-change="query">
+	                    <i-option v-for="c in category" :value="c.key" :key="c.key">{{c.val}}</i-option>
+	                </i-select>
+                </i-col>
+                
+                <i-col span="2" style="padding-top: 8px;">
+	                
+                    <Radio-group v-model="q.onsale" @on-change="query">
+                        <Radio label="">
+                            <span>不选</span>
+                        </Radio>
+                        <Radio label="1">
+                            <span>上架</span>
+                        </Radio>
+                        <Radio label="0">
+                            <span>下架</span>
+                        </Radio>
+                    </Radio-group>
+                </i-col>
+                
+                <i-col span="2" style="padding-top: 8px;">
+	                
+                    <Radio-group v-model="q.outtime" @on-change="query">
+                        <Radio label="">
+                            <span>不选</span>
+                        </Radio>
+                        <Radio label="1">
+                            <span>过期</span>
+                        </Radio>
+                        <Radio label="0">
+                            <span>未过期</span>
+                        </Radio>
+                    </Radio-group>
+                </i-col>
+                
+                <i-col span="2">
+	             	<Date-picker type="datetime" v-model="q.addTimeBegin" format="yyyy-MM-dd" placeholder="开始时间"></Date-picker>
+                </i-col>
+                <i-col span="2">
+	             	<Date-picker type="datetime" v-model="q.addTimeEnd" format="yyyy-MM-dd" placeholder="结束时间"></Date-picker>
+                </i-col>
+                
+                <i-button @click="query">查询</i-button>
+                <!-- <i-button @click="reloadSearch">重置</i-button> -->
+            </div>
+            <div class="buttons-group">
+            
+                #if($shiro.hasPermission("coupongoodsinfo:save"))
+                <i-button type="info" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</i-button>
+                #end
+                #if($shiro.hasPermission("coupongoodsinfo:batchAdd"))
+                <i-button type="info" @click="addBatch"><i class="fa fa-plus"></i>&nbsp;批量上传</i-button>
+                #end
+                #if($shiro.hasPermission("coupongoodsinfo:upperShelf"))
+                <i-button type="info" @click="upperShelf"><i class="fa fa-plus"></i>&nbsp;上架</i-button>
+                #end
+                 #if($shiro.hasPermission("coupongoodsinfo:soldOut"))
+                <i-button type="info" @click="soldOut"><i class="fa fa-plus"></i>&nbsp;下架</i-button>
+                #end
+                #if($shiro.hasPermission("coupongoodsinfo:update"))
+                <i-button type="warning" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</i-button>
+                #end
+                #if($shiro.hasPermission("coupongoodsinfo:delete"))
+                <i-button type="error" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</i-button>
+                #end
+            </div>
+        </Row>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+
+    <Card v-show="!showList && showAdd">
+        <p slot="title">{{title}}</p>
+		<i-form ref="addFormValidate" :model="CoupongoodsInfo" :rules="ruleValidate" :label-width="80">
+            <Form-item label="商品种类" prop="pId" placeholder="请选择商品种类">
+                <i-select v-model="CoupongoodsInfo.pId" @on-change="add_getChild(CoupongoodsInfo.pId)">
+                    <i-option v-for="c in m_category" :value="c.key" >{{c.val}}</i-option>
+                </i-select>
+            </Form-item>
+            <Form-item label="商品分类" prop="cId" placeholder="商品分类">
+                <i-select v-model="CoupongoodsInfo.cId" >
+                    <i-option v-for="c in m_category_child" :value="c.key" >{{c.val}}</i-option>
+                </i-select>
+            </Form-item>
+            <Form-item label="有效时间（含当天）" prop="effTime">
+                <Date-picker type="datetime" v-model="CoupongoodsInfo.effTime" format="yyyy-MM-dd" placeholder="有效时间"></Date-picker>
+            </Form-item>
+            
+            <Row>
+                <i-col span="16">
+		            <Form-item label="商品图片" prop="imgPath">
+		                <i-input v-model="CoupongoodsInfo.imgPath" placeholder="商品图片"/>
+		            </Form-item>
+                </i-col>
+                <i-col span="3">
+                    <Form-item :label-width="1">
+                        <Upload style="width: 300px;" action="../sys/oss/upload" :format="['jpg','jpeg','png']"
+                                max-size="2048"
+                                :on-success="handleSuccessPicUrl" :on-format-error="handleFormatError"
+                                :show-upload-list="false"
+                                :on-exceeded-size="handleMaxSize">
+                            <i-button icon="ios-cloud-upload-outline">上传图片</i-button>
+                        </Upload>
+                    </Form-item>
+                </i-col>
+                <i-col span="3">
+                    <Form-item :label-width="1">
+                        <i-button icon="eye" @click="eyePicUrl">预览图片</i-button>
+                    </Form-item>
+                </i-col>
+            </Row>
+            
+            <Form-item label="兑换码" prop="redeemCode">
+                <i-input v-model="CoupongoodsInfo.redeemCode" placeholder="兑换码"/>
+            </Form-item>
+            
+            <Form-item>
+                <i-button type="primary" @click="handleSubmit('addFormValidate')">提交</i-button>
+                <i-button type="warning" @click="reload" style="margin-left: 8px"/>返回</i-button>
+            </Form-item>
+        </i-form>
+	</Card>
+	
+	
+    <Card v-show="!showList && showBitchAdd">
+        <p slot="title">{{title}}</p>
+		<i-form ref="formValidate" :model="batchAddInfo" :rules="ruleValidate" :label-width="80" >
+            <Form-item label="商品种类" prop="pId" placeholder="请选择商品种类">
+                <i-select v-model="batchAddInfo.pId" @on-change="add_getChild(batchAddInfo.pId)">
+                    <i-option v-for="c in m_category" :value="c.key" >{{c.val}}</i-option>
+                </i-select>
+            </Form-item>
+            <Form-item label="商品分类" prop="cId" placeholder="商品分类">
+                <i-select v-model="batchAddInfo.cId" >
+                    <i-option v-for="c in m_category_child" :value="c.key" >{{c.val}}</i-option>
+                </i-select>
+            </Form-item>
+            <Form-item label="有效时间（含当天）" prop="effTime">
+                <Date-picker type="datetime" v-model="batchAddInfo.effTime" format="yyyy-MM-dd" placeholder="有效时间"></Date-picker>
+            </Form-item>
+            
+            <Row>
+                <template>
+                	<div>
+                		<span class="label lable-info">当前有 &nbsp;{{uploadList.length}}&nbsp; 张图片</span>
+                	</div>
+                	<div  class="upload-parent">
+	                    <div class="upload-list" v-for="item in uploadList">
+	                        <template v-if="item.status === 'finished'">
+	                        	<div>
+		                            <img :src="item.imgUrl"/>
+		                            <div class="upload-list-cover">
+		                                <Icon type="ios-eye-outline" @click.native="handleView(item.imgUrl)"></Icon>
+		                                <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+		                            </div>
+	                        	</div>
+	               				<i-input v-model="item.code" :class='item.codeClass' @on-blur="batchImgValit(item)" placeholder="兑换码"/>
+	                        </template>
+	                        <template v-else>
+	                            <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+	                        </template>
+	                    </div>
+	                    <Upload
+	                            ref="upload"
+	                            :show-upload-list="false"
+	                            :default-file-list="uploadList"
+	                            :on-success="handleSuccess"
+	                            :format="['jpg','jpeg','png']"
+	                            :max-size="2048"
+	                            :on-format-error="handleFormatError"
+	                            :on-exceeded-size="handleMaxSize"
+	                            :before-upload="handleBeforeUpload"
+	                            multiple
+	                            type="drag"
+	                            action="../sys/oss/upload"
+	                            style="display: inline-block;width:58px;">
+	                        <div style="width: 58px;height:58px;line-height: 58px;">
+	                            <Icon type="camera" size="20"></Icon>
+	                        </div>
+	                    </Upload>
+	                    <Modal title="查看图片" v-model="visible">
+	                        <img :src="imgName" v-if="visible" style="width: 100%"/>
+	                    </Modal>
+                    </div>
+                </template>
+            </Row>
+            
+            <Form-item>
+                <i-button type="primary" @click="handleBatchSubmit('formValidate')">提交</i-button>
+                <i-button type="warning" @click="reload" style="margin-left: 8px"/>返回</i-button>
+            </Form-item>
+        </i-form>
+	</Card>
+	
+</div>
+
+<script src="${rc.contextPath}/js/coupon/coupongoodsinfo.js?_${date.systemTime}"></script>
+</body>
+</html>

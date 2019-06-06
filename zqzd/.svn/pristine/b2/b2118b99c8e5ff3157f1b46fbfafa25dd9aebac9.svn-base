@@ -1,0 +1,71 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api.js'
+export const y_have_buy = {
+    
+  //我的卡券购买页面数据
+  haveBuy: (params) => {
+    
+    return axios.request({
+      url: api.Y_HaveBuy,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  //购买-未使用
+  unusedBuy: (params) => {
+    
+    var paraStr = "";
+    if(params != undefined){
+      paraStr = Object.keys(params).map(function (key) {
+        // body...
+        return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
+      }).join("&");
+        paraStr = "?" + paraStr;
+    }
+
+    return axios.request({
+      url: api.Y_HaveBuy + paraStr,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  //购买-已完成
+  completeBuy: (params) => {
+    
+    var paraStr = "";
+    if(params != undefined){
+      paraStr = Object.keys(params).map(function (key) {
+        // body...
+        return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
+      }).join("&");
+        paraStr = "?" + paraStr;
+    }
+
+    return axios.request({
+      url: api.Y_HaveBuy + paraStr,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  //购买-处理中
+  processingBuy: (params) => {
+    
+    var paraStr = "";
+    if(params != undefined){
+      paraStr = Object.keys(params).map(function (key) {
+        // body...
+        return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
+      }).join("&");
+        paraStr = "?" + paraStr;
+    }
+
+    return axios.request({
+      url: api.Y_HaveBuy + paraStr,
+      data: params,
+      method: 'post'
+    })
+  },
+}

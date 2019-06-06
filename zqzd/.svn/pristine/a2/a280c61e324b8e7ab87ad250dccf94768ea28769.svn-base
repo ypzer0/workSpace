@@ -1,0 +1,166 @@
+package com.platform.dto;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import cn.afterturn.easypoi.excel.annotation.Excel;
+
+public class CouponWalletInfoDto implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
+	//用户编号
+    @Excel(name = "用户编号")
+    private String uCode;
+    @Excel(name = "用户类型")
+    private Integer paltType;
+    @Excel(name = "用户编号转换")
+    private String uCodeStr;
+    //用户昵称
+    @Excel(name = "用户昵称")
+    private String nickname;
+    //变动情况:1.支出 2.收入 
+    @Excel(name = "变动情况")
+    private Integer wtype1;
+    @Excel(name = "变动情况名称")
+    private String wtype1Str;
+    
+    //冻结状态0:正常 1:冻结中
+    @Excel(name = "状态")
+    private Integer fStatus;
+    @Excel(name = "状态名称")
+    private String fStatusStr;
+    
+    //变动数量
+    @Excel(name = "变动数量")
+    private BigDecimal money;
+    //余额
+    @Excel(name = "余额")
+    private BigDecimal fMoney;
+    //备注
+    @Excel(name = "备注")
+    private String remark;
+    //消费时间
+    @Excel(name = "消费时间")
+    private Date ctime;
+    @Excel(name = "消费时间转换值")
+    private String date;
+    //可提现
+    @Excel(name = "可提现")
+    private BigDecimal endMoney;
+   
+    
+	public String getuCodeStr() {
+		String uCodeString = null;
+		if (paltType.equals(1)) {
+			uCodeString = "DX"+uCode;
+		}else {
+			uCodeString = "HY"+uCode;
+		}
+		return uCodeString;
+	}
+	public String getDate() {
+		String cDate = ""; 
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		cDate = df.format(ctime);
+		return cDate;
+	}
+	public String getfStatusStr() {
+		String rtString = "";
+		if (fStatus == 0) {
+			rtString = "正常";
+		}else if (fStatus == 1) {
+			rtString = "冻结";
+		}else {
+			rtString = "未知";
+		}
+		return rtString;
+	}
+	public String getWtype1Str() {
+		String rtString = "";
+		if(wtype1 == 1) {
+			rtString = "支出";
+		}
+		else if(wtype1 == 2) {
+			rtString = "收入";
+		}
+		else {
+			rtString = "未知";
+		}
+		return rtString;
+	}
+	
+	public Integer getPaltType() {
+		return paltType;
+	}
+	public void setPaltType(Integer paltType) {
+		this.paltType = paltType;
+	}
+	public String getuCode() {
+		return uCode;
+	}
+	public void setuCode(String uCode) {
+		this.uCode = uCode;
+	}
+	public String getNickname() {
+		return nickname;
+	}
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	public Integer getWtype1() {
+		return wtype1;
+	}
+	public void setWtype1(Integer wtype1) {
+		this.wtype1 = wtype1;
+	}
+	public Integer getfStatus() {
+		return fStatus;
+	}
+	public void setfStatus(Integer fStatus) {
+		this.fStatus = fStatus;
+	}
+	public BigDecimal getMoney() {
+		return money;
+	}
+	public void setMoney(BigDecimal money) {
+		this.money = money;
+	}
+	public BigDecimal getfMoney() {
+		return fMoney;
+	}
+	public void setfMoney(BigDecimal fMoney) {
+		this.fMoney = fMoney;
+	}
+	public String getRemark() {
+		return remark;
+	}
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	public Date getCtime() {
+		return ctime;
+	}
+	public void setCtime(Date ctime) {
+		this.ctime = ctime;
+	}
+	public BigDecimal getEndMoney() {
+		return endMoney;
+	}
+	public void setEndMoney(BigDecimal endMoney) {
+		this.endMoney = endMoney;
+	}
+	@Override
+	public String toString() {
+		return "CouponWalletInfoDto [uCode=" + uCode + ", uCodeStr=" + uCodeStr + ", nickname=" + nickname + ", wtype1="
+				+ wtype1 + ", wtype1Str=" + wtype1Str + ", fStatus=" + fStatus + ", fStatusStr=" + fStatusStr
+				+ ", money=" + money + ", fMoney=" + fMoney + ", remark=" + remark + ", ctime=" + ctime + ", date="
+				+ date + ", endMoney=" + endMoney + ", paltType=" + paltType + "]";
+	}
+	
+	
+	
+    
+    
+}

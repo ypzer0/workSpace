@@ -1,0 +1,65 @@
+package com.platform.service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.platform.dao.ApiZdGoodsInfoMapper;
+import com.platform.entity.ZdGoodsInfoVo;
+import com.platform.entity.ZdUserVo;
+import com.platform.util.ApiPageUtils;
+import com.platform.utils.Rp;
+import com.platform.utils.StringUtils;
+
+@Service
+public class ApiZdGoodsInfoService {
+
+	@Autowired
+	private ApiZdGoodsInfoMapper apiZdGoodsInfoMapper;
+	
+	public Rp goodsList(Integer status,String cName) {
+		
+		Map<String , Object> map=new HashMap<String, Object>();
+		map.put("cName", cName);
+		map.put("status", status);
+		List<ZdGoodsInfoVo> list=apiZdGoodsInfoMapper.queryGoodsList(map);
+		
+		Integer total=apiZdGoodsInfoMapper.queryGoodsTotal(status);
+		if(StringUtils.isNullOrEmpty(list)||total==null) {
+			return Rp.error("没有商品");
+		}
+		
+		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+		
+		for (ZdGoodsInfoVo goods : list) {
+			Map<String , Object> mapData=new HashMap<String, Object>();
+			mapData.put("gid", goods.getId());
+			mapData.put("cid", goods.getcId());
+			mapData.put("cName", goods.getcName());
+			mapData.put("goodsName", goods.getGoodsName());
+			mapData.put("goodsSn", goods.getGoodsSn());
+			mapData.put("smallImgPath", goods.getSmallImgPath());
+			mapData.put("price", goods.getPrice());
+			mapData.put("status", goods.getStatus());
+			mapData.put("goodsNumber", goods.getGoodsNumber());
+			mapData.put("goodsDesc", goods.getGoodsDesc());
+			dataList.add(mapData);
+			
+		}
+		
+		return Rp.ok().putDt("goodsList", dataList);
+	}
+	
+	public Rp goodsDetails(Integer id) {
+		Map<String, Object> goods=apiZdGoodsInfoMapper.queryByGoodsId(id);
+		
+		if(StringUtils.isNullOrEmpty(goods)) {
+			return Rp.error("数据异常");
+		}
+		return Rp.ok().putAllDt(goods);
+	}
+}

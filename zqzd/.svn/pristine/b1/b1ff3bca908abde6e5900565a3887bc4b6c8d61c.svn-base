@@ -1,0 +1,35 @@
+import * as types from './mutation-types'
+import { api } from '@/service/api'
+import {toast} from '@/libs/cube-ui'
+
+export const actions = {
+  //客服售后
+  async getService ({dispatch, commit, state}, o) {
+      //debugger;
+      o = {
+        opinionName:state.advice.adviceContent,
+      }
+      let res = await api.z_service.service(o)
+      
+      if (res.success) {
+        commit(types.INIT_SERVICE, res.data)
+      } else {
+        toast(res.msg, 'warn')
+      }
+      return res;
+  },
+
+  //客服售后获取手机号和微信号
+  async getCustomerLoad ({dispatch, commit, state}, o) {
+    //debugger;
+    let res = await api.z_service.customerLoad(o)
+    // debugger;
+    if (res.data.success) {
+      commit(types.INIT_CUSTOMER_LOAD, res.data)
+    } else {
+      toast(res.msg, 'warn')
+    }
+    return res;
+},
+  
+}

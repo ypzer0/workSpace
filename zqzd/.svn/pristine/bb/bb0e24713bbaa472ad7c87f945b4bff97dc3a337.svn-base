@@ -1,0 +1,23 @@
+import * as types from './mutation-types'
+import { debug } from 'util';
+
+export const mutations = {
+  [types.INIT_MSG_LIST] (state, d) {
+    // @TODO
+    state.list = d.data;
+    
+    
+  },
+  [types.INIT_MSG_DETAIL] (state, d) {
+    state.msglist = d.data.msglist;
+    state.currentAsk = d.data.current;
+  },
+  [types.PUT_MSG] (state, d) {
+    state.msglist.push({
+      uname:state.currentAsk.uname,
+      ctime:new Date(),
+      msg: d.msg,
+    })
+  },
+  
+}

@@ -1,0 +1,175 @@
+$(function () {
+    $("#jqGrid").Grid({
+        url: '../couponuser/listtg',
+        colModel: [
+			{label: '用户id', name: 'id', index: 'id', key: true, hidden: true},
+			{label: '昵称', name: 'nickname', index: 'nickname', width: 80, sortable: false, align: 'center'},
+			{label: '性别', name: 'gender', index: 'gender', width: 80, sortable: false, align: 'center'},
+			{label: '生日', name: 'birthday', index: 'birthday', width: 80, sortable: false, align: 'center'},
+			{label: '注册时间', name: 'registerTime', index: 'register_time', width: 80, sortable: false, align: 'center'},
+			{label: '手机', name: 'mobile', index: 'mobile', width: 80, sortable: false, align: 'center'},
+			{label: '微信号', name: 'weixinCode', index: 'weixin_code', width: 80, sortable: false, align: 'center'},
+			{label: '积分', name: 'integral', index: 'integral', width: 80, sortable: false, align: 'center'},
+			{label: '倍数', name: 'multiple', index: 'multiple', width: 80, sortable: false, align: 'center'},
+			/*{label: '状态', name: 'status', index: 'status', width: 80,
+				align: 'center',
+				formatter: function (value) {
+                	var rt = "";
+                	var cls = "";
+                	cls = 'label-blue';
+                	if (value == '0') {
+                    	rt =  '未启用';
+                    } else if (value == '1') {
+                    	rt =  '禁用';
+                    } else if (value == '2') {
+                    	rt =  '删除';
+                    } 
+                    else{
+                        rt =  '-';
+                    }
+                	return '<span class="label '+ cls +'">' + rt + '</span>';
+                }	
+			},
+			{label: '成功售出（件）', name: 'mobile', index: 'mobile', width: 80},
+			{label: '一共售出（元）', name: 'mobile', index: 'mobile', width: 80},
+			{label: '暂未出售（件）', name: 'mobile', index: 'mobile', width: 80},*/
+			/*{label: '用户名', name: 'username', index: 'username', width: 80},
+			{label: '支付宝', name: 'zhifubao', index: 'zhifubao', width: 80},
+			{label: '密码', name: 'password', index: 'password', width: 80},
+			{label: '积分', name: 'credit', index: 'credit', width: 80},
+			{label: '最后登录时间', name: 'lastLoginTime', index: 'last_login_time', width: 80},
+			{label: '最后登录 ip', name: 'lastLoginIp', index: 'last_login_ip', width: 80},
+			{label: '用户级别', name: 'userLevelId', index: 'user_level_id', width: 80},
+			{label: '注册ip', name: 'registerIp', index: 'register_ip', width: 80},
+			{label: '头像', name: 'avatar', index: 'avatar', width: 80},
+			{label: '微信openid', name: 'weixinOpenid', index: 'weixin_openid', width: 80},
+			{label: '平台标识编码：1: 鼎鑫权益用户DX开头  2:惠友圈用户 HY开头', name: 'platType', index: 'plat_type', width: 80},
+			{label: '用户编号id', name: 'codeId', index: 'code_id', width: 80},
+			
+			
+			*/]
+    });
+});
+
+let vm = new Vue({
+	el: '#rrapp',
+	data: {
+        showList: true,
+        title: null,
+		Couponuser: {},
+		ruleValidate: {
+			name: [
+				{required: true, message: '名称不能为空', trigger: 'blur'}
+			]
+		},
+		q: {
+		    name: ''
+		}
+	},
+	methods: {
+		query: function () {
+			vm.reload();
+		},
+		add: function () {
+			vm.showList = false;
+			vm.title = "新增";
+			vm.Couponuser = {};
+		},
+		update: function (event) {
+            let id = getSelectedRow("#jqGrid");
+			if (id == null) {
+				return;
+			}
+			vm.showList = false;
+            vm.title = "修改";
+
+            vm.getInfo(id)
+		},
+		saveOrUpdate: function (event) {
+            let url = vm.Couponuser.id == null ? "../couponuser/savetg" : "../couponuser/updatetg";
+            Ajax.request({
+			    url: url,
+                params: JSON.stringify(vm.Couponuser),
+                type: "POST",
+			    contentType: "application/json",
+                successCallback: function (r) {
+                    alert('操作成功', function (index) {
+                        vm.reload();
+                    });
+                }
+			});
+		},
+		//删除推广员
+		updateExtend: function(){
+
+			let ids = getSelectedRows("#jqGrid");
+			if (ids == null){
+				return;
+			}
+			
+			Ajax.request({
+			    url: "../couponuser/updateExtend",
+                params: JSON.stringify(ids),
+                type: "POST",
+			    contentType: "application/json",
+                successCallback: function (r) {
+                    alert('删除成功', function (index) {
+                        vm.reload();
+                    });
+                }
+			});
+		},
+		del: function (event) {
+            let ids = getSelectedRows("#jqGrid");
+			if (ids == null){
+				return;
+			}
+
+			confirm('确定要删除选中的记录？', function () {
+                Ajax.request({
+				    url: "../couponuser/delete",
+                    params: JSON.stringify(ids),
+                    type: "POST",
+				    contentType: "application/json",
+                    successCallback: function () {
+                        alert('操作成功', function (index) {
+                            vm.reload();
+                        });
+					}
+				});
+			});
+		},
+		getInfo: function(id){
+            Ajax.request({
+                url: "../couponuser/infotg/"+id,
+                async: true,
+                successCallback: function (r) {
+                    vm.Couponuser = r.Couponuser;
+                }
+            });
+		},
+		reload: function (event) {
+			vm.showList = true;
+            let page = $("#jqGrid").jqGrid('getGridParam', 'page');
+			$("#jqGrid").jqGrid('setGridParam', {
+                postData: {'name': vm.q.name},
+                page: page
+            }).trigger("reloadGrid");
+            vm.handleReset('formValidate');
+		},
+        reloadSearch: function() {
+            vm.q = {
+                name: ''
+            }
+            vm.reload();
+        },
+        handleSubmit: function (name) {
+            handleSubmitValidate(this, name, function () {
+                vm.saveOrUpdate()
+            });
+        },
+        handleReset: function (name) {
+            handleResetForm(this, name);
+        }
+	}
+});

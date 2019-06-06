@@ -1,0 +1,12 @@
+export default {
+
+  list:[],
+  total:{
+    picCount: 0,
+    allCount: 0
+  },
+  filter:{
+    list:[],
+  }
+
+}

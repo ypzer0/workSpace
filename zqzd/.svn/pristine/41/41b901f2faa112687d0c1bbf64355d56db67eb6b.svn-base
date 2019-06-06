@@ -1,0 +1,69 @@
+import {api} from '@/service/api'
+import * as types from './mutation-types'
+
+export const actions = {
+  //加载列表
+  async loadList ({commit, dispatch}, para) {
+    var paras = {
+      typeId: para.typeId,
+      valueId: para.valueId,
+      showType: para.showType == undefined ? '' : para.showType,
+      // sort: para.sort,
+      // order: para.order,
+      page: para.page == undefined ? '' : para.page,
+      size: para.size == undefined ? '' : para.size,
+    }
+    let res = await api.evaluate.list(paras)
+    if (res.success) {
+      commit(types.INIT_LIST, res.data)
+    }
+  },
+
+  async load ({commit, dispatch}, para) {
+    dispatch('loadList', para);
+    dispatch('getTotalCount', para);
+  },
+
+  async loadByFilter ({commit, dispatch}, para) {
+    
+    switch (para.d.type) {
+      case "ALL":
+      para.para.size = 30;
+      break;
+      case "New":
+      para.para.size = 10;
+      break;
+      default:
+        break;
+    }
+
+    dispatch('loadList', para.para);
+    dispatch('getTotalCount', para.para);
+
+  },
+
+
+  async getTotalCount ({commit}, para) {
+    var paras = {
+      typeId: para.typeId,
+      valueId: para.valueId
+    }
+    let res = await api.evaluate.totalCount(paras)
+    if (res.success) {
+      commit(types.INIT_TOTALCOUNT, res.data)
+    }
+  },
+  
+  async add ({commit}, para) {
+    var paras = {
+      typeId: para.typeId,
+      valueId: para.valueId,
+      content: para.content,
+      imagesList: para.imagesList
+    }
+    let res = await api.evaluate.add(paras)
+    return res;
+  },
+
+
+}

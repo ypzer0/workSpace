@@ -1,0 +1,375 @@
+<template>
+  <div>
+    <div class="details-buy-alert">
+      <div class="details-buy-alert-bg"></div>
+      <div class="details-buy-alert-content" @click="hideAlert">
+        <div class="details-goods">
+          <div class="details-goods-img">
+            <img src="../../static/images/img.png"/>
+          </div>
+          <div class="details-goods-msg">
+            <p class="details-goods-msg-price">￥888.55</p>
+            <p class="details-goods-msg-name">机的分类看电视剧</p>
+            <p class="details-goods-msg-number">剩余库存123件</p>
+          </div>
+        </div>
+
+        <div class="details-select-titlename">选择项目</div>
+        <div class="details-select-type">
+          <p class="details-select-type-name1">来看待时间来看</p>
+          <p class="details-select-type-name2">来看待时间来看</p>
+        </div>
+        <div class="details-select">
+        <div class="por">
+          <div class="selectBox" style="width: 400px;">
+            <div class="selectBox_show" v-on:click.stop="arrowDown">
+              <i class="icon icon_arrowDown"></i>
+              <p class="details-select-title" title="请选择医院">{{unitName}}</p>
+              <input type="hidden" name="unit" v-model="unitModel">
+            </div>
+            <div class="selectBox_list" v-show="isShowSelect">
+              <div class="selectBox_listLi" v-for="(item, index) in dataList" @click.stop="select(item, index)">{{item.value}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="details-select-box1">
+        <div class="details-select1">
+          <div class="por">
+            <div class="selectBox" style="width: 400px;">
+              <div class="selectBox_show" v-on:click.stop="departmentDown">
+                <i class="icon icon_arrowDown"></i>
+                <p class="details-select-title" title="请选择可是">{{departmentName}}</p>
+                <input type="hidden" name="unit" v-model="departmentModel">
+              </div>
+              <div class="selectBox_list" v-show="isShowdepartment">
+                <div class="selectBox_listLi" v-for="(item, index) in departmentList" @click.stop="departmentSelect(item, index)">{{item.value}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+          <div class="details-select2">
+          <div class="por">
+            <div class="selectBox" style="width: 400px;">
+              <div class="selectBox_show" v-on:click.stop="doctorDown">
+                <i class="icon icon_arrowDown"></i>
+                <p class="details-select-title" title="请选择可是">{{doctorName}}</p>
+                <input type="hidden" name="unit" v-model="doctorModel">
+              </div>
+              <div class="selectBox_list" v-show="isShowDoctor">
+                <div class="selectBox_listLi" v-for="(item, index) in doctorList" @click.stop="doctorSelect(item, index)">{{item.value}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 选择数量 -->
+      <!-- <div class="details-number">
+        <p class="details-number-text">选择数量</p>
+        <m-number class="details-number-count" :value="goodsDetailDt.count" @change="GoodsNumChange"></m-number>
+      </div> -->
+
+      <button class="register-btn" @click="$go('/z-pay')">立即购买</button>
+
+      </div>
+    </div>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import Vue from 'vue'
+import {formatDate} from '../../utils/date';
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
+export default {
+  props:['isHideAll'],
+  data() {
+    return {
+      isShowSelect: false,
+      isShowdepartment: false,
+      isShowDoctor: false,
+      //isHideAll: false,
+      dataList: [
+        // {key: -1, value: "请选择医生"},
+        {key: 0, value: "苹果"},
+        {key: 0, value: "苹果"},
+        {key: 0, value: "苹果"},
+        {key: 0, value: "苹果"},
+        {key: 0, value: "苹果"},
+        {key: 1, value: "香蕉"}
+      ],
+      departmentList: [
+        // {key: -1, value: "请选择医生"},
+        {key: 0, value: "牙科"},
+        {key: 0, value: "眼科"},
+        {key: 0, value: "鼻科"},
+        {key: 0, value: "内障可"},
+        {key: 0, value: "写也可"},
+      ],
+      doctorList: [
+        // {key: -1, value: "请选择医生"},
+        {key: 0, value: "王"},
+        {key: 0, value: "里"},
+        {key: 0, value: "张"},
+        {key: 0, value: "小"},
+        {key: 0, value: "大"},
+      ],
+      unitName:'请选择医院',
+      departmentName:'请选择科室',
+      doctorName:'请选医生',
+      unitModel: '',
+      departmentModel:'',
+      doctorModel:'',
+
+      goodsDetailDt:{
+        count: 1,
+      },
+    }
+  },
+
+  computed: {
+    
+  },
+  components: {
+    
+  },
+  methods: {
+    //医院
+    arrowDown() {
+      this.isShowSelect = !this.isShowSelect;
+    },
+    select(item, index) {
+      this.isShowSelect = false;
+      console.log(item);
+      console.log(index);
+      this.unitModel = index;
+      this.unitName = item.value;
+    },
+    
+    //科室
+    departmentDown() {
+      this.isShowdepartment = !this.isShowdepartment;
+    },
+
+    departmentSelect(item, index) {
+      this.isShowdepartment = false;
+      console.log(item);
+      console.log(index);
+      this.departmentModel = index;
+      this.departmentName = item.value;
+    },
+
+    //医生
+    doctorDown() {
+      this.isShowDoctor = !this.isShowDoctor;
+    },
+
+    doctorSelect(item, index) {
+      this.isShowDoctor = false;
+      console.log(item);
+      console.log(index);
+      this.doctorModel = index;
+      this.doctorName = item.value;
+    },
+
+    //点击背面隐藏弹窗
+    hideAlert(){
+      this.isShowSelect = false;
+      this.isShowdepartment = false;
+      this.isShowDoctor = false;
+    },
+
+    hideAl1(){
+      this.isHideAll = false;
+    }
+
+  },
+  created() {
+
+  },
+  activated(){
+
+  },
+  
+}
+</script>
+
+<style lang="less" scoped>
+  .details-buy-alert{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    bottom: 0;
+    z-index: 9;
+    .details-buy-alert-bg{
+      width: 100%;
+      height: 100%;
+      background: #333333;
+      opacity: 0.3;
+    }
+    .details-buy-alert-content{
+      position: absolute;
+      bottom: 0;
+      background: #ffffff;
+      width: 100%;
+      padding-bottom: 30px;
+      border-radius: 10px 10px 0 0;
+      .details-goods{
+        width: 95%;
+        margin: 0 auto;
+        margin-top: 25px;
+        display: flex;
+        .details-goods-img{
+          width: 200px;
+          height: 200px;
+          img{
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .details-goods-msg{
+          margin-left: 25px;
+        }
+        .details-goods-msg-price{
+          font-size: 40px;
+          color: #f58d25;
+          margin-top: 65px;
+        }
+        .details-goods-msg-name{
+          font-size: 30px;
+          color: #2e2e2e;
+          margin-top: 25px;
+        }
+        .details-goods-msg-number{
+          font-size: 26px;
+          color: #b0b0b6;
+          margin-top: 10px;
+        }
+      }
+    }
+  }
+
+//下拉选项
+  .details-select-box1{
+    display: flex;
+  }
+  .details-select{
+    width: 95%;
+    margin: 0 auto;
+    margin-top: 30px;
+  }
+  .details-select1{
+    width: 440px;
+    margin-left: 20px;
+    margin-top: 30px;
+  }
+  .details-select2{
+    width: 240px;
+    margin-left: 20px;
+    margin-top: 30px;
+  }
+  .por{
+    width: 100%;
+    height: 60px;
+    border-radius: 6px;
+    background: #efeff4;
+    //margin-top: 20px;
+    
+  }
+  .details-select-title{
+    line-height: 60px;
+    margin-left: 20px;
+    font-size: 26px;
+    color: #2e2e2e;
+  }
+  .selectBox_list{
+    width: 460px;
+    height: 300px;
+    border-radius: 10px;
+    background: #ffffff;
+    overflow: scroll;
+    position: fixed;
+    bottom: 30px;
+    left:30px;
+  }
+  .selectBox_listLi{
+    width: 390px;
+    margin: 0 auto;
+    font-size: 24px;
+    color: #95959a;
+    padding-top: 22px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  .details-number{
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
+    margin: 0 auto;
+    margin-top: 25px;
+  }
+  .details-number-text{
+    font-size: 26px;
+    color: #b0b0b6;
+    margin-top: 15px;
+  }
+
+  .details-select-titlename{
+    width: 95%;
+    margin: 0 auto;
+    font-size: 26px;
+    color: #b0b0b6;
+    margin-top: 30px;
+  }
+  .details-select-type{
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
+    margin: 0 auto;
+    margin-top: 25px;
+  }
+  .details-select-type-name1{
+    width: 340px;
+    height: 60px;
+    border-radius: 10px;
+    background: #efeff4;
+    color: #2e2e2e;
+    text-align: center;
+    line-height: 60px;
+  }
+
+  .details-select-type-name2{
+    width: 340px;
+    height: 60px;
+    border-radius: 10px;
+    background: #efeff4;
+    color: #2e2e2e;
+    text-align: center;
+    line-height: 60px;
+  }
+
+  .register-btn{
+    width: 702px;
+    height: 80px;
+    border-radius: 100px;
+    margin: 0 auto;
+    display: block;
+    border: none;
+    margin-top: 33px;
+    font-size: 36px;
+    color: #fff;
+    // -webkit-box-shadow: 10px 10px 5px #b6b6b6;
+    // -o-box-shadow: 10px 10px 5px #b6b6b6;
+    // -moz-box-shadow: 10px 10px 5px #b6b6b6;
+    // box-shadow: 10px 10px 5px #b6b6b6;
+    background: -webkit-linear-gradient(100deg, #25c5a2, #17a797); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(100deg, #25c5a2, #17a797); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(100deg, #25c5a2, #17a797); /* Firefox 3.6 - 15 */
+    background: linear-gradient(100deg,#25c5a2, #17a797); /* 标准的语法（必须放在最后） */
+  }
+</style>

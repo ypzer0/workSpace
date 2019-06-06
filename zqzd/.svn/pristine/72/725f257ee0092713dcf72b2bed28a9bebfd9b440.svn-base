@@ -1,0 +1,22 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api.js'
+export const y_goods_home = {
+
+    goodsHomeList: (params) => {
+    
+        return axios.request({
+            url: api.Y_goodsHomeList,
+            data: params,
+            method: 'post'
+        })
+    },
+
+    getGoodsListByCid: (params) => {
+    
+        return axios.request({
+            url: api.Y_goodsListByCId,
+            data: params,
+            method: 'post'
+        })
+    },
+}

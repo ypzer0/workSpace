@@ -1,0 +1,10 @@
+package com.platform.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.entity.SubUserInfoVo;
+
+public interface ApiUserSubMapper extends BaseDao<SubUserInfoVo>{
+	public List<SubUserInfoVo> findSubUserInfo(Map<String,Object> map);
+}

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ApiZdUserMapper">
+	<insert id="save" parameterType="com.platform.entity.ZdUserVo" useGeneratedKeys="true" keyProperty="id">
+		insert into zd_user(
+			`username`,
+			`password`,
+			`gender`,
+			`register_time`,
+			`last_login_time`,
+			`last_login_ip`,
+			`user_level_id`,
+			`mobile`,
+			`register_ip`,
+			`status`,
+			`age`
+			
+			)values(
+			#{username},
+			#{password},
+			#{gender},
+			#{registerTime},
+			#{lastLoginTime},
+			#{lastLoginIp},
+			#{userLevelId},
+			#{mobile},
+			#{registerIp},
+			#{status},
+			#{age} 
+			)
+	</insert>
+	
+	<select id="queryByUserName" resultType="com.platform.entity.ZdUserVo">
+		select * from zd_user where username = #{username} limit 0,1 
+	</select>
+	
+	<select id="queryObject" resultType="com.platform.entity.ZdUserVo">
+    		select 
+			`username`,
+			`password`,
+			`gender`,
+			`register_time`,
+			`last_login_time`,
+			`last_login_ip`,
+			`user_level_id`,
+			`mobile`,
+			`register_ip`,
+			`status`,
+			`age` 
+		from zd_user u 
+		where u.id = #{value} 
+	</select>
+</mapper>

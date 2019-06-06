@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.CouponUserIntegralInfoDao">
+
+    <resultMap type="com.platform.entity.CouponUserIntegralInfoEntity" id="CouponuserIntegralInfoMap">
+        <result property="id" column="id"/>
+        <result property="iType" column="i_type"/>
+        <result property="uId" column="u_id"/>
+        <result property="integral" column="integral"/>
+        <result property="preIntegral" column="pre_integral"/>
+        <result property="endIntegral" column="end_integral"/>
+        <result property="reson" column="reson"/>
+        <result property="handlerId" column="handler_id"/>
+        <result property="addTime" column="add_time"/>
+        <result property="nickname" column="nickname"/>
+        <result property="uCode" column="u_code"/>
+        <result property="platType" column="plat_type"/>
+        
+    </resultMap>
+
+	<select id="queryObject" resultType="com.platform.entity.CouponUserIntegralInfoEntity">
+		select
+			`id`,
+			`i_type`,
+			`u_id`,
+			`integral`,
+			`pre_integral`,
+			`end_integral`,
+			`reson`,
+			`handler_id`,
+			`add_time`
+		from coupon_user_integral_info
+		where id = #{id}
+	</select>
+
+	<select id="queryList" resultType="com.platform.entity.CouponUserIntegralInfoEntity">
+		select
+    		i.`id`,
+    		i.`i_type`,
+    		i.`u_id`,
+    		i.`integral`,
+    		i.`pre_integral`,
+    		i.`end_integral`,
+    		i.`reson`,
+    		i.`handler_id`,
+    		i.`add_time`,
+    		u.`nickname`,
+    		ub.`u_code`,
+    		u.`plat_type`
+		from coupon_user_integral_info i
+		left join coupon_user u on i.u_id = u.id
+		left join coupon_user_code_bom ub on ub.u_id = u.id
+		WHERE 1=1
+		<if test="name != null and name.trim() != ''">
+			AND (u.nickname LIKE concat('%',#{name},'%') or ub.`u_code` = #{name})
+		</if>
+		<if test="confirmTimeBegin != null and confirmTimeBegin.trim() != ''">
+			AND i.`add_time` &gt;= #{confirmTimeBegin}
+		</if>
+		
+		<if test="confirmTimeEnd != null and confirmTimeEnd.trim() != ''">
+			AND i.`add_time` &lt;= #{confirmTimeEnd}
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from coupon_user_integral_info i
+		left join coupon_user u on i.u_id = u.id
+		left join coupon_user_code_bom ub on ub.u_id = u.id
+		WHERE 1=1
+        <if test="name != null and name.trim() != ''">
+			AND (u.nickname LIKE concat('%',#{name},'%') or ub.`u_code` = #{name})
+		</if>
+		<if test="confirmTimeBegin != null and confirmTimeBegin.trim() != ''">
+			AND i.`add_time` &gt;= #{confirmTimeBegin}
+		</if>
+		
+		<if test="confirmTimeEnd != null and confirmTimeEnd.trim() != ''">
+			AND i.`add_time` &lt;= #{confirmTimeEnd}
+		</if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.CouponUserIntegralInfoEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into coupon_user_integral_info(
+			`i_type`,
+			`u_id`,
+			`integral`,
+			`pre_integral`,
+			`end_integral`,
+			`reson`,
+			`handler_id`,
+			`add_time`)
+		values(
+			#{iType},
+			#{uId},
+			#{integral},
+			#{preIntegral},
+			#{endIntegral},
+			#{reson},
+			#{handlerId},
+			#{addTime})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.CouponUserIntegralInfoEntity">
+		update coupon_user_integral_info 
+		<set>
+			<if test="iType != null">`i_type` = #{iType}, </if>
+			<if test="uId != null">`u_id` = #{uId}, </if>
+			<if test="integral != null">`integral` = #{integral}, </if>
+			<if test="preIntegral != null">`pre_integral` = #{preIntegral}, </if>
+			<if test="endIntegral != null">`end_integral` = #{endIntegral}, </if>
+			<if test="reson != null">`reson` = #{reson}, </if>
+			<if test="handlerId != null">`handler_id` = #{handlerId}, </if>
+			<if test="addTime != null">`add_time` = #{addTime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from coupon_user_integral_info where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from coupon_user_integral_info where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

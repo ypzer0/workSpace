@@ -1,0 +1,62 @@
+package com.platform.service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.platform.dao.ApiCategoryMapper;
+import com.platform.dao.ApiOrderMapper;
+import com.platform.dao.ApiWalletMapper;
+import com.platform.entity.CouponCategoryVo;
+import com.platform.entity.CouponOrderVo;
+import com.platform.entity.CouponWalletVo;
+import com.platform.entity.UserVo;
+import com.platform.utils.Rp;
+
+@Service
+public class ApiWalletService {
+	@Autowired 
+	private ApiWalletMapper mapper;
+	public Rp moneyDetail(UserVo loginUser) {
+		
+		Map<String, Object> rtMap = new HashMap<String, Object>();
+
+		List<Map<String, Object>> cMapList = new ArrayList<Map<String,Object>>();
+		
+		List<CouponWalletVo> walletList = mapper.queryByUid(loginUser.getId());
+		if (walletList == null || walletList.size() == 0) {
+			return Rp.error("您还没有资金记录！");
+		}
+		for (CouponWalletVo Wallet : walletList) {
+			Integer ptype = Wallet.getPlatType();
+			String type = ptype == 1 ? "DX" : "HY";
+			String userid = type + Wallet.getuCode();
+			Map<String, Object> cMap = new HashMap<String, Object>();
+			cMap.put("userid",userid);
+			cMap.put("spendingTime", Wallet.getPayTime());
+			cMap.put("spendingPrice",Wallet.getMoney());
+			cMap.put("spendingNote", Wallet.getRemark());
+			cMap.put("incomeDeposit", Wallet.getEndMoney());
+			cMap.put("incomeTime",Wallet.getPayTime());
+			cMap.put("incomePrice", Wallet.getMoney());
+			cMap.put("incomeNote", Wallet.getRemark());
+			cMapList.add(cMap);
+		}
+				
+		CouponWalletVo WalletSum = mapper.querySumByUid(loginUser.getId());
+		//汇总
+		rtMap.put("spendingTotal", WalletSum.getSpendingTotal());
+		rtMap.put("incomeTotal", WalletSum.getIncomeTotal());
+		rtMap.put("incomeDeposit",WalletSum.getEndMoney());
+		rtMap.put("incomeFreeze", WalletSum.getFMoney());
+		
+		//列表数据
+		rtMap.put("moneyDetailList", cMapList);
+		
+		return Rp.ok().putAllDt(rtMap);
+	}
+}

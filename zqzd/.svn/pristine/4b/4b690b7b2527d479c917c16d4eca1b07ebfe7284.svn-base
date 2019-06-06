@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ApiZdHospitalMapper">
+
+    <resultMap type="com.platform.entity.ZdHospitalVo" id="hospitalMap">
+        <result property="id" column="id"/>
+        <result property="hospitalName" column="hospital_name"/>
+        <result property="handlerId" column="handler_id"/>
+        <result property="addTime" column="add_time"/>
+        <result property="isDelete" column="is_delete"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.platform.entity.ZdHospitalVo">
+		select
+			`id`,
+			`hospital_name`,
+			`handler_id`,
+			`add_time`,
+			`is_delete`
+		from zd_hospital
+		where id = #{id}
+	</select>
+	
+	
+	<select id="queryHospitalList" resultType="com.platform.entity.ZdHospitalVo">
+		select
+    		`id`,
+    		`hospital_name`,
+    		`handler_id`,
+    		`add_time`,
+    		`is_delete`
+		from zd_hospital
+		where is_delete=#{isDelete}
+	</select>
+	
+
+	<select id="queryList" resultType="com.platform.entity.ZdHospitalVo">
+		select
+    		`id`,
+    		`hospital_name`,
+    		`handler_id`,
+    		`add_time`,
+    		`is_delete`
+		from zd_hospital
+		WHERE 1=1
+		<if test="name != null and name.trim() != ''">
+			AND name LIKE concat('%',#{name},'%')
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from zd_hospital
+		WHERE 1=1
+        <if test="name != null and name.trim() != ''">
+            AND name LIKE concat('%',#{name},'%')
+        </if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.ZdHospitalVo" useGeneratedKeys="true" keyProperty="id">
+		insert into zd_hospital(
+			`hospital_name`,
+			`handler_id`,
+			`add_time`,
+			`is_delete`)
+		values(
+			#{hospitalName},
+			#{handlerId},
+			#{addTime},
+			#{isDelete})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.ZdHospitalVo">
+		update zd_hospital 
+		<set>
+			<if test="hospitalName != null">`hospital_name` = #{hospitalName}, </if>
+			<if test="handlerId != null">`handler_id` = #{handlerId}, </if>
+			<if test="addTime != null">`add_time` = #{addTime}, </if>
+			<if test="isDelete != null">`is_delete` = #{isDelete}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from zd_hospital where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from zd_hospital where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

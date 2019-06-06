@@ -1,0 +1,59 @@
+package com.platform.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.dao.CouponCashDrawalLogDao;
+import com.platform.entity.CouponCashDrawalLogEntity;
+import com.platform.service.CouponCashDrawalLogService;
+
+/**
+ * Service实现类
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-24 15:49:54
+ */
+@Service("CouponcashDrawalLogService")
+public class CouponCashDrawalLogServiceImpl implements CouponCashDrawalLogService {
+    @Autowired
+    private CouponCashDrawalLogDao CouponcashDrawalLogDao;
+
+    @Override
+    public CouponCashDrawalLogEntity queryObject(Integer id) {
+        return CouponcashDrawalLogDao.queryObject(id);
+    }
+
+    @Override
+    public List<CouponCashDrawalLogEntity> queryList(Map<String, Object> map) {
+        return CouponcashDrawalLogDao.queryList(map);
+    }
+
+    @Override
+    public int queryTotal(Map<String, Object> map) {
+        return CouponcashDrawalLogDao.queryTotal(map);
+    }
+
+    @Override
+    public int save(CouponCashDrawalLogEntity CouponcashDrawalLog) {
+        return CouponcashDrawalLogDao.save(CouponcashDrawalLog);
+    }
+
+    @Override
+    public int update(CouponCashDrawalLogEntity CouponcashDrawalLog) {
+        return CouponcashDrawalLogDao.update(CouponcashDrawalLog);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return CouponcashDrawalLogDao.delete(id);
+    }
+
+    @Override
+    public int deleteBatch(Integer[] ids) {
+        return CouponcashDrawalLogDao.deleteBatch(ids);
+    }
+}

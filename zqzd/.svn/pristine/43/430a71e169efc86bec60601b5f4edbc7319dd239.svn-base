@@ -1,0 +1,157 @@
+package com.platform.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.platform.dto.CouponCommissionInfoDto;
+import com.platform.dto.CouponGoodsInfoDto;
+import com.platform.entity.CouponOrderEntity;
+import com.platform.service.CouponOrderService;
+import com.platform.utils.ExcelUtil;
+import com.platform.utils.PageUtils;
+import com.platform.utils.Query;
+import com.platform.utils.R;
+
+import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
+
+/**
+ * Controller
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-22 11:10:01
+ */
+@RestController
+@RequestMapping("Couponorder")
+public class CouponOrderController {
+    @Autowired
+    private CouponOrderService CouponorderService;
+
+    /**
+     * 查看列表
+     */
+    @RequestMapping("/list")
+    @RequiresPermissions("Couponorder:list")
+    public R list(@RequestParam Map<String, Object> params) {
+        //查询列表数据
+        Query query = new Query(params);
+
+        List<CouponOrderEntity> CouponorderList = CouponorderService.queryList(query);
+        int total = CouponorderService.queryTotal(query);
+
+        PageUtils pageUtil = new PageUtils(CouponorderList, total, query.getLimit(), query.getPage());
+        
+        Map<String, Object> sumTotal = CouponorderService.QueryOrderPriceCountSum(query);
+
+        return R.ok().put("page", pageUtil).put("total", sumTotal);
+    }
+
+    /**
+     * 查看信息
+     */
+    @RequestMapping("/info/{id}")
+    @RequiresPermissions("Couponorder:info")
+    public R info(@PathVariable("id") Integer id) {
+        CouponOrderEntity Couponorder = CouponorderService.queryObject(id);
+
+        return R.ok().put("Couponorder", Couponorder);
+    }
+
+    /**
+     * 保存
+     */
+    @RequestMapping("/save")
+    @RequiresPermissions("Couponorder:save")
+    public R save(@RequestBody CouponOrderEntity Couponorder) {
+        CouponorderService.save(Couponorder);
+
+        return R.ok();
+    }
+
+    /**
+     * 修改
+     */
+    @RequestMapping("/update")
+    @RequiresPermissions("Couponorder:update")
+    public R update(@RequestBody CouponOrderEntity Couponorder) {
+        CouponorderService.update(Couponorder);
+
+        return R.ok();
+    }
+
+    /**
+     * 删除
+     */
+    @RequestMapping("/delete")
+    @RequiresPermissions("Couponorder:delete")
+    public R delete(@RequestBody Integer[] ids) {
+        CouponorderService.deleteBatch(ids);
+
+        return R.ok();
+    }
+
+    /**
+     * 查看所有列表
+     */
+    @RequestMapping("/queryAll")
+    public R queryAll(@RequestParam Map<String, Object> params) {
+
+        List<CouponOrderEntity> list = CouponorderService.queryList(params);
+
+        return R.ok().put("list", list);
+    }
+    
+    //商品明细
+    /**
+     * 查看列表
+     */
+    @RequestMapping("/listInfo")
+    @RequiresPermissions("Couponorder:listInfo")
+    public R listInfo(@RequestParam Map<String, Object> params) {
+        //查询列表数据
+        Query query = new Query(params);
+
+        List<CouponOrderEntity> CouponorderList = CouponorderService.queryListInfo(query);
+        
+        int total = CouponorderService.queryTotalInfo(query);
+
+        PageUtils pageUtil = new PageUtils(CouponorderList, total, query.getLimit(), query.getPage());
+        
+        Map<String, Object> sumTotal = CouponorderService.rptQueryPriceCountSum(query);
+        
+        return R.ok().put("page", pageUtil).put("total", sumTotal);
+    }
+    
+    /**
+     * 商品统计报表Excel
+     * 
+     */
+    @RequestMapping("/listGoodsExcel")
+    @RequiresPermissions("Couponorder:listGoodsExcel")
+    public void listGoodsExcel(HttpServletResponse response,@RequestParam Map<String, Object> para) throws Exception {
+    	
+    	Map<String, Object> data = new HashMap<String, Object>();
+    	TemplateExportParams params = new TemplateExportParams();
+    	
+    	List<CouponGoodsInfoDto> GoodsInfoList = CouponorderService.QuertGoodsCount(para);
+    	
+    	data.putAll(ExcelUtil.GetExcelTitleCotent(CouponGoodsInfoDto.class));
+    	data.put("vlist", GoodsInfoList);
+    	
+    	Workbook workbook = ExcelUtil.getWorkbook(params, data, "coupon-goods.xlsx");
+    	ExcelUtil.export(response, workbook, "商品明细报表");
+	}
+    
+}

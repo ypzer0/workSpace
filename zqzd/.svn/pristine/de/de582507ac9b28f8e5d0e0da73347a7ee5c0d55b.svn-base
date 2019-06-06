@@ -1,0 +1,59 @@
+package com.platform.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.platform.dao.CouponWalletInfoLogDao;
+import com.platform.entity.CouponWalletInfoLogEntity;
+import com.platform.service.CouponWalletInfoLogService;
+
+/**
+ * Service实现类
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-23 15:21:11
+ */
+@Service("CouponwalletInfoLogService")
+public class CouponWalletInfoLogServiceImpl implements CouponWalletInfoLogService {
+    @Autowired
+    private CouponWalletInfoLogDao CouponwalletInfoLogDao;
+
+    @Override
+    public CouponWalletInfoLogEntity queryObject(Integer id) {
+        return CouponwalletInfoLogDao.queryObject(id);
+    }
+
+    @Override
+    public List<CouponWalletInfoLogEntity> queryList(Map<String, Object> map) {
+        return CouponwalletInfoLogDao.queryList(map);
+    }
+
+    @Override
+    public int queryTotal(Map<String, Object> map) {
+        return CouponwalletInfoLogDao.queryTotal(map);
+    }
+
+    @Override
+    public int save(CouponWalletInfoLogEntity CouponwalletInfoLog) {
+        return CouponwalletInfoLogDao.save(CouponwalletInfoLog);
+    }
+
+    @Override
+    public int update(CouponWalletInfoLogEntity CouponwalletInfoLog) {
+        return CouponwalletInfoLogDao.update(CouponwalletInfoLog);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return CouponwalletInfoLogDao.delete(id);
+    }
+
+    @Override
+    public int deleteBatch(Integer[] ids) {
+        return CouponwalletInfoLogDao.deleteBatch(ids);
+    }
+}

@@ -1,0 +1,226 @@
+<template>
+  <div :better-scroll="true" class="box">
+    <div class="page-header border-1px-bottom" slot="top">
+      <div class="header-left" @click="$back">
+        <i class="iconfont">&#xe601;</i>
+      </div>
+      <h3>收藏夹</h3>
+      <div class="header-right">
+        <!-- <span @click="SaveAddr">保存</span> -->
+      </div>
+    </div>
+    <favoritea-list :favorites="favorites" @click-tab="checkedList"></favoritea-list>
+    <div class="details-bottom">
+      <div class="action-left">
+        <div class="left-item">
+          <!-- <input type='checkbox' name='checkboxinput' class='input-checkbox' @click="checkAll"> -->
+          <i class="iconfont icon-checkbox-uncheck" v-show="checkbox.checkedAll == false" @click="checkAll">&#xe60e;</i>
+          <i class="iconfont icon-checkbox-selected" v-show="checkbox.checkedAll == true" @click="checkCancelAll">&#xe681;</i>
+          <span>全选</span>
+        </div>
+      </div>
+      <div class="action-right">
+        <m-button @click.native="NowBuy" class="right-item right-item-buy">
+          <span>取消收藏</span>
+        </m-button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import favoriteaList from './favoritea-list'
+import {mapState, mapGetters, mapActions} from 'vuex'
+export default{
+  data () {
+    return {
+      //checked:false, //是否全选
+　　　 checkModel:[], //双向数据绑定的数组，我是用的id
+    }
+  },
+  computed:{
+    ...mapState('y_favorites', ['favorites','checkbox'])
+  },
+  components: {
+   favoriteaList,
+  },
+  methods: {
+    ...mapActions('y_favorites', ['getFavorites','NowBuy']),
+    //全选
+    checkAll(){
+      this.checkbox.checkedAll = true;
+      console.log("checkbox:",this.checkbox.checkedAll);
+      if(this.checkbox.checkedAll == true){
+        var xuanzhe = this.favorites
+        for(var i = 0;i<xuanzhe.length; i++){
+          xuanzhe[i].checkboxItem = true
+          console.log("xuanzhe[i].checkboxItem:",xuanzhe[i].checkboxItem)
+        }
+        console.log("11:",xuanzhe)
+      }
+　　},
+
+    //全部选
+    checkCancelAll(){
+      this.checkbox.checkedAll = false;
+      console.log("checkbox:",this.checkbox.checkedAll);
+      if(this.checkbox.checkedAll == false){
+        var xuanzhe = this.favorites
+        for(var i = 0;i<xuanzhe.length; i++){
+          xuanzhe[i].checkboxItem = false
+          console.log("xuanzhe[i].checkboxItem:",xuanzhe[i].checkboxItem)
+        }
+        console.log("11:",xuanzhe)
+      }
+　　},
+
+    checkedList(){
+      console.log("dd")
+    }
+  },
+  payLoadSuc(e){
+     
+    
+  },
+  created(){
+    //debugger;
+    this.getFavorites();
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .box{
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+  }
+  .page-header{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 88px;
+    // background: #2eacef;
+    background: -webkit-linear-gradient(left, #ff6839 , #ff4439); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(right, #ff6839, #ff4439); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(right, #ff6839, #ff4439); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to right, #ff6839 , #ff4439); /* 标准的语法 */
+    .header-left{
+      position: absolute;
+      top:50%;
+      left:30px;
+      color: #fff;
+      transform: translateY(-50%);
+    }
+    h3{
+      font-size: 30px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .header-right{
+      position: absolute;
+      top:50%;
+      right:30px;
+      transform: translateY(-50%);
+      span{
+        color:#666;
+      }
+    }
+  }
+
+  .details-bottom{
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    bottom: 98px;
+    background: #f7f7f7;
+    border-top: 1px solid #e5e5e5;
+    height: 98px;
+    width: 100%;
+    .action-left{
+      width: 450px;
+      margin-left: 35px;
+      // display: flex;
+      // justify-content: space-around;
+      .left-item{
+        display: flex;
+        span{
+          font-size: 32px;
+          color: #838383;
+          line-height: 98px;
+          margin-left: 10px;
+        }
+      }
+    }
+    .action-right{
+      width: 300px;
+      background: #ff4539;
+      border: none;
+      .right-item{
+        border: none;
+        color: #ffffff;
+        font-size: 36px;
+        span{
+        color: #ffffff;
+        font-size: 36px;
+      }
+      }
+    }
+  }
+
+
+//选择框
+.icon-checkbox-uncheck{
+  font-size: 60px;
+  line-height: 98px;
+  color: #838383;
+}
+.icon-checkbox-selected{
+  font-size: 60px;
+  color: #1673ff;
+  line-height: 98px;
+}
+
+
+//checkbox优化
+.input-checkbox:checked {
+	background:#1673ff
+}
+.input-checkbox {
+	width:50px;
+	height:50px;
+	background-color:#ffffff;
+	border:solid 1px #838383;
+	-webkit-border-radius:50%;
+	border-radius:50%;
+	font-size:20px;
+	margin:22px 0;
+	padding:0;
+	position:relative;
+	display:inline-block;
+	vertical-align:top;
+	cursor:default;
+	-webkit-appearance:none;
+	-webkit-user-select:none;
+	user-select:none;
+	-webkit-transition:background-color ease 0.1s;
+	transition:background-color ease 0.1s;
+}
+.input-checkbox:checked::after {
+	content:'';
+	top:10px;
+	left:10px;
+	position:absolute;
+	background:transparent;
+	border:#fff solid 4px;
+	border-top:none;
+	border-right:none;
+	height:10px;
+	width:20px;
+	-moz-transform:rotate(-45deg);
+	-ms-transform:rotate(-45deg);
+	-webkit-transform:rotate(-45deg);
+    transform:rotate(-45deg);
+}
+</style>

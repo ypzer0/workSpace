@@ -1,0 +1,33 @@
+import * as types from './mutation-types'
+import { api } from '@/service/api'
+
+export const actions = {
+  async getCategory ({commit}) {
+    let res = await api.category.getCategory()
+    if (res.success) {
+      commit(types.INIT_CATEGORY, res.data)
+    }
+  },
+  async getSubCategoryByPid ({commit}, n) {
+    var para = {
+      id : n.id
+    }
+    let res = await api.category.getSubCategoryByPid(para)
+    if (res.success) {
+      commit(types.INIT_SUB_CATEGORY, res.data)
+      return res.data
+    }
+  },
+  async getGoodsByCategory ({commit, state}, n) {
+    var para = {
+      categoryId: n.id,
+      page: 1,
+      size: 10
+    }
+    let res = await api.category.getGoodsByCategory(para)
+    if (res.success) {
+      commit(types.INIT_GOODS_BY_CATEGORY, res.data)
+      state.subCategory.current = n;
+    }
+  }
+}

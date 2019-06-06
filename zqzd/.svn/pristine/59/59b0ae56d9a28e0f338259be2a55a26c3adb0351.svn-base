@@ -1,0 +1,231 @@
+package com.platform.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.platform.dto.CouponCommissionInfoDto;
+import com.platform.dto.CouponWalletInfoDto;
+import com.platform.dto.RPTWalletInfoDto;
+import com.platform.entity.CouponWalletInfoEntity;
+import com.platform.service.CouponWalletInfoService;
+import com.platform.utils.ExcelUtil;
+import com.platform.utils.PageUtils;
+import com.platform.utils.Query;
+import com.platform.utils.R;
+
+import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
+
+/**
+ * Controller
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-23 15:21:11
+ */
+@RestController
+@RequestMapping("couponwalletinfo")
+public class CouponWalletInfoController {
+    @Autowired
+    private CouponWalletInfoService CouponwalletInfoService;
+
+    /**
+     * 查看列表
+     */
+    @RequestMapping("/list")
+    @RequiresPermissions("couponwalletinfo:list")
+    public R list(@RequestParam Map<String, Object> params) {
+        //查询列表数据
+        Query query = new Query(params);
+
+        List<CouponWalletInfoEntity> CouponwalletInfoList = CouponwalletInfoService.queryList(query);
+        int total = CouponwalletInfoService.queryTotal(query);
+
+        PageUtils pageUtil = new PageUtils(CouponwalletInfoList, total, query.getLimit(), query.getPage());
+        
+        return R.ok().put("page", pageUtil);
+    }
+
+    /**
+     * 查看信息
+     */
+    @RequestMapping("/info/{id}")
+    @RequiresPermissions("couponwalletinfo:info")
+    public R info(@PathVariable("id") Integer id) {
+        CouponWalletInfoEntity CouponwalletInfo = CouponwalletInfoService.queryObject(id);
+
+        return R.ok().put("CouponwalletInfo", CouponwalletInfo);
+    }
+
+    /**
+     * 保存
+     */
+    @RequestMapping("/save")
+    @RequiresPermissions("couponwalletinfo:save")
+    public R save(@RequestBody CouponWalletInfoEntity CouponwalletInfo) {
+        CouponwalletInfoService.save(CouponwalletInfo);
+
+        return R.ok();
+    }
+
+    /**
+     * 修改
+     */
+    @RequestMapping("/update")
+    @RequiresPermissions("couponwalletinfo:update")
+    public R update(@RequestBody CouponWalletInfoEntity CouponwalletInfo) {
+        CouponwalletInfoService.update(CouponwalletInfo);
+
+        return R.ok();
+    }
+
+    /**
+     * 删除
+     */
+    @RequestMapping("/delete")
+    @RequiresPermissions("couponwalletinfo:delete")
+    public R delete(@RequestBody Integer[] ids) {
+        CouponwalletInfoService.deleteBatch(ids);
+
+        return R.ok();
+    }
+
+    /**
+     * 查看所有列表
+     */
+    @RequestMapping("/queryAll")
+    public R queryAll(@RequestParam Map<String, Object> params) {
+
+        List<CouponWalletInfoEntity> list = CouponwalletInfoService.queryList(params);
+
+        return R.ok().put("list", list);
+    }
+    
+    
+    //佣金
+    /**
+     * 查看列表
+     */
+    @RequestMapping("/listm")
+    @RequiresPermissions("couponwalletinfo:listm")
+    public R listm(@RequestParam Map<String, Object> params) {
+        //查询列表数据
+        Query query = new Query(params);
+
+        List<CouponWalletInfoEntity> CouponCommissionInfoList = CouponwalletInfoService.queryCommissionList(query);
+       
+        int total = CouponwalletInfoService.queryCommissionTotal(query);
+
+        PageUtils pageUtil = new PageUtils(CouponCommissionInfoList, total, query.getLimit(), query.getPage());
+       
+        Map<String, Object> sumTotal = CouponwalletInfoService.rptQueryWalletCountSum(query);
+        
+        return R.ok().put("page", pageUtil).put("total", sumTotal);
+    }
+
+    /**
+     * 查看信息
+     */
+    @RequestMapping("/infom/{id}")
+    @RequiresPermissions("couponwalletinfo:infom")
+    public R infom(@PathVariable("id") Integer id) {
+        CouponWalletInfoEntity CouponwalletInfo = CouponwalletInfoService.queryCommissionObject(id);
+
+        return R.ok().put("CouponwalletInfo", CouponwalletInfo);
+    }
+
+    /**
+     * 保存
+     */
+    @RequestMapping("/savem")
+    @RequiresPermissions("couponwalletinfo:savem")
+    public R savem(@RequestBody CouponWalletInfoEntity CouponwalletInfo) {
+        CouponwalletInfoService.save(CouponwalletInfo);
+
+        return R.ok();
+    }
+
+    /**
+     * 修改
+     */
+    @RequestMapping("/updatem")
+    @RequiresPermissions("couponwalletinfo:updatem")
+    public R updatem(@RequestBody CouponWalletInfoEntity CouponwalletInfo) {
+        CouponwalletInfoService.update(CouponwalletInfo);
+
+        return R.ok();
+    }
+
+    /**
+     * 删除
+     */
+    @RequestMapping("/deletem")
+    @RequiresPermissions("couponwalletinfo:deletem")
+    public R deletem(@RequestBody Integer[] ids) {
+        CouponwalletInfoService.deleteBatch(ids);
+
+        return R.ok();
+    }
+
+    /**
+     * 查看所有列表
+     */
+    @RequestMapping("/queryAllm")
+    public R queryAllm(@RequestParam Map<String, Object> params) {
+
+        List<CouponWalletInfoEntity> list = CouponwalletInfoService.queryCommissionList(params);
+
+        return R.ok().put("list", list);
+    }
+    
+    /**
+     * 资金统计报表Excel
+     * 
+     */
+    @RequestMapping("/listcountexcel")
+    @RequiresPermissions("couponwalletinfo:listcountexcel")
+    public void listcountexcel(HttpServletResponse response,@RequestParam Map<String, Object> para) throws Exception {
+    	
+    	Map<String, Object> data = new HashMap<String, Object>();
+    	TemplateExportParams params = new TemplateExportParams();
+    	
+    	List<CouponWalletInfoDto> walletInfoList = CouponwalletInfoService.QueryWalletCount(para);
+    	
+    	data.putAll(ExcelUtil.GetExcelTitleCotent(CouponWalletInfoDto.class));
+    	data.put("vlist", walletInfoList);
+    	
+    	Workbook workbook = ExcelUtil.getWorkbook(params, data, "coupon-wallet.xlsx");
+    	ExcelUtil.export(response, workbook, "资金明细报表");
+	}
+    
+    /**
+     * 资金统计报表Excel
+     * 
+     */
+    @RequestMapping("/listCommissionExcel")
+    @RequiresPermissions("couponwalletinfo:listCommissionExcel")
+    public void listCommissionExcel(HttpServletResponse response,@RequestParam Map<String, Object> para) throws Exception {
+    	
+    	Map<String, Object> data = new HashMap<String, Object>();
+    	TemplateExportParams params = new TemplateExportParams();
+    	
+    	List<CouponCommissionInfoDto> commissionInfoList = CouponwalletInfoService.QueryCommissionCount(para);
+    	
+    	data.putAll(ExcelUtil.GetExcelTitleCotent(CouponCommissionInfoDto.class));
+    	data.put("vlist", commissionInfoList);
+    	
+    	Workbook workbook = ExcelUtil.getWorkbook(params, data, "coupon-commission.xlsx");
+    	ExcelUtil.export(response, workbook, "佣金明细报表");
+	}
+}

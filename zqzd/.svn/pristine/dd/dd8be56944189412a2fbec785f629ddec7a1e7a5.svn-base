@@ -1,0 +1,20 @@
+package com.platform.dto;
+
+import java.io.Serializable;
+
+public class CidDto implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Integer cid;
+
+	public Integer getCid() {
+		return cid;
+	}
+
+	public void setCid(Integer cid) {
+		this.cid = cid;
+	}
+	
+}

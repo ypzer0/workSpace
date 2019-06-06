@@ -1,0 +1,34 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api.js'
+export const y_change_phone = {
+    
+  //更换手机-修改绑定手机号
+  changePhone: (params) => {
+    
+    return axios.request({
+      url: api.Y_MobileChange,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  //更换手机-验证是否有手机号
+  mobileValidatep: (params) => {
+    
+    return axios.request({
+      url: api.Y_MobileValidatep,
+      data: params,
+      method: 'post'
+    })
+  },
+
+  //更换手机-发送验证码
+  mobileSendchange: (params) => {
+    
+    return axios.request({
+      url: api.Y_MobileSendchange,
+      data: params,
+      method: 'post'
+    })
+  },
+}

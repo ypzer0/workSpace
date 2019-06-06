@@ -1,0 +1,577 @@
+package com.platform.entity;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+
+import com.platform.utils.Constant;
+import com.platform.utils.DateUtils;
+import com.qcloud.cos.utils.Md5Utils;
+
+/**
+ * 实体 表名 coupon_goods_info
+ *
+ * @author zy
+ * @email zgyxszyd@163.com
+ * @date 2019-04-22 16:02:53
+ */
+public class CouponGoodsVo implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	//
+	private Integer id;
+	// 种类id
+	private Integer cId;
+	// 种类
+	private String cName;
+	// 商品编号
+	private String goodsSn;
+	// 商品名称
+	private String name;
+	// 商品数量
+	private Integer goodsNumber;
+	// 搜索关键字
+	private String keywords;
+	// 商品描述
+	private String goodsBrief;
+	// 是否在销售 0 ， 没有 1， 有
+	private Integer isOnSale;
+	// 订单顺序
+	private Integer sortOrder;
+	// 是否删除 0 ， 没有 1， 有
+	private Integer isDelete;
+	// 有效时间
+	private Long effTimeEnd;
+	// 兑换码（加密）
+	private String redeemCode;
+	// 图片路径（加密）
+	private String imgPath;
+	// 验证加密完整性（全部加密）
+	private String valiCode;
+	// 商品单位
+	private String goodsUnit;
+	// 创建人ID
+	private Integer createUserId;
+	// 修改人ID
+	private Integer updateUserId;
+	// 有效期
+	private Date effTime;
+	// 添加时间
+	private Date addTime;
+	// 修改时间
+	private Date updateTime;
+
+	// 是否平台商品
+	private Integer isPlat;
+	// 创建商品的用户id
+	private Integer ccId;
+
+	//上级分类 id
+	private Integer parentId;
+	// 上级分类名
+	private String parentCname;
+	// 用户编号
+	private String uCode;
+	//用户昵称
+	private String nickname;
+	// 用户平台类型
+	private Integer platType;
+	// 平台操作员名称
+	private String username;
+	//商品价格
+	private BigDecimal salePrice;
+	//收购价格
+    private BigDecimal buyPrice;
+    //市场价
+    private BigDecimal marketPrice;
+	//订单价格
+	private BigDecimal orderPrice;
+	//购买数量
+	private Integer buyCount;
+	//订单状态
+	private Integer orderStatus;
+	// 是否使用
+	private Integer isUsed;
+	//用户昵称
+	private String reminder;
+	 //商品缩略图
+    private String picUrl;
+    //商品大图url
+    private String picBigUrl;
+	@Override
+	public String toString() {
+		return "CouponGoodsVo [id=" + id + ", cId=" + cId + ", cName=" + cName + ", goodsSn=" + goodsSn + ", name="
+				+ name + ", goodsNumber=" + goodsNumber + ", keywords=" + keywords + ", goodsBrief=" + goodsBrief
+				+ ", isOnSale=" + isOnSale + ", sortOrder=" + sortOrder + ", isDelete=" + isDelete + ", effTimeEnd="
+				+ effTimeEnd + ", redeemCode=" + redeemCode + ", imgPath=" + imgPath + ", valiCode=" + valiCode
+				+ ", goodsUnit=" + goodsUnit + ", createUserId=" + createUserId + ", updateUserId=" + updateUserId
+				+ ", effTime=" + effTime + ", addTime=" + addTime + ", updateTime=" + updateTime + ", isPlat=" + isPlat
+				+ ", ccId=" + ccId + ", parentId=" + parentId + ", parentCname=" + parentCname + ", uCode=" + uCode
+				+ ", nickname=" + nickname + ", platType=" + platType + ", username=" + username + ", salePrice="
+				+ salePrice + ", orderPrice=" + orderPrice + ", buyCount=" + buyCount + "]";
+	}
+
+	public String GetUpdateLogStr() {
+		return "{id:" + id + ", cId:" + cId + ", goodsSn:" + goodsSn + ", isOnSale:" + isOnSale + ", isDelete:"
+				+ isDelete + ", effTimeEnd:" + effTimeEnd + ", redeemCode:" + redeemCode + ", imgPath:" + imgPath
+				+ ", valiCode:" + valiCode + ", updateTime:" + updateTime + ", isPlat:" + isPlat + "}";
+	}
+	
+	
+	
+	public BigDecimal getMarketPrice() {
+		return marketPrice;
+	}
+
+	public void setMarketPrice(BigDecimal marketPrice) {
+		this.marketPrice = marketPrice;
+	}
+
+	public BigDecimal getBuyPrice() {
+		return buyPrice;
+	}
+
+	public void setBuyPrice(BigDecimal buyPrice) {
+		this.buyPrice = buyPrice;
+	}
+
+	public String getPicBigUrl() {
+		return picBigUrl;
+	}
+
+	public void setPicBigUrl(String picBigUrl) {
+		this.picBigUrl = picBigUrl;
+	}
+
+	public String getPicUrl() {
+		return picUrl;
+	}
+
+	public void setPicUrl(String picUrl) {
+		this.picUrl = picUrl;
+	}
+
+	/**
+	 * 获取Code编码
+	 * 
+	 * @return
+	 */
+	public String GetGoodsMd5Str() {
+		String comPime = imgPath + Constant.GOODS_MD5_PWDCODE + redeemCode;
+		String md5Str = Md5Utils.md5AsBase64(comPime.getBytes());
+		return md5Str;
+	}
+
+	/**
+	 * 生成商品编号
+	 * 
+	 * @return
+	 */
+	
+	
+	public String GenGoodsCode() {
+		return "G" + DateUtils.format(new Date(), "yyyyMMddHHmmssSSS");
+	}
+	
+	public String getReminder() {
+		return reminder;
+	}
+
+	public void setReminder(String reminder) {
+		this.reminder = reminder;
+	}
+
+	public Integer getIsUsed() {
+		return isUsed;
+	}
+
+	public void setIsUsed(Integer isUsed) {
+		this.isUsed = isUsed;
+	}
+
+	public Integer getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public Integer getIsPlat() {
+		return isPlat;
+	}
+
+	public void setIsPlat(Integer isPlat) {
+		this.isPlat = isPlat;
+	}
+
+	public Integer getCcId() {
+		return ccId;
+	}
+
+	public void setCcId(Integer ccId) {
+		this.ccId = ccId;
+	}
+
+	public String getParentCname() {
+		return parentCname;
+	}
+
+	public void setParentCname(String parentCname) {
+		this.parentCname = parentCname;
+	}
+
+	public String getuCode() {
+		return uCode;
+	}
+
+	public void setuCode(String uCode) {
+		this.uCode = uCode;
+	}
+
+	public Integer getPlatType() {
+		return platType;
+	}
+
+	public void setPlatType(Integer platType) {
+		this.platType = platType;
+	}
+
+	/**
+	 * 设置：
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * 获取：
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * 设置：种类id
+	 */
+	public void setcId(Integer cId) {
+		this.cId = cId;
+	}
+
+	/**
+	 * 获取：种类id
+	 */
+	public Integer getcId() {
+		return cId;
+	}
+
+	/**
+	 * 设置：商品编号
+	 */
+	public void setGoodsSn(String goodsSn) {
+		this.goodsSn = goodsSn;
+	}
+
+	/**
+	 * 获取：商品编号
+	 */
+	public String getGoodsSn() {
+		return goodsSn;
+	}
+
+	/**
+	 * 设置：商品名称
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * 获取：商品名称
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * 设置：商品数量
+	 */
+	public void setGoodsNumber(Integer goodsNumber) {
+		this.goodsNumber = goodsNumber;
+	}
+
+	/**
+	 * 获取：商品数量
+	 */
+	public Integer getGoodsNumber() {
+		return goodsNumber;
+	}
+
+	/**
+	 * 设置：搜索关键字
+	 */
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
+	}
+
+	/**
+	 * 获取：搜索关键字
+	 */
+	public String getKeywords() {
+		return keywords;
+	}
+
+	/**
+	 * 设置：商品描述
+	 */
+	public void setGoodsBrief(String goodsBrief) {
+		this.goodsBrief = goodsBrief;
+	}
+
+	/**
+	 * 获取：商品描述
+	 */
+	public String getGoodsBrief() {
+		return goodsBrief;
+	}
+
+	/**
+	 * 设置：是否在销售 0 ， 没有 1， 有
+	 */
+	public void setIsOnSale(Integer isOnSale) {
+		this.isOnSale = isOnSale;
+	}
+
+	/**
+	 * 获取：是否在销售 0 ， 没有 1， 有
+	 */
+	public Integer getIsOnSale() {
+		return isOnSale;
+	}
+
+	/**
+	 * 设置：订单顺序
+	 */
+	public void setSortOrder(Integer sortOrder) {
+		this.sortOrder = sortOrder;
+	}
+
+	/**
+	 * 获取：订单顺序
+	 */
+	public Integer getSortOrder() {
+		return sortOrder;
+	}
+
+	/**
+	 * 设置：是否删除 0 ， 没有 1， 有
+	 */
+	public void setIsDelete(Integer isDelete) {
+		this.isDelete = isDelete;
+	}
+
+	/**
+	 * 获取：是否删除 0 ， 没有 1， 有
+	 */
+	public Integer getIsDelete() {
+		return isDelete;
+	}
+
+	/**
+	 * 设置：有效时间
+	 */
+	public void setEffTimeEnd(Long effTimeEnd) {
+		this.effTimeEnd = effTimeEnd;
+	}
+
+	/**
+	 * 获取：有效时间
+	 */
+	public Long getEffTimeEnd() {
+		return effTimeEnd;
+	}
+
+	/**
+	 * 设置：兑换码（加密）
+	 */
+	public void setRedeemCode(String redeemCode) {
+		this.redeemCode = redeemCode;
+	}
+
+	/**
+	 * 获取：兑换码（加密）
+	 */
+	public String getRedeemCode() {
+		return redeemCode;
+	}
+
+	/**
+	 * 设置：图片路径（加密）
+	 */
+	public void setImgPath(String imgPath) {
+		this.imgPath = imgPath;
+	}
+
+	/**
+	 * 获取：图片路径（加密）
+	 */
+	public String getImgPath() {
+		return imgPath;
+	}
+
+	/**
+	 * 设置：验证加密完整性（全部加密）
+	 */
+	public void setValiCode(String valiCode) {
+		this.valiCode = valiCode;
+	}
+
+	/**
+	 * 获取：验证加密完整性（全部加密）
+	 */
+	public String getValiCode() {
+		return valiCode;
+	}
+
+	/**
+	 * 设置：商品单位
+	 */
+	public void setGoodsUnit(String goodsUnit) {
+		this.goodsUnit = goodsUnit;
+	}
+
+	/**
+	 * 获取：商品单位
+	 */
+	public String getGoodsUnit() {
+		return goodsUnit;
+	}
+
+	/**
+	 * 设置：创建人ID
+	 */
+	public void setCreateUserId(Integer createUserId) {
+		this.createUserId = createUserId;
+	}
+
+	/**
+	 * 获取：创建人ID
+	 */
+	public Integer getCreateUserId() {
+		return createUserId;
+	}
+
+	/**
+	 * 设置：修改人ID
+	 */
+	public void setUpdateUserId(Integer updateUserId) {
+		this.updateUserId = updateUserId;
+	}
+
+	/**
+	 * 获取：修改人ID
+	 */
+	public Integer getUpdateUserId() {
+		return updateUserId;
+	}
+
+	/**
+	 * 设置：有效期
+	 */
+	public void setEffTime(Date effTime) {
+		this.effTime = effTime;
+	}
+
+	/**
+	 * 获取：有效期
+	 */
+	public Date getEffTime() {
+		return effTime;
+	}
+
+	/**
+	 * 设置：添加时间
+	 */
+	public void setAddTime(Date addTime) {
+		this.addTime = addTime;
+	}
+
+	/**
+	 * 获取：添加时间
+	 */
+	public Date getAddTime() {
+		return addTime;
+	}
+
+	/**
+	 * 设置：修改时间
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	/**
+	 * 获取：修改时间
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public BigDecimal getSalePrice() {
+		return salePrice;
+	}
+
+	public void setSalePrice(BigDecimal salePrice) {
+		this.salePrice = salePrice;
+	}
+
+	public String getcName() {
+		return cName;
+	}
+
+	public void setcName(String cName) {
+		this.cName = cName;
+	}
+
+	public BigDecimal getOrderPrice() {
+		return orderPrice;
+	}
+
+	public void setOrderPrice(BigDecimal orderPrice) {
+		this.orderPrice = orderPrice;
+	}
+
+	public Integer getBuyCount() {
+		return buyCount;
+	}
+
+	public void setBuyCount(Integer buyCount) {
+		this.buyCount = buyCount;
+	}
+
+	public Integer getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(Integer orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+	
+	
+}

@@ -1,0 +1,167 @@
+import * as types from './mutation-types'
+import {api} from '@/service/api'
+import {toast} from '@/libs/cube-ui'
+
+export const actions = {
+  // async getOrderList ({dispatch, commit}, o) {
+    
+  //   let res = await api.y_order.orderList(o)
+  //   if (res.success) {
+  //     // toast('获取订单数据成功', 'correct')
+  //     commit(types.INIT_ORDER, res.data);
+  //   } else {
+  //     toast(res.msg, 'warn')
+  //   }
+  //   return res;
+  // },
+
+
+  //获取全部订单数据
+  async getPageOrderList ({dispatch, commit, state}, o) {
+    
+    o = {
+      //page: state.pageDataList.page + 1,
+      status: '',
+    };
+    
+    let res = await api.y_order.allOrderList(o)
+    console.log(res);
+    //debugger;
+    if (res.success) {
+      // toast('获取订单数据成功', 'correct')
+      commit(types.APPEND_PAGE_ORDER_LIST, res.data);
+    } else {
+      toast(res.msg, 'warn')
+    }
+    
+    return res;
+  },
+
+  //获取等待付款数据
+  async getOrderWaitPay ({dispatch, commit, state}, o) {
+    
+    o = {
+      //page: state.pageDataList.page + 1,
+      status: "0",
+    };
+    
+    let res = await api.y_order.orderWaitPay(o)
+    console.log(res);
+    //debugger;
+    if (res.success) {
+      // toast('获取订单数据成功', 'correct')
+      commit(types.APPEND_PAGE_WAIT_ORDER_LIST, res.data);
+    } else {
+      toast(res.msg, 'warn')
+    }
+    
+    return res;
+  },
+
+
+  //获取付款完成数据
+  async getOrderFinish ({dispatch, commit, state}, o) {
+    
+    o = {
+      //page: state.pageDataList.page + 1,
+      status: "1",
+    };
+    
+    let res = await api.y_order.orderFinish(o)
+    console.log(res);
+    //debugger;
+    if (res.success) {
+      // toast('获取订单数据成功', 'correct')
+      commit(types.APPEND_PAGE_FINISH_ORDER_LIST, res.data);
+    } else {
+      toast(res.msg, 'warn')
+    }
+    
+    return res;
+  },
+
+
+
+  //立即使用传参
+  async getUseAsk ({dispatch, commit, state}, o) {
+    
+    o = {
+      oid: state.allOrderList.data,
+    };
+    
+    let res = await api.y_order.useAsk(o)
+    console.log(res);
+    //debugger;
+    if (res.success) {
+      // toast('获取订单数据成功', 'correct')
+      commit(types.APPEND_USE_ASK, res.data);
+    } else {
+      toast(res.msg, 'warn')
+    }
+    
+    return res;
+  },
+  
+
+
+
+
+
+  // //获取等待支付订单数据
+  // async getWaitPayOrderList ({dispatch, commit, state}, o) {
+
+  //   o = {
+  //     //page: state.pageDataList.page + 1,
+  //     status: 0
+  //   };
+  //   let res = await api.y_order.getPageWaitPayOrderList(o)
+  //   if (res.success) {
+  //     // toast('获取订单数据成功', 'correct')
+  //     commit(types.APPEND_PAGE_WAIT_ORDER_LIST, res.data);
+  //   } else {
+  //     toast(res.msg, 'warn')
+  //   }
+  //   return res;
+  // },
+
+
+  // //获取付款完成订单数据
+  // async getFinishPayOrderList ({dispatch, commit, state}, o) {
+    
+  //   o = {
+  //     status: 1
+  //   };
+  //   let res = await api.y_order.getPageFinishOrderList(o)
+  //   //debugger;
+  //   if (res.success) {
+  //     // toast('获取订单数据成功', 'correct')
+  //     commit(types.APPEND_PAGE_FINISH_ORDER_LIST, res.data);
+  //   } else {
+  //     toast(res.msg, 'warn')
+  //   }
+  //   return res;
+  // },
+
+
+    //根据状态不同跳状不同页面
+  obligationPay({dispatch, commit, state}, o){
+    //debugger;
+    let _then = this;
+    let item = o.item;
+    console.log("item:",item)
+    console.log("item.status:", item.status);
+    if(o.key == 1 && item.showPay){
+      o.go(`/y-pay?oid=${item.oid}`)
+    }else if(o.key == 2 && item.showIssue){
+      o.go(`/y-apply-disputes/${item.oid}`)
+    }else if(o.key == 3 && item.showUse){
+      //dispatch("getUseAsk", o);
+      o.go(`/y-use-explain/${item.gid}?oid=${item.oid}`)
+      
+      //debugger;
+    };
+
+  },
+
+
+}

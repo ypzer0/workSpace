@@ -1,0 +1,17 @@
+import axios from '@/libs/api.request'
+import * as api from '@/config/api'
+
+export const feed = {
+
+  //添加反馈
+  add: (params) => {
+    return axios.request({
+      url: api.FeedbackAdd,
+      data: params,
+      method: 'post'
+    },
+    {
+      cp : 'application/json'
+    })
+  },
+}
