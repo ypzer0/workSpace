@@ -1,7 +1,11 @@
 package com.platform.oss;
 
 import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.model.DownloadFileRequest;
+import com.aliyun.oss.model.DownloadFileResult;
+import com.aliyun.oss.model.OSSObject;
 import com.platform.utils.RRException;
+import org.aspectj.weaver.ast.Var;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
@@ -15,11 +19,13 @@ import java.io.InputStream;
  * @date 2017-03-26 16:22
  */
 public class AliyunCloudStorageService extends CloudStorageService {
+
+    private static final String QIANZHIHE_DOMAIN="https://wsimg.qzhkj.cn/";
+
     private OSSClient client;
 
-    public AliyunCloudStorageService(CloudStorageConfig config) {
+    public AliyunCloudStorageService(CloudStorageConfig config) throws Throwable {
         this.config = config;
-
         //初始化
         init();
     }
@@ -33,6 +39,7 @@ public class AliyunCloudStorageService extends CloudStorageService {
     public String upload(MultipartFile file) throws Exception {
         String fileName = file.getOriginalFilename();
         String prefix = fileName.substring(fileName.lastIndexOf(".") + 1);
+        String key=getPath(config.getAliyunPrefix()) + "." + prefix;
         return upload(file.getBytes(), getPath(config.getAliyunPrefix()) + "." + prefix);
     }
 
@@ -50,5 +57,22 @@ public class AliyunCloudStorageService extends CloudStorageService {
         }
 
         return config.getAliyunDomain() + "/" + path;
+    }
+
+    public InputStream downloadPDF(String url) {
+        InputStream objectContent=null;
+        try {
+            if(url.contains(QIANZHIHE_DOMAIN)){
+                url=url.replace(QIANZHIHE_DOMAIN,"");
+            }
+            OSSObject ossObject = client.getObject(config.getAliyunBucketName(),url);
+            return ossObject.getObjectContent();
+        } catch (Exception e) {
+            throw new RRException("下载PDF文件失败", e);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+
+        return objectContent;
     }
 }

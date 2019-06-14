@@ -48,7 +48,7 @@ public class QiniuCloudStorageService extends CloudStorageService {
         try {
             Response res = uploadManager.put(data, path, token);
             if (!res.isOK()) {
-                throw new RuntimeException("上传七牛出错：" + res.toString());
+                throw new RuntimeException("上传文件出错：" + res.toString());
             }
         } catch (Exception e) {
             throw new RRException("上传文件失败，请核对七牛配置信息", e);
