@@ -46,9 +46,6 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
         }
         //获取用户信息
         return userService.queryObject((Long) object);
-    	
-    	//测试环境
-//    	UserVo user = userService.queryObject(4L);
-//    	return user;
+
     }
 }

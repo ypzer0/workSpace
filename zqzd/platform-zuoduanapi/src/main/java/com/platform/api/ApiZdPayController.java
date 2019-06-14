@@ -34,8 +34,7 @@ public class ApiZdPayController extends ApiBaseAction{
 	@ApiOperation(value = "微信支付", response = Map.class)
 	@PostMapping("/buy")
 	public Object payMoney(@LoginUser ZdUserVo nowUser, @RequestParam(value = "oid") Integer oid) {
-		Rp rt = apiZdPayService.payMoney(nowUser, oid,  getClientIp());
-		return rt;
+		return apiZdPayService.payMoney(nowUser, oid,  getClientIp());
 	}
 	
 	@ApiOperation(value = "微信支付响应", response = Map.class)

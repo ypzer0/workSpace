@@ -32,6 +32,18 @@ public class ApiZdUserService {
 	public ZdUserVo queryObject(Long userId) {
 		return userMapper.queryObject(userId);
 	}
+
+	public int save(ZdUserVo userVo){
+        return userMapper.save(userVo);
+    }
+
+    public int update(ZdUserVo userVo){
+        return userMapper.update(userVo);
+    }
+
+	public ZdUserVo queryByOpenId(String openId){
+		return userMapper.queryByOpenId(openId);
+	}
 	
 	public Rp register(ZdUserVo user,String ip,String validate) {
 		try {

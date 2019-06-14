@@ -14,12 +14,11 @@ public class CORSFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         response.addHeader("Access-Control-Allow-Headers", "Content-Type");
-        response.addHeader("Access-Control-Max-Age", "1800");//30 min
+        response.addHeader("Access-Control-Max-Age", "1800");
+        response.addHeader("Access-Control-Allow-Credentials", "true");
         filterChain.doFilter(request, response);
 
 	}

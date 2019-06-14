@@ -32,8 +32,7 @@ public class ApiZdMobileController  extends ApiBaseAction{
 	@ApiOperation(value = "发送短信验证码接口", response = Map.class)
 	@PostMapping("/mobile/send")
 	public Object mobileSend(@LoginUser ZdUserVo nowUser, @RequestParam(value = "mobile") String mobile) {
-		Rp cMap= service.mobileSend(nowUser, mobile);
-		return cMap;
+		return service.mobileSend(nowUser, mobile);
 	}
 	
 	

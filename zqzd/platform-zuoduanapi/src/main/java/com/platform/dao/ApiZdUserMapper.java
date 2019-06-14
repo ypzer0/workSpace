@@ -8,12 +8,19 @@ import com.platform.entity.SmsLogVo;
 import com.platform.entity.ZdUserVo;
 
 public interface ApiZdUserMapper extends BaseDao<ZdUserVo>{
+    /**
+     * 根据平台id查询用户信息
+     * @param openId 平台id
+     * @return 用户信息
+     */
+    ZdUserVo queryByOpenId(@Param("openId") String openId);
+
 	ZdUserVo queryByUserName(String username);
 	
 	 /**
      * 获取用户最后一条短信
      *
-     * @param user_id
+     * @param
      * @return
      */
     SmsLogVo querySmsCodeTodayLast(@Param("mobile") String mobile, @Param("type") Integer type);

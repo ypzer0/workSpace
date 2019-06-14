@@ -113,7 +113,7 @@ public class SysOssController {
      * @throws Exception 异常
      */
     @RequestMapping("/upload")
-    public R upload(@RequestParam("file") MultipartFile file) throws Exception {
+    public R upload(@RequestParam("file") MultipartFile file) throws Throwable {
         if (file.isEmpty()) {
             throw new RRException("上传文件不能为空");
         }

@@ -15,7 +15,9 @@ import java.util.Map;
 public class TokenService {
     @Autowired
     private ApiTokenMapper tokenDao;
-    //12小时后过期
+    /**
+     * 12小时过期
+     */
     private final static int EXPIRE = 3600 * 12;
 
     public TokenVo queryByUserId(Long userId) {

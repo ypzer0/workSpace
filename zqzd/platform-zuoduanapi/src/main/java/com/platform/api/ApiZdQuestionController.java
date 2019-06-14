@@ -44,7 +44,6 @@ public class ApiZdQuestionController  extends ApiBaseAction{
 	@ApiOperation("我的问诊接口")
 	@PostMapping("/my/question")
 	public Object myQuestion(@LoginUser ZdUserVo nowUser) {
-		System.out.println(nowUser.getUsername()+"============="+ nowUser.toString());
 		return apiZdQuestionService.myQuestion(nowUser);
 	}
 

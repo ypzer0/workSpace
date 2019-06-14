@@ -5,164 +5,62 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.platform.entity.ZdUserVo;
 import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.platform.entity.UserVo;
 import com.platform.util.ApiUserUtils;
 import com.platform.util.CommonUtil;
 import com.platform.utils.CharUtil;
 import com.platform.utils.Rp;
 import com.platform.utils.StringUtils;
 
+/**
+ * @author 杨鹏
+ */
 @Service
 public class ApiLoginService {
 
     protected Logger logger = Logger.getLogger(getClass());
     @Autowired
-    private ApiUserService userService;
+    private ApiZdUserService userService;
 
     @Autowired
     protected TokenService tokenService;
-    
+
 	/**
-	 * 微信登录
-	 */
-	public Rp loginWeiXin(String code, String state, String ip, Integer plat) {
-		if(plat == null) {
-    		return Rp.error("UnKnow");
-		}
-		//验证平台
-		if(plat == 1 || plat == 2) {
-			
-		}
-		else {
-    		return Rp.error("UnKnow");
-		}
-		
-        if (StringUtils.isNullOrEmpty(code)) {
-    		return Rp.error("失败了");
-        }
-        logger.info("--------------- 开始进入登录！");
-        Map<String, Object> resultObj = new HashMap<String, Object>();
-        
-        logger.info("--------------- 获取openId！");
-        //获取openid
-        String requestUrl = ApiUserUtils.couponGetWeiXinGZHWebAccess(code, plat);//通过自定义工具类组合出小程序需要的登录凭证 code
-        logger.info("》》》组合tokenUrl链接为：" + requestUrl);
-        
-        JSONObject sessionData = CommonUtil.httpsRequest(requestUrl, "GET", null);
-        logger.info(sessionData);
-        if (null == sessionData || StringUtils.isNullOrEmpty(sessionData.getString("openid"))) {
-            return Rp.error("请重新登录");
-        }
-
-        String access_token = sessionData.getString("access_token");
-        String openid = sessionData.getString("openid");
-        
-        logger.info("--------------- 获取openId:" + openid);
-        logger.info("--------------- 获取access_token:" + access_token);
-        
-        
-        logger.info("--------------- 开始更新用户！");
-        Date nowTime = new Date();
-        UserVo userVo = userService.queryByOpenId(openid);
-        if (null == userVo) {
-        	
-        	requestUrl = ApiUserUtils.couponGetWeiXinGZHUserMsg(access_token, plat);;
-            sessionData = CommonUtil.httpsRequest(requestUrl, "GET", null);
-            logger.info("获取登录用户信息:");
-            logger.info(sessionData);
-            
-            if (null == sessionData || StringUtils.isNullOrEmpty(sessionData.getString("openid"))) {
-                return Rp.error("请重新登录");
-            }
-            
-            String headimgurl = sessionData.getString("headimgurl");
-            Integer sex = sessionData.getInteger("sex");
-            String nickname = sessionData.getString("nickname");
-            
-            userVo = new UserVo();
-            userVo.setUsername("微信用户" + CharUtil.getRandomString(12));
-            userVo.setPassword(openid);
-            userVo.setRegisterTime(nowTime);
-            
-            userVo.setRegisterIp(ip);
-            userVo.setLastLoginIp(userVo.getRegisterIp());
-            userVo.setLastLoginTime(userVo.getRegisterTime());
-            userVo.setWeixinOpenid(openid);
-            
-            userVo.setAvatar(headimgurl);
-            userVo.setGender(sex); // //性别 0：未知、1：男、2：女
-            userVo.setNickname(nickname);
-            
-            userService.save(userVo);
-            logger.info("--------------- 保存用户:");
-        } else {
-        	//保存用户openid
-//            userVo.setWeixin_openid(sessionData.getString("openid"));
-            userVo.setLastLoginIp(ip);
-            userVo.setLastLoginTime(nowTime);
-            
-            userService.update(userVo);
-            logger.info("--------------- 更新用户:");
-        }
-
-        Map<String, Object> tokenMap = tokenService.createToken(userVo.getId());
-        String token = MapUtils.getString(tokenMap, "token");
-        logger.info("--------------- 返回数据token:" + token);
-
-        if (StringUtils.isNullOrEmpty(token)) {
-            return Rp.error("登录失败");
-        }
-
-        resultObj.put("token", token);
-        resultObj.put("userId", userVo.getId());
-        return Rp.ok().putAllDt(resultObj);
-	}
-    
-	/**
-	 * 
+	 * 登录测试
 	 */
 	public Rp loginTest(String name, String ip) {
 		if(StringUtils.isNullOrEmpty(name)) {
 			return Rp.error("名字不能为空！");
 		}
-		String openid = name;
         Date nowTime = new Date();
-        UserVo userVo = userService.queryByOpenId(openid);
+        ZdUserVo userVo = userService.queryByOpenId(name);
         if (null == userVo) {
             
-            String headimgurl = "";
+            String headImgUrl = "";
             Integer sex = 0;
-            String nickname = openid;
-            
-            userVo = new UserVo();
-            
-            userVo.setPlatType(1);
+            userVo = new ZdUserVo();
+
             userVo.setAge(0);
-            userVo.setMultiple(50);
             userVo.setStatus(1);
-            userVo.setCredit(888);
-            userVo.setIntegral(new BigDecimal(888));
-            userVo.setFrozen(new BigDecimal(888));
-            userVo.setMoney(new BigDecimal(888));
             
             userVo.setUsername("微信用户" + CharUtil.getRandomString(12));
-            userVo.setPassword(openid);
+            userVo.setPassword(name);
             userVo.setRegisterTime(nowTime);
             
             userVo.setRegisterIp(ip);
             userVo.setLastLoginIp(userVo.getRegisterIp());
             userVo.setLastLoginTime(userVo.getRegisterTime());
-            userVo.setWeixinOpenid(openid);
+            userVo.setWeixinOpenid(name);
             
-            userVo.setAvatar(headimgurl);
-            userVo.setGender(sex); // //性别 0：未知、1：男、2：女
-            userVo.setNickname(nickname);
+            userVo.setAvatar(headImgUrl);
+            userVo.setGender(sex);
+            userVo.setNickname(name);
             
             userService.save(userVo);
             logger.info("--------------- 保存用户:");

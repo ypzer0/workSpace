@@ -34,7 +34,30 @@
         <result property="sms_text" column="sms_text"/>
         <result property="is_used" column="is_used"/>
     </resultMap>
-    
+
+	<select id="queryByOpenId" resultType="com.platform.entity.ZdUserVo">
+		select
+		`id`,
+		`nickname`,
+		`avatar`,
+		`weixin_code`,
+		`weixin_openid`,
+		`username`,
+		`password`,
+		`gender`,
+		`register_time`,
+		`last_login_time`,
+		`last_login_ip`,
+		`user_level_id`,
+		`mobile`,
+		`register_ip`,
+		`age`,
+		`status`,
+		`remarks`
+		from zd_user
+		where weixin_openid = #{ openId }
+	</select>
+
     <select id="queryByUserName" resultType="com.platform.entity.ZdUserVo">
 		select
 			`id`,

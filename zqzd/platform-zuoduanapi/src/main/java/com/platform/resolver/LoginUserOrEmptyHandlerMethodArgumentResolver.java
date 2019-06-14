@@ -69,9 +69,5 @@ public class LoginUserOrEmptyHandlerMethodArgumentResolver implements HandlerMet
         //获取用户信息
     	return userService.queryObject(tokenEntity.getUserId());
 
-    	//测试环境
-    	
-//    	UserVo user = userService.queryObject(4L);
-//    	return user;
     }
 }
